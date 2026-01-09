@@ -1,9 +1,0 @@
-export default function LessonPage({ params }: { params: { id: string } }) {
-  return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center text-white">
-      <h1 className="text-3xl font-bold">Arc: {params.id}</h1>
-      <p className="text-slate-400 mt-4">Scrollytelling Engine Coming Soon...</p>
-      <a href="/" className="mt-8 text-brand-primary underline">Back to Path</a>
-    </div>
-  );
-}

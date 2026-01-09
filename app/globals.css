@@ -1,26 +1,55 @@
+/* app/globals.css */
 @import "tailwindcss";
 
+@theme {
+    /* Core Brand - Navy & White */
+    --color-navy: #0055ff;
+    --color-navy-dark: #0044cc;
+    --color-canvas: #ffffff;
+    --color-lab-bg: #f8fafc;
+
+    /* Power Colors - High Contrast Highlights */
+    --color-power-teal: #14b8a6;
+    --color-power-purple: #a855f7;
+    --color-power-orange: #f97316;
+
+    /* Neutrals */
+    --color-ink-900: #0f172a;
+    --color-ink-400: #94a3b8;
+    --color-border-light: #e2e8f0;
+
+    /* Global Radius Strategy */
+    --radius-button: 1.25rem;
+    --radius-card: 2.5rem;
+    --radius-pill: 9999px;
+}
+
+@layer utilities {
+    /* 3D Power Button: The Signature Interaction */
+    .btn-3d {
+        @apply transition-all active:translate-y-[4px] active:shadow-none font-black uppercase tracking-widest border-b-[6px];
+    }
+
+    .btn-3d-navy {
+        @apply bg-navy border-navy-dark text-white hover:bg-navy-dark shadow-xl shadow-navy/20;
+    }
+
+    .btn-3d-white {
+        @apply bg-white border-border-light text-ink-400 hover:bg-slate-50;
+    }
+
+    /* Spacious Container */
+    .lab-container {
+        @apply max-w-7xl mx-auto px-8;
+    }
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+    --background: var(--color-canvas);
+    --foreground: var(--color-ink-900);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--color-lab-bg);
+    font-family: "Inter", sans-serif; /* Or your preferred bold sans-serif */
 }

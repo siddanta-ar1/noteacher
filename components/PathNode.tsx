@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { Lock, Check } from "lucide-react";
+import { Lock, Check, Play } from "lucide-react";
 import Link from "next/link";
 
 interface NodeProps {
@@ -18,7 +18,6 @@ export default function PathNode({
   position,
   index,
 }: NodeProps) {
-  // Determine alignment based on position prop
   const alignmentClass =
     position === "left"
       ? "mr-auto ml-10"
@@ -28,38 +27,51 @@ export default function PathNode({
 
   return (
     <div
-      className={`relative flex flex-col items-center w-full max-w-xs ${alignmentClass} mb-12`}
+      className={`relative flex flex-col items-center w-full max-w-xs ${alignmentClass} group`}
     >
       <Link href={status === "locked" ? "#" : `/lesson/${id}`}>
         <motion.div
-          whileHover={status !== "locked" ? { scale: 1.1 } : {}}
+          whileHover={status !== "locked" ? { scale: 1.05, y: -5 } : {}}
           whileTap={{ scale: 0.95 }}
           className={`
-            w-20 h-20 rounded-3xl flex items-center justify-center border-4 shadow-xl transition-all duration-500
+            w-24 h-24 rounded-[2rem] flex items-center justify-center border-b-8 transition-all duration-300
             ${
               status === "completed"
-                ? "bg-brand-accent border-brand-accent text-white"
+                ? "bg-power-teal border-teal-700 text-white shadow-lg shadow-power-teal/20"
                 : status === "current"
-                  ? "bg-brand-primary border-white text-white shadow-blue-500/50"
-                  : "bg-slate-800 border-slate-700 text-slate-500 cursor-not-allowed"
+                  ? "bg-navy border-navy-dark text-white shadow-xl shadow-navy/30"
+                  : "bg-slate-200 border-slate-300 text-slate-400 cursor-not-allowed"
             }
           `}
         >
           {status === "completed" ? (
-            <Check size={32} strokeWidth={3} />
+            <Check size={40} strokeWidth={4} />
           ) : status === "locked" ? (
-            <Lock size={28} />
+            <Lock size={32} />
           ) : (
-            <span className="text-2xl font-bold">{index + 1}</span>
+            <Play size={36} fill="currentColor" className="ml-1" />
           )}
         </motion.div>
       </Link>
 
-      <p
-        className={`mt-4 font-semibold text-lg ${status === "locked" ? "text-slate-600" : "text-slate-200"}`}
+      <div
+        className={`mt-4 text-center bg-white px-6 py-2 rounded-2xl border-2 transition-all
+        ${status === "locked" ? "border-slate-100 opacity-50" : "border-slate-200 shadow-sm group-hover:border-navy group-hover:shadow-md"}
+      `}
       >
-        {title}
-      </p>
+        <p
+          className={`font-black text-sm tracking-tight ${status === "locked" ? "text-slate-400" : "text-slate-900"}`}
+        >
+          {title}
+        </p>
+        <p className="text-[10px] uppercase tracking-widest font-black text-slate-400 mt-0.5">
+          {status === "completed"
+            ? "Mastered"
+            : status === "current"
+              ? "In Progress"
+              : "Locked"}
+        </p>
+      </div>
     </div>
   );
 }

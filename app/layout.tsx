@@ -1,61 +1,84 @@
-// app/layout.tsx
+"use client";
 import "./globals.css";
-import { Zap, Menu, BookOpen, Award, Settings } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Zap, LayoutDashboard, BookOpen, Trophy } from "lucide-react";
+import Link from "next/link";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
+  // Full-screen pages for maximum focus
+  const isImmersive =
+    pathname === "/login" ||
+    pathname === "/interest" ||
+    pathname === "/simulator" ||
+    pathname.startsWith("/lesson");
+
   return (
     <html lang="en">
-      <body className="bg-slate-950 text-slate-200 selection:bg-blue-500/30">
+      <body className="selection:bg-navy/10">
         <div className="flex min-h-screen">
-          {/* Side Navigation - Based on your prototype */}
-          <nav className="w-20 lg:w-72 bg-slate-900/80 backdrop-blur-xl border-r border-slate-800 flex flex-col p-5 sticky top-0 h-screen">
-            <div className="flex items-center gap-4 mb-12 px-3">
-              <div className="bg-gradient-to-tr from-blue-600 to-emerald-500 p-2 rounded-xl">
-                <Zap className="text-white w-6 h-6" />
+          {!isImmersive && (
+            <aside className="w-20 lg:w-72 bg-white border-r border-border-light p-6 sticky top-0 h-screen z-50 flex flex-col">
+              <Link href="/home" className="flex items-center gap-3 mb-12 px-2">
+                <div className="bg-navy p-2.5 rounded-[1rem] shadow-lg shadow-navy/20">
+                  <Zap className="text-white w-6 h-6 fill-white" />
+                </div>
+                <span className="text-2xl font-black text-navy hidden lg:block italic tracking-tighter">
+                  NOT<span className="text-power-purple">Eacher</span>
+                </span>
+              </Link>
+
+              <div className="flex-1 space-y-3">
+                <NavTab
+                  href="/home"
+                  icon={LayoutDashboard}
+                  label="Dashboard"
+                  active={pathname === "/home"}
+                />
+                <NavTab
+                  href="/"
+                  icon={BookOpen}
+                  label="My Path"
+                  active={pathname === "/"}
+                />
+                <NavTab
+                  href="/leaderboard"
+                  icon={Trophy}
+                  label="Leaderboard"
+                  active={pathname === "/leaderboard"}
+                />
               </div>
-              <span className="text-xl font-black text-white hidden lg:block italic">
-                NOTEacher
-              </span>
-            </div>
+            </aside>
+          )}
 
-            <div className="flex-1 space-y-4">
-              <NavItem icon={Menu} label="Dashboard" active />
-              <NavItem icon={BookOpen} label="My Learning" />
-              <NavItem icon={Award} label="Quests" />
-            </div>
-          </nav>
-
-          {/* Main Content */}
-          <main className="flex-1 p-8 lg:p-16">{children}</main>
+          <main
+            className={`flex-1 ${isImmersive ? "w-full" : "overflow-y-auto"}`}
+          >
+            {children}
+          </main>
         </div>
       </body>
     </html>
   );
 }
 
-function NavItem({
-  icon: Icon,
-  label,
-  active = false,
-}: {
-  icon: any;
-  label: string;
-  active?: boolean;
-}) {
+function NavTab({ href, icon: Icon, label, active }: any) {
   return (
-    <div
-      className={`flex items-center gap-4 p-4 rounded-2xl transition-all cursor-pointer ${
+    <Link
+      href={href}
+      className={`flex items-center gap-4 p-4 rounded-[1.25rem] transition-all font-bold ${
         active
-          ? "bg-blue-600 text-white shadow-lg"
-          : "text-slate-400 hover:bg-slate-800"
+          ? "bg-navy text-white shadow-xl shadow-navy/20"
+          : "text-ink-400 hover:bg-slate-50 hover:text-navy"
       }`}
     >
       <Icon size={22} />
-      <span className="font-semibold hidden lg:block">{label}</span>
-    </div>
+      <span className="hidden lg:block">{label}</span>
+    </Link>
   );
 }
