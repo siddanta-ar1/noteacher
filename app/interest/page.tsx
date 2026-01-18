@@ -2,255 +2,187 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import {
+  Cpu,
+  Code2,
+  Zap,
+  Wifi,
+  LogOut,
+  CheckCircle2,
+  ArrowRight,
+} from "lucide-react";
+import { saveInterests, signOut } from "./actions";
 
-// Questions Configuration
-const QUESTIONS = [
+const DOMAINS = [
   {
-    id: 1,
-    key: "mission", // key for database storage
-    title: "🎯 What's your primary mission?",
-    subtitle: "We'll tailor your learning path",
-    options: [
-      {
-        id: "exam",
-        label: "Ace my Exams",
-        color: "text-purple-500",
-        shadow: "shadow-[0_6px_0_#7C3AED]",
-        bg: "bg-purple-50",
-        border: "border-purple-400",
-      },
-      {
-        id: "career",
-        label: "Career Pivot to Hardware",
-        color: "text-teal-500",
-        shadow: "shadow-[0_6px_0_#0D9488]",
-        bg: "bg-teal-50",
-        border: "border-teal-400",
-      },
-      {
-        id: "build",
-        label: "Build a CPU",
-        color: "text-orange-500",
-        shadow: "shadow-[0_6px_0_#EA580C]",
-        bg: "bg-orange-50",
-        border: "border-orange-400",
-      },
-    ],
+    id: "Computer Science",
+    icon: Code2,
+    label: "Computer Science",
+    desc: "Software, Algorithms, & OS",
+    color: "bg-power-purple",
   },
   {
-    id: 2,
-    key: "level",
-    title: "🧠 How strong is your foundation?",
-    subtitle: "Be honest — we adjust difficulty",
-    options: [
-      {
-        id: "beginner",
-        label: "Beginner (Logic Gates)",
-        color: "text-purple-500",
-        shadow: "shadow-[0_6px_0_#7C3AED]",
-        bg: "bg-purple-50",
-        border: "border-purple-400",
-      },
-      {
-        id: "intermediate",
-        label: "Intermediate (Architecture)",
-        color: "text-teal-500",
-        shadow: "shadow-[0_6px_0_#0D9488]",
-        bg: "bg-teal-50",
-        border: "border-teal-400",
-      },
-      {
-        id: "advanced",
-        label: "Advanced (Pipelining/RISC-V)",
-        color: "text-orange-500",
-        shadow: "shadow-[0_6px_0_#EA580C]",
-        bg: "bg-orange-50",
-        border: "border-orange-400",
-      },
-    ],
+    id: "Electrical Engineering",
+    icon: Zap,
+    label: "Electrical Eng.",
+    desc: "Circuits, Signals, & Power",
+    color: "bg-power-orange",
   },
   {
-    id: 3,
-    key: "commitment",
-    title: "⏱ How much time can you commit?",
-    subtitle: "Consistency beats intensity",
-    options: [
-      {
-        id: "light",
-        label: "15–30 min / day",
-        color: "text-purple-500",
-        shadow: "shadow-[0_6px_0_#7C3AED]",
-        bg: "bg-purple-50",
-        border: "border-purple-400",
-      },
-      {
-        id: "medium",
-        label: "1 hour / day",
-        color: "text-teal-500",
-        shadow: "shadow-[0_6px_0_#0D9488]",
-        bg: "bg-teal-50",
-        border: "border-teal-400",
-      },
-      {
-        id: "hardcore",
-        label: "2+ hours / day",
-        color: "text-orange-500",
-        shadow: "shadow-[0_6px_0_#EA580C]",
-        bg: "bg-orange-50",
-        border: "border-orange-400",
-      },
-    ],
+    id: "Electronics",
+    icon: Cpu,
+    label: "Electronics (ECE)",
+    desc: "Microprocessors & Embedded",
+    color: "bg-power-teal",
+  },
+  {
+    id: "Robotics",
+    icon: Wifi,
+    label: "Robotics & IoT",
+    desc: "Sensors, Actuators, & Control",
+    color: "bg-navy",
   },
 ];
 
 export default function InterestPage() {
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const [selected, setSelected] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const current = QUESTIONS[step];
-  const progress = ((step + 1) / QUESTIONS.length) * 100;
+  const toggleSelection = (id: string) => {
+    if (selected.includes(id)) {
+      setSelected(selected.filter((item) => item !== id));
+    } else {
+      setSelected([...selected, id]); // Allow multiple or limit to 1
+    }
+  };
 
-  // Handle saving data to Supabase
-  const handleFinish = async () => {
-    setIsLoading(true);
+  const handleContinue = async () => {
+    if (selected.length === 0) return;
+    setIsSubmitting(true);
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) throw new Error("No user found");
-
-      // Transform answers into a cleaner JSON object
-      // e.g. { mission: "exam", level: "beginner", commitment: "light" }
-      const profileData = QUESTIONS.reduce(
-        (acc, q) => {
-          acc[q.key] = answers[q.id];
-          return acc;
-        },
-        {} as Record<string, string>,
-      );
-
-      const { error } = await supabase
-        .from("profiles")
-        .update({
-          interests: profileData, // Storing the wizard JSON
-        })
-        .eq("id", user.id);
-
-      if (error) throw error;
-
-      router.push("/home");
+      await saveInterests(selected);
     } catch (error) {
-      console.error("Error saving profile:", error);
-      alert("Something went wrong. Please try again.");
-      setIsLoading(false);
+      alert("Failed to save. Try again.");
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F7FF] flex flex-col">
-      {/* Progress Bar */}
-      <div className="h-4 bg-slate-200">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
-          className="h-full bg-[#0055FF]"
-        />
-      </div>
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      {/* ESCAPE HATCH (Fixes your loop bug) */}
+      <button
+        onClick={() => signOut()}
+        className="absolute top-8 right-8 text-slate-400 hover:text-navy flex items-center gap-2 font-bold text-sm transition-colors z-20"
+      >
+        <LogOut size={16} /> Sign Out
+      </button>
 
-      <main className="flex-1 max-w-2xl mx-auto w-full px-6 flex flex-col justify-center">
-        {/* Question Card */}
-        <motion.div
-          key={current.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="bg-white rounded-[32px] shadow-2xl p-8 border border-slate-100"
-        >
-          <h2 className="text-4xl font-black text-[#0055FF] mb-2 leading-tight">
-            {current.title}
-          </h2>
-          <p className="text-slate-500 mb-8 font-medium text-lg">
-            {current.subtitle}
-          </p>
+      {/* Background Decor */}
+      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-power-purple via-power-teal to-power-orange" />
+      <div className="absolute -top-20 -left-20 w-96 h-96 bg-power-purple/5 rounded-full blur-3xl" />
+      <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-power-teal/5 rounded-full blur-3xl" />
 
-          <div className="space-y-4">
-            {current.options.map((opt) => {
-              const selected = answers[current.id] === opt.id;
-              return (
-                <button
-                  key={opt.id}
-                  onClick={() =>
-                    setAnswers({ ...answers, [current.id]: opt.id })
-                  }
-                  className={`w-full p-6 rounded-2xl border-2 text-left font-bold transition-all group relative overflow-hidden
-                    ${
-                      selected
-                        ? `${opt.bg} ${opt.border} ${opt.shadow} translate-y-[2px]`
-                        : "bg-white border-slate-200 hover:border-slate-300 hover:-translate-y-1 hover:shadow-lg"
-                    }`}
-                >
-                  <span
-                    className={`text-xl relative z-10 ${
-                      selected ? opt.color : "text-slate-700"
-                    }`}
-                  >
-                    {opt.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+      <div className="max-w-2xl w-full relative z-10">
+        <div className="text-center mb-12">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="w-16 h-16 bg-white rounded-2xl shadow-xl flex items-center justify-center mx-auto mb-6"
+          >
+            <Cpu className="text-navy w-8 h-8" />
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-3xl font-black text-slate-900 mb-3"
+          >
+            Identify Your Signal.
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="text-slate-500 font-medium"
+          >
+            NOTEacher adapts the curriculum to your major. <br />
+            Select your primary field of study.
+          </motion.p>
+        </div>
 
-          {/* Navigation */}
-          <div className="mt-10 flex gap-4">
-            {step > 0 && (
-              <button
-                disabled={isLoading}
-                onClick={() => setStep(step - 1)}
-                className="w-1/3 py-4 rounded-2xl bg-slate-100 text-slate-600 font-bold hover:bg-slate-200 transition-colors"
-              >
-                Back
-              </button>
-            )}
+        <div className="grid sm:grid-cols-2 gap-4 mb-10">
+          {DOMAINS.map((domain, index) => {
+            const isSelected = selected.includes(domain.id);
+            const Icon = domain.icon;
 
-            {step < QUESTIONS.length - 1 ? (
-              <button
-                disabled={!answers[current.id]}
-                onClick={() => setStep(step + 1)}
-                className={`flex-1 py-4 rounded-2xl font-black text-white transition-all
+            return (
+              <motion.button
+                key={domain.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+                onClick={() => toggleSelection(domain.id)}
+                className={`
+                  relative p-6 rounded-2xl text-left border-2 transition-all group
                   ${
-                    answers[current.id]
-                      ? "bg-[#0055FF] shadow-[0_6px_0_#003ECC] hover:translate-y-[2px] hover:shadow-[0_4px_0_#003ECC]"
-                      : "bg-slate-300 cursor-not-allowed opacity-50"
-                  }`}
-              >
-                Next Step
-              </button>
-            ) : (
-              <button
-                disabled={!answers[current.id] || isLoading}
-                onClick={handleFinish}
-                className={`flex-1 py-4 rounded-2xl font-black text-white bg-[#0055FF]
-                  shadow-[0_6px_0_#003ECC] flex items-center justify-center gap-2
-                  ${isLoading ? "opacity-80 cursor-wait" : "hover:translate-y-[2px] hover:shadow-[0_4px_0_#003ECC]"}
+                    isSelected
+                      ? "bg-white border-navy shadow-xl scale-[1.02]"
+                      : "bg-white border-slate-100 hover:border-slate-300 hover:bg-slate-50"
+                  }
                 `}
               >
-                {isLoading ? (
-                  <Loader2 className="w-6 h-6 animate-spin" />
-                ) : (
-                  "Start My Journey 🚀"
+                <div
+                  className={`
+                  w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors
+                  ${isSelected ? domain.color + " text-white" : "bg-slate-100 text-slate-400 group-hover:bg-slate-200"}
+                `}
+                >
+                  <Icon size={20} />
+                </div>
+
+                <h3
+                  className={`font-black text-lg mb-1 ${isSelected ? "text-slate-900" : "text-slate-700"}`}
+                >
+                  {domain.label}
+                </h3>
+                <p className="text-xs font-bold text-slate-400">
+                  {domain.desc}
+                </p>
+
+                {isSelected && (
+                  <div className="absolute top-4 right-4 text-power-teal">
+                    <CheckCircle2
+                      size={24}
+                      className="fill-current text-white"
+                    />
+                  </div>
                 )}
-              </button>
-            )}
-          </div>
-        </motion.div>
-      </main>
+              </motion.button>
+            );
+          })}
+        </div>
+
+        <div className="text-center">
+          <button
+            onClick={handleContinue}
+            disabled={selected.length === 0 || isSubmitting}
+            className={`
+              px-10 py-4 rounded-xl font-black text-lg flex items-center gap-3 mx-auto transition-all
+              ${
+                selected.length > 0
+                  ? "bg-navy text-white shadow-xl hover:scale-105 active:scale-95"
+                  : "bg-slate-200 text-slate-400 cursor-not-allowed"
+              }
+            `}
+          >
+            {isSubmitting ? "Calibrating..." : "Initialize Profile"}
+            {!isSubmitting && <ArrowRight size={20} />}
+          </button>
+
+          <p className="mt-6 text-xs font-bold text-slate-300 uppercase tracking-widest">
+            Step 1 of 4: Calibration
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

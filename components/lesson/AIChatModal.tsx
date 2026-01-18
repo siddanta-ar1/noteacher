@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { X, Send, Sparkles, Bot, User } from "lucide-react";
+import { X, Send, Sparkles, Bot, User, Loader2 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
 type Message = {
@@ -13,48 +13,79 @@ type Message = {
 export default function AIChatModal({
   isOpen,
   onClose,
+  context, // New Prop for Lesson Context
 }: {
   isOpen: boolean;
   onClose: () => void;
+  context?: string;
 }) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
       role: "ai",
-      text: "Greetings, Cadet! I am ready to deconstruct any complex topic for you. What's confusing you?",
+      text: "Greetings, Cadet! I'm synced with your current lesson. What's confusing you?",
     },
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom
+  // Auto-scroll
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
   const handleSend = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || isTyping) return;
 
+    const userText = input;
+    setInput(""); // Clear input immediately
+
+    // 1. Add User Message
     const userMsg: Message = {
       id: Date.now().toString(),
       role: "user",
-      text: input,
+      text: userText,
     };
     setMessages((prev) => [...prev, userMsg]);
-    setInput("");
     setIsTyping(true);
 
-    // Simulate AI thinking delay
-    setTimeout(() => {
+    try {
+      // 2. Call the Real API
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: userText,
+          history: messages.slice(1), // Send history (skip greeting)
+          context: context, // Pass the lesson content
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.error) throw new Error(data.error);
+
+      // 3. Add AI Response
       const aiMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: "ai",
-        text: "That's an excellent question. In the context of logic gates, think of the connection as a flow of water. If you block the flow (0), nothing passes.",
+        text: data.reply,
       };
       setMessages((prev) => [...prev, aiMsg]);
+    } catch (error) {
+      // Error Fallback
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          role: "ai",
+          text: "⚠️ Connection lost. My neural link is unstable. Please check your API Key.",
+        },
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -88,7 +119,7 @@ export default function AIChatModal({
                     AI Tutor
                   </h3>
                   <p className="text-white/60 text-xs font-bold uppercase tracking-widest">
-                    Online
+                    Gemini Flash 1.5
                   </p>
                 </div>
               </div>
@@ -136,11 +167,10 @@ export default function AIChatModal({
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="flex gap-2 ml-12"
+                  className="flex gap-2 ml-12 items-center text-slate-400 text-xs font-bold"
                 >
-                  <span className="w-2 h-2 bg-slate-300 rounded-full animate-bounce" />
-                  <span className="w-2 h-2 bg-slate-300 rounded-full animate-bounce [animation-delay:0.2s]" />
-                  <span className="w-2 h-2 bg-slate-300 rounded-full animate-bounce [animation-delay:0.4s]" />
+                  <Loader2 className="animate-spin w-4 h-4" />
+                  Thinking...
                 </motion.div>
               )}
               <div ref={bottomRef} />
@@ -164,7 +194,7 @@ export default function AIChatModal({
                 />
                 <button
                   type="submit"
-                  disabled={!input.trim()}
+                  disabled={!input.trim() || isTyping}
                   className="w-10 h-10 bg-navy text-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 disabled:opacity-50 disabled:scale-100 transition-all"
                 >
                   <Send size={18} />

@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { createServerSupabaseClient } from "@/lib/supabase-server";
+import { createServerSupabaseClient } from "@/lib/supabase-server"; // Ensure this import path is correct
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  // CHANGE: Default redirect is now /interest instead of /home
-  const next = searchParams.get("next") ?? "/interest";
+  // Default to /home, but we can pass ?next=/interest in the login page later
+  const next = searchParams.get("next") ?? "/home";
 
   if (code) {
     const supabase = await createServerSupabaseClient();
@@ -16,5 +16,6 @@ export async function GET(request: Request) {
     }
   }
 
+  // Return the user to an error page with instructions
   return NextResponse.redirect(`${origin}/login?error=auth-code-error`);
 }

@@ -23,8 +23,9 @@ export async function completeNode(nodeId: string) {
     return { error: error.message };
   }
 
-  // 2. Logic to unlock the NEXT node
-  // Fetch current node to get its position
+  // 2. Logic to find and unlock the NEXT node
+  let nextNodeId = null;
+
   const { data: currentNode } = await supabase
     .from("nodes")
     .select("course_id, position_index")
@@ -41,11 +42,9 @@ export async function completeNode(nodeId: string) {
       .single();
 
     if (nextNode) {
-      // Unlock it (status: 'unlocked') ONLY if it hasn't been touched yet
-      // We use 'insert' with 'on conflict do nothing' effectively via upsert with checking
-      // But simpler: just try to insert 'unlocked'. If row exists (completed/unlocked), ignore.
+      nextNodeId = nextNode.id;
 
-      // Check if row exists
+      // Unlock it if not already unlocked/completed
       const { data: existingProgress } = await supabase
         .from("user_progress")
         .select("status")
@@ -65,5 +64,7 @@ export async function completeNode(nodeId: string) {
 
   revalidatePath("/home");
   revalidatePath(`/lesson/${nodeId}`);
-  return { success: true };
+
+  // Return the nextNodeId to the client
+  return { success: true, nextNodeId };
 }
