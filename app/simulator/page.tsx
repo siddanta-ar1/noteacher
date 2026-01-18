@@ -1,225 +1,117 @@
 "use client";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  X,
-  Play,
-  Trash2,
-  Plus,
-  ChevronLeft,
-  Info,
-  Cpu,
-  MousePointer2,
-  Target,
-  Send,
-  Sparkles,
-  CheckCircle2,
-} from "lucide-react";
+
+import { motion } from "framer-motion";
+import { ChevronLeft, Save, Play, RotateCcw } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useState, Suspense } from "react";
 
-export default function SimulatorPage() {
-  const [gradingStatus, setGradingStatus] = useState<
-    "idle" | "grading" | "success"
-  >("idle");
-  const [showTask, setShowTask] = useState(true);
-
-  const handleSubmission = () => {
-    setGradingStatus("grading");
-    // Simulate AI logic check
-    setTimeout(() => setGradingStatus("success"), 3000);
-  };
+// 1. Separate the logic that needs search params into its own component
+function SimulatorContent() {
+  const params = useSearchParams();
+  const task = params.get("task") || "Free Play";
+  const [isRunning, setIsRunning] = useState(false);
 
   return (
-    <div className="h-screen bg-slate-950 flex flex-col overflow-hidden selection:bg-power-teal/30">
-      {/* 1. Header */}
-      <header className="bg-slate-900 border-b border-slate-800 p-4 flex justify-between items-center px-8 z-50">
-        <div className="flex items-center gap-6">
+    <div className="h-screen bg-slate-900 flex flex-col text-white overflow-hidden">
+      {/* Toolbar */}
+      <header className="h-16 border-b border-white/10 flex items-center justify-between px-6 bg-slate-900/50 backdrop-blur-md z-10">
+        <div className="flex items-center gap-4">
           <Link
-            href="/"
-            className="p-2 bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-colors"
+            href="/home"
+            className="text-white/50 hover:text-white transition-colors"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft />
           </Link>
-          <div>
-            <h1 className="text-white font-black text-lg flex items-center gap-2">
-              <Cpu className="text-power-teal" size={18} />
-              Logic Lab: <span className="text-power-teal">NAND Universe</span>
-            </h1>
-          </div>
+          <div className="h-6 w-px bg-white/10" />
+          <h1 className="font-bold tracking-wide">
+            SIMULATOR <span className="text-power-teal mx-2">//</span> {task}
+          </h1>
         </div>
 
-        <div className="flex gap-3">
-          <button className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl font-bold text-sm hover:bg-slate-700">
-            <Trash2 size={16} className="inline mr-2" /> Clear
-          </button>
+        <div className="flex items-center gap-3">
           <button
-            onClick={handleSubmission}
-            className="px-6 py-2 bg-power-teal text-white rounded-xl font-black text-sm shadow-lg shadow-power-teal/20 hover:scale-105 active:scale-95 transition-all"
+            onClick={() => setIsRunning(!isRunning)}
+            className={`
+              flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all
+              ${
+                isRunning
+                  ? "bg-red-500/20 text-red-400 border border-red-500/50"
+                  : "bg-power-teal text-slate-900 shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:shadow-[0_0_30px_rgba(45,212,191,0.5)]"
+              }
+            `}
           >
-            <Play size={16} fill="white" className="inline mr-2" /> Run
-            Simulation
+            {isRunning ? <RotateCcw size={16} /> : <Play size={16} />}
+            {isRunning ? "Stop Simulation" : "Run Circuit"}
+          </button>
+          <button className="p-2 bg-white/5 rounded-full hover:bg-white/10 text-white/70">
+            <Save size={18} />
           </button>
         </div>
       </header>
 
+      {/* Main Workbench Area */}
       <div className="flex-1 flex relative">
-        {/* 2. Assignment HUD (Pinned Task) */}
-        <AnimatePresence>
-          {showTask && (
+        {/* Left: Component Palette */}
+        <div className="w-64 bg-slate-800/50 border-r border-white/5 p-4 flex flex-col gap-4">
+          <p className="text-xs font-bold text-white/40 uppercase tracking-widest mb-2">
+            Logic Gates
+          </p>
+          {["NAND", "AND", "OR", "NOT", "XOR"].map((gate) => (
             <motion.div
-              initial={{ x: -300, opacity: 0 }}
-              animate={{ x: 20, opacity: 1 }}
-              exit={{ x: -300, opacity: 0 }}
-              className="absolute top-6 left-6 w-80 bg-slate-900/90 backdrop-blur-xl border border-slate-800 rounded-[2rem] p-6 z-40 shadow-2xl"
+              key={gate}
+              whileHover={{ scale: 1.02, x: 5 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-slate-700/50 p-4 rounded-xl border border-white/5 cursor-grab active:cursor-grabbing hover:border-power-teal/50 transition-colors group"
             >
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center gap-2">
-                  <Target className="text-power-orange" size={18} />
-                  <span className="text-[10px] font-black text-power-orange uppercase tracking-widest">
-                    Active Task
-                  </span>
-                </div>
-                <button
-                  onClick={() => setShowTask(false)}
-                  className="text-slate-500 hover:text-white"
-                >
-                  <X size={16} />
-                </button>
+              <div className="flex justify-between items-center">
+                <span className="font-bold font-mono">{gate}</span>
+                <div className="w-2 h-2 rounded-full bg-slate-500 group-hover:bg-power-teal transition-colors" />
               </div>
-
-              <h3 className="text-white font-black text-lg mb-2">
-                Build a NOT Gate
-              </h3>
-              <p className="text-slate-400 text-sm font-medium leading-relaxed mb-6">
-                Connect both inputs of a{" "}
-                <span className="text-navy font-bold underline">NAND Gate</span>{" "}
-                to a single Input Node.
-              </p>
-
-              <button
-                onClick={handleSubmission}
-                disabled={gradingStatus !== "idle"}
-                className={`w-full py-4 rounded-2xl font-black text-sm border-b-4 flex items-center justify-center gap-2 transition-all
-                    ${
-                      gradingStatus === "success"
-                        ? "bg-power-teal border-teal-700 text-white"
-                        : "bg-navy border-navy-dark text-white hover:scale-[1.02] active:translate-y-1 active:border-b-0"
-                    }
-                  `}
-              >
-                {gradingStatus === "idle" && (
-                  <>
-                    <Send size={16} /> Submit for Grading
-                  </>
-                )}
-                {gradingStatus === "grading" && (
-                  <>
-                    <Sparkles size={16} className="animate-spin" /> AI
-                    Analyzing...
-                  </>
-                )}
-                {gradingStatus === "success" && (
-                  <>
-                    <CheckCircle2 size={16} /> Mastery Verified
-                  </>
-                )}
-              </button>
             </motion.div>
-          )}
-        </AnimatePresence>
+          ))}
+        </div>
 
-        {/* 3. Toolbox (Left) */}
-        <aside className="w-72 bg-slate-900 border-r border-slate-800 p-6 space-y-8 overflow-y-auto">
-          <div>
-            <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">
-              Inputs
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="p-4 bg-slate-800 border border-slate-700 rounded-2xl text-[10px] font-black text-center text-slate-400 uppercase">
-                Input A
-              </div>
-              <div className="p-4 bg-slate-800 border border-slate-700 rounded-2xl text-[10px] font-black text-center text-slate-400 uppercase">
-                Input B
-              </div>
+        {/* Center: Canvas (Grid) */}
+        <div className="flex-1 bg-[radial-gradient(#ffffff10_1px,transparent_1px)] [background-size:20px_20px] relative overflow-hidden group">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="text-center opacity-30 group-hover:opacity-50 transition-opacity">
+              <p className="text-6xl font-black text-white/10 mb-4">CANVAS</p>
+              <p className="text-sm font-mono text-power-teal">
+                Drag components here to build
+              </p>
             </div>
           </div>
-          <div>
-            <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">
-              Gates
-            </h3>
-            <div className="space-y-3">
-              <div className="p-5 bg-navy border-b-4 border-navy-dark rounded-2xl text-white font-black text-center text-xs">
-                NAND GATE
-              </div>
-              <div className="p-5 bg-slate-800 border border-slate-700 rounded-2xl text-slate-500 font-black text-center text-xs opacity-50">
-                AND GATE (Locked)
-              </div>
-            </div>
-          </div>
-        </aside>
 
-        {/* 4. Canvas (Center) */}
-        <main className="flex-1 relative bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:32px_32px]">
+          {/* Example Placed Component */}
           <motion.div
             drag
             dragMomentum={false}
-            className="absolute top-1/3 left-1/4 p-6 bg-slate-800 border-2 border-navy rounded-[2rem] shadow-2xl cursor-grab"
+            className="absolute top-1/2 left-1/3 bg-power-purple px-6 py-4 rounded-lg shadow-2xl cursor-grab active:cursor-grabbing border-2 border-white/20"
           >
-            <div className="flex items-center gap-6">
-              <div className="space-y-4">
-                <div className="w-3 h-3 bg-slate-700 rounded-full border border-slate-600" />
-                <div className="w-3 h-3 bg-slate-700 rounded-full border border-slate-600" />
-              </div>
-              <div className="w-16 h-12 bg-navy rounded-xl flex items-center justify-center font-black text-white text-xs">
-                NAND
-              </div>
-              <div className="w-3 h-3 bg-slate-700 rounded-full border border-slate-600" />
-            </div>
+            <p className="font-bold text-white">NAND Gate</p>
+            {/* Input/Output dots */}
+            <div className="absolute -left-2 top-3 w-4 h-4 bg-white rounded-full border-4 border-slate-900" />
+            <div className="absolute -left-2 top-9 w-4 h-4 bg-white rounded-full border-4 border-slate-900" />
+            <div className="absolute -right-2 top-6 w-4 h-4 bg-power-teal rounded-full border-4 border-slate-900 shadow-[0_0_10px_#2dd4bf]" />
           </motion.div>
-        </main>
-
-        {/* 5. Success Overlay Modal */}
-        <AnimatePresence>
-          {gradingStatus === "success" && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="absolute inset-0 bg-navy/20 backdrop-blur-md z-[60] flex items-center justify-center p-6"
-            >
-              <motion.div
-                initial={{ scale: 0.9 }}
-                animate={{ scale: 1 }}
-                className="bg-white rounded-[3rem] p-12 max-w-lg text-center shadow-3xl border-b-[12px] border-slate-100"
-              >
-                <div className="w-20 h-20 bg-power-teal rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-xl shadow-power-teal/20 text-white">
-                  <CheckCircle2 size={40} strokeWidth={3} />
-                </div>
-                <h2 className="text-4xl font-black text-slate-900 mb-4">
-                  Challenge Solved!
-                </h2>
-                <p className="text-slate-500 font-bold mb-8">
-                  Your circuit successfully inverted the signal using NAND
-                  logic. Earned <span className="text-power-teal">500 XP</span>.
-                </p>
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => setGradingStatus("idle")}
-                    className="flex-1 py-4 bg-slate-100 text-slate-400 rounded-2xl font-black"
-                  >
-                    Retry
-                  </button>
-                  <Link
-                    href="/"
-                    className="flex-[2] py-4 bg-navy text-white rounded-2xl font-black border-b-4 border-navy-dark text-center"
-                  >
-                    Back to Path
-                  </Link>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        </div>
       </div>
     </div>
+  );
+}
+
+// 2. Wrap the content in Suspense in the default export
+export default function SimulatorPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="h-screen bg-slate-900 flex items-center justify-center text-white">
+          Loading Workbench...
+        </div>
+      }
+    >
+      <SimulatorContent />
+    </Suspense>
   );
 }

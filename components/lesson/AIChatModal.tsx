@@ -1,17 +1,14 @@
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  X,
-  Send,
-  Sparkles,
-  Zap,
-  MessageCircle,
-  Bot,
-  User,
-  RotateCcw,
-  BookOpen,
-} from "lucide-react";
-import { useState } from "react";
+
+import { AnimatePresence, motion } from "framer-motion";
+import { X, Send, Sparkles, Bot, User } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+
+type Message = {
+  id: string;
+  role: "user" | "ai";
+  text: string;
+};
 
 export default function AIChatModal({
   isOpen,
@@ -20,31 +17,44 @@ export default function AIChatModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     {
-      role: "assistant",
-      content:
-        "Hi! I'm your NOTEacher AI. I've read this lesson on NAND Gates. Need a quick summary or have a specific question?",
+      id: "1",
+      role: "ai",
+      text: "Greetings, Cadet! I am ready to deconstruct any complex topic for you. What's confusing you?",
     },
   ]);
   const [input, setInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
-  const handleSend = () => {
+  // Auto-scroll to bottom
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isTyping]);
+
+  const handleSend = async () => {
     if (!input.trim()) return;
-    setMessages([...messages, { role: "user", content: input }]);
-    setInput("");
 
-    // Simulate AI Response
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      role: "user",
+      text: input,
+    };
+    setMessages((prev) => [...prev, userMsg]);
+    setInput("");
+    setIsTyping(true);
+
+    // Simulate AI thinking delay
     setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content:
-            "Great question! Tying NAND inputs together creates a NOT gate because it forces the output to be the inverse of the single input signal.",
-        },
-      ]);
-    }, 1000);
+      const aiMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "ai",
+        text: "That's an excellent question. In the context of logic gates, think of the connection as a flow of water. If you block the flow (0), nothing passes.",
+      };
+      setMessages((prev) => [...prev, aiMsg]);
+      setIsTyping(false);
+    }, 1500);
   };
 
   return (
@@ -57,102 +67,109 @@ export default function AIChatModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60]"
+            className="fixed inset-0 bg-navy/60 backdrop-blur-sm z-[60]"
           />
 
-          {/* Chat Window */}
+          {/* Modal Container */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed bottom-24 right-6 w-[400px] h-[600px] bg-white rounded-[2.5rem] shadow-2xl border-2 border-slate-100 flex flex-col overflow-hidden z-[70]"
+            initial={{ opacity: 0, y: 100, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 100, scale: 0.9 }}
+            className="fixed inset-x-4 bottom-4 md:bottom-10 md:inset-x-auto md:right-10 md:w-[28rem] h-[32rem] bg-white rounded-[2.5rem] shadow-2xl z-[70] flex flex-col overflow-hidden border-4 border-white"
           >
             {/* Header */}
-            <div className="bg-navy p-6 text-white">
-              <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-power-purple rounded-2xl flex items-center justify-center shadow-lg">
-                    <Bot size={24} />
-                  </div>
-                  <div>
-                    <h3 className="font-black leading-tight">AI Teacher</h3>
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-2 h-2 bg-power-teal rounded-full animate-pulse" />
-                      <span className="text-[10px] font-bold uppercase tracking-widest opacity-70">
-                        Context: NAND Gates
-                      </span>
-                    </div>
-                  </div>
+            <div className="bg-navy p-6 flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-power-teal rounded-full flex items-center justify-center shadow-lg shadow-power-teal/20">
+                  <Sparkles className="text-white w-5 h-5" />
                 </div>
-                <button
-                  onClick={onClose}
-                  className="p-2 hover:bg-white/10 rounded-xl transition-colors"
-                >
-                  <X size={20} />
-                </button>
+                <div>
+                  <h3 className="font-black text-white italic text-lg">
+                    AI Tutor
+                  </h3>
+                  <p className="text-white/60 text-xs font-bold uppercase tracking-widest">
+                    Online
+                  </p>
+                </div>
               </div>
-
-              {/* Quick Actions */}
-              <div className="flex gap-2">
-                <button className="flex-1 bg-white/10 hover:bg-white/20 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-2 border border-white/10 transition-all">
-                  <Sparkles size={12} /> Summarize
-                </button>
-                <button className="flex-1 bg-white/10 hover:bg-white/20 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-2 border border-white/10 transition-all">
-                  <RotateCcw size={12} /> Key Terms
-                </button>
-              </div>
+              <button
+                onClick={onClose}
+                className="text-white/50 hover:text-white transition-colors"
+              >
+                <X />
+              </button>
             </div>
 
-            {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              {messages.map((m, i) => (
-                <div
-                  key={i}
-                  className={`flex gap-3 ${m.role === "user" ? "flex-row-reverse" : ""}`}
+            {/* Chat Area */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50">
+              {messages.map((msg) => (
+                <motion.div
+                  key={msg.id}
+                  initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                 >
                   <div
-                    className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
-                      m.role === "assistant"
-                        ? "bg-slate-100 text-slate-400"
-                        : "bg-navy text-white"
-                    }`}
+                    className={`
+                    w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm
+                    ${msg.role === "ai" ? "bg-white text-navy" : "bg-navy text-white"}
+                  `}
                   >
-                    {m.role === "assistant" ? (
-                      <Bot size={18} />
-                    ) : (
-                      <User size={18} />
-                    )}
+                    {msg.role === "ai" ? <Bot size={16} /> : <User size={16} />}
                   </div>
                   <div
-                    className={`p-4 rounded-2xl text-sm font-medium leading-relaxed max-w-[80%] ${
-                      m.role === "assistant"
-                        ? "bg-slate-50 text-slate-700"
-                        : "bg-power-purple text-white"
-                    }`}
+                    className={`
+                    p-4 rounded-2xl max-w-[80%] text-sm font-medium shadow-sm
+                    ${
+                      msg.role === "ai"
+                        ? "bg-white text-slate-700 rounded-tl-none border border-slate-100"
+                        : "bg-navy text-white rounded-tr-none shadow-navy/20"
+                    }
+                  `}
                   >
-                    {m.content}
+                    {msg.text}
                   </div>
-                </div>
+                </motion.div>
               ))}
+
+              {isTyping && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex gap-2 ml-12"
+                >
+                  <span className="w-2 h-2 bg-slate-300 rounded-full animate-bounce" />
+                  <span className="w-2 h-2 bg-slate-300 rounded-full animate-bounce [animation-delay:0.2s]" />
+                  <span className="w-2 h-2 bg-slate-300 rounded-full animate-bounce [animation-delay:0.4s]" />
+                </motion.div>
+              )}
+              <div ref={bottomRef} />
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t border-slate-100 bg-slate-50/50">
-              <div className="relative">
+            <div className="p-4 bg-white border-t border-slate-100">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSend();
+                }}
+                className="flex items-center gap-2 bg-slate-50 p-2 rounded-full border border-slate-200 focus-within:border-navy focus-within:ring-2 focus-within:ring-navy/10 transition-all"
+              >
                 <input
+                  type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                  placeholder="Ask your AI teacher..."
-                  className="w-full bg-white border-2 border-slate-200 rounded-2xl py-4 pl-6 pr-14 focus:outline-none focus:border-navy transition-all shadow-sm font-medium"
+                  placeholder="Ask about this concept..."
+                  className="flex-1 bg-transparent border-none outline-none px-4 text-slate-700 placeholder:text-slate-400 font-medium"
                 />
                 <button
-                  onClick={handleSend}
-                  className="absolute right-2 top-2 w-10 h-10 bg-navy text-white rounded-xl flex items-center justify-center hover:bg-navy-dark active:scale-95 transition-all"
+                  type="submit"
+                  disabled={!input.trim()}
+                  className="w-10 h-10 bg-navy text-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 disabled:opacity-50 disabled:scale-100 transition-all"
                 >
                   <Send size={18} />
                 </button>
-              </div>
+              </form>
             </div>
           </motion.div>
         </>

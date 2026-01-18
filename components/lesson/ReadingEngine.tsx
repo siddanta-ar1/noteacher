@@ -1,122 +1,68 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
-import { Volume2, VolumeX, Play, Pause, ChevronDown } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
-interface ReadingEngineProps {
-  contentRefs: React.RefObject<HTMLElement[]>;
-  textSegments: string[];
-}
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import { Zap } from "lucide-react";
 
-export default function ReadingEngine({
-  contentRefs,
-  textSegments,
-}: ReadingEngineProps) {
-  const [isReading, setIsReading] = useState(false);
-  const [currentSegment, setCurrentSegment] = useState(0);
-  const synth = useRef<SpeechSynthesis | null>(null);
-  const utterance = useRef<SpeechSynthesisUtterance | null>(null);
-
-  useEffect(() => {
-    synth.current = window.speechSynthesis;
-    return () => synth.current?.cancel();
-  }, []);
-
-  const stopReading = () => {
-    synth.current?.cancel();
-    setIsReading(false);
+type ReadingEngineProps = {
+  content: {
+    segments?: string[]; // Optional now
+    task?: string; // Optional (for assignments)
   };
+};
 
-  const startReading = (index: number) => {
-    if (!synth.current) return;
-    synth.current.cancel();
+export default function ReadingEngine({ content }: ReadingEngineProps) {
+  // SAFETY FIX: Determine what text to show based on available data
+  const segments = content?.segments || (content?.task ? [content.task] : []);
 
-    const text = textSegments[index];
-    utterance.current = new SpeechSynthesisUtterance(text);
-
-    // NOTEacher Voice Profile
-    utterance.current.rate = 0.95; // Slightly slower for clarity
-    utterance.current.pitch = 1.1; // Friendly tone
-
-    utterance.current.onstart = () => {
-      setIsReading(true);
-      // Auto-scroll logic: Bring the current section into view smoothly
-      contentRefs.current?.[index]?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    };
-
-    utterance.current.onend = () => {
-      if (index < textSegments.length - 1) {
-        setCurrentSegment(index + 1);
-        startReading(index + 1);
-      } else {
-        setIsReading(false);
-      }
-    };
-
-    synth.current.speak(utterance.current);
-  };
-
-  const toggleReading = () => {
-    if (isReading) {
-      stopReading();
-    } else {
-      startReading(currentSegment);
-    }
-  };
+  if (!segments.length) return null;
 
   return (
-    <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50">
-      <motion.div
-        layout
-        className="bg-white border-2 border-slate-200 rounded-[2rem] p-3 shadow-2xl flex items-center gap-4"
-      >
-        <button
-          onClick={toggleReading}
-          className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all border-b-4
-            ${isReading ? "bg-power-orange border-orange-700 text-white" : "bg-navy border-navy-dark text-white"}
-          `}
-        >
-          {isReading ? <Pause size={20} /> : <Volume2 size={20} />}
-        </button>
-
-        <div className="pr-6">
-          <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-0.5">
-            {isReading ? "NOTEacher is Reading" : "Auto-Scroll & Read"}
-          </p>
-          <p className="text-sm font-black text-slate-900">
-            {isReading
-              ? `Section ${currentSegment + 1} of ${textSegments.length}`
-              : "Start Audio Guide"}
-          </p>
-        </div>
-
-        <AnimatePresence>
-          {isReading && (
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-              className="flex gap-1 pr-4"
-            >
-              {[1, 2, 3].map((i) => (
-                <motion.div
-                  key={i}
-                  animate={{ height: [8, 16, 8] }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: 0.5,
-                    delay: i * 0.1,
-                  }}
-                  className="w-1 bg-power-teal rounded-full"
-                />
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+    <div className="space-y-12 max-w-3xl mx-auto">
+      {segments.map((segment, index) => (
+        <AnimatedBlock key={index} text={segment} index={index} />
+      ))}
     </div>
+  );
+}
+
+function AnimatedBlock({ text, index }: { text: string; index: number }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-10% 0px -10% 0px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50, scale: 0.95 }}
+      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{
+        duration: 0.8,
+        ease: [0.2, 0.65, 0.3, 0.9],
+        delay: index * 0.1,
+      }}
+      className="relative group"
+    >
+      {/* Decorative Line for the first item */}
+      {index === 0 && (
+        <motion.div
+          initial={{ height: 0 }}
+          animate={{ height: "100%" }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+          className="absolute -left-6 top-2 w-1 bg-gradient-to-b from-power-teal to-transparent rounded-full opacity-50"
+        />
+      )}
+
+      {/* The Text Card */}
+      <div className="bg-white/50 backdrop-blur-sm p-6 md:p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+        <p className="text-xl md:text-2xl text-slate-700 leading-relaxed font-medium font-sans">
+          {text}
+        </p>
+      </div>
+
+      {/* Little connector icon between segments */}
+      <div className="absolute -bottom-9 left-1/2 -translate-x-1/2 opacity-20 group-last:hidden">
+        <Zap size={20} className="text-slate-400" />
+      </div>
+    </motion.div>
   );
 }
