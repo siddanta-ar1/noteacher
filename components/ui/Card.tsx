@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { cn } from "@/utils/cn";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {

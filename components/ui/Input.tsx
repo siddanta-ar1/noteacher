@@ -1,9 +1,9 @@
-import { forwardRef, useState } from "react";
+import React, { forwardRef, useState } from "react";
 import { cn } from "@/utils/cn";
 import { Eye, EyeOff, AlertCircle } from "lucide-react";
 
 export interface InputProps
-    extends React.InputHTMLAttributes<HTMLInputElement> {
+    extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
     icon?: React.ReactNode;
     error?: string;
     label?: string;

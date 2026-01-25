@@ -209,7 +209,7 @@ export default function DashboardClient({
                 >
                   <Link href={`/course/${course.id}`}>
                     <motion.div
-                      whileHover={{ y: -4, shadow: "0 20px 40px -15px rgba(0,0,0,0.1)" }}
+                      whileHover={{ y: -4, boxShadow: "0 20px 40px -15px rgba(0,0,0,0.1)" }}
                       className="bg-white border-2 border-border p-6 rounded-[1.5rem] hover:border-primary transition-all cursor-pointer h-full flex flex-col group"
                     >
                       {/* Icon & Badge */}
