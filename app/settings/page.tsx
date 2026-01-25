@@ -106,7 +106,7 @@ export default function SettingsPage() {
                             <Zap size={12} className="fill-current" />
                             Free Tier
                         </Badge>
-                        <Badge variant="default">Member since Jan 2024</Badge>
+                        <Badge variant="default">Member since Jan 2026</Badge>
                     </div>
                 </Card>
 

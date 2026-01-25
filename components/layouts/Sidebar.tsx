@@ -5,7 +5,7 @@ import React from "react";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Zap, LayoutDashboard, BookOpen, Trophy, Settings, HelpCircle, Sparkles } from "lucide-react";
+import { Zap, LayoutDashboard, BookOpen, Trophy, Settings, HelpCircle, Sparkles, Wrench } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { ROUTES } from "@/config/routes";
 import { ComingSoonModal } from "@/components/ui";
@@ -91,6 +91,12 @@ export function Sidebar() {
                         icon={HelpCircle}
                         label="Help & Support"
                         active={pathname === "/help"}
+                    />
+                    <NavTab
+                        href="/admin/course-creator"
+                        icon={Wrench}
+                        label="Admin Engine"
+                        active={pathname === "/admin/course-creator"}
                     />
                 </nav>
 

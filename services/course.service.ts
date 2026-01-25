@@ -181,3 +181,78 @@ export async function createCourseFromJSON(courseData: {
         return { data: null, error: (err as Error).message };
     }
 }
+
+/**
+ * Update an existing course from JSON
+ */
+export async function updateCourseFromJSON(courseId: string, courseData: {
+    title: string;
+    description: string;
+    nodes: Array<{
+        id?: string;
+        title: string;
+        type: "lesson" | "assignment" | "simulator";
+        content: any;
+    }>;
+}): Promise<ServiceResult<string>> {
+    try {
+        const supabase = createSupabaseAdmin();
+
+        // 1. Update Course
+        const { error: courseError } = await supabase
+            .from("courses")
+            .update({
+                title: courseData.title,
+                description: courseData.description,
+            })
+            .eq("id", courseId);
+
+        if (courseError) throw courseError;
+
+        // 2. Upsert Nodes
+        // We map the nodes to include course_id and proper fields
+        const nodesToUpsert = courseData.nodes.map((node, index) => ({
+            id: node.id, // If present, will update. If undefined, might fail upsert unless handled?
+            // Supabase upsert requires the primary key to match.
+            // If ID is missing, we should probably INSERT.
+            // But upsert takes an array. Mixed content?
+            // Actually, separate Insert and Update is safer or let Postgres handle it if we generate IDs?
+            // For now, let's assume if ID is present, we update.
+            course_id: courseId,
+            title: node.title,
+            type: node.type,
+            content: node.content,
+            content_json: node.content,
+            position_index: index,
+            is_mandatory: true,
+        }));
+
+        // If node has no ID, we remove 'id' key so Supabase generates it?
+        // But upsert needs the key to conflict on.
+        // Strategy:
+        // 1. Nodes with IDs -> Update
+        // 2. Nodes without IDs -> Insert
+
+        const existingNodes = nodesToUpsert.filter(n => n.id);
+        const newNodes = nodesToUpsert.filter(n => !n.id);
+
+        if (existingNodes.length > 0) {
+            const { error: updateError } = await supabase
+                .from("nodes")
+                .upsert(existingNodes);
+            if (updateError) throw updateError;
+        }
+
+        if (newNodes.length > 0) {
+            const { error: insertError } = await supabase
+                .from("nodes")
+                .insert(newNodes);
+            if (insertError) throw insertError;
+        }
+
+        return { data: courseId, error: null };
+    } catch (err) {
+        console.error("updateCourseFromJSON error:", err);
+        return { data: null, error: (err as Error).message };
+    }
+}

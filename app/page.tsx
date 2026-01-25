@@ -367,7 +367,7 @@ export default function LandingPage() {
           <span className="font-black text-ink-900 italic">NOTEacher</span>
         </div>
         <p className="text-ink-400 text-sm font-medium">
-          © 2024 NOTEacher Labs. Designed for the builders.
+          © 2026 NOTEacher Labs. Designed for the builders.
         </p>
       </footer>
     </div>
