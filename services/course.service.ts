@@ -1,6 +1,6 @@
 "use server";
 
-import { createServerSupabaseClient } from "@/lib/supabase-server";
+import { createServerSupabaseClient, createSupabaseAdmin } from "@/lib/supabase-server";
 import type {
     Course,
     CourseWithNodes,
@@ -123,6 +123,61 @@ export async function getCoursesForDashboard(): Promise<
         return { data: data as CourseWithNodes[], error: null };
     } catch (err) {
         console.error("getCoursesForDashboard error:", err);
+        return { data: null, error: (err as Error).message };
+    }
+}
+
+/**
+ * Create a new course with nodes from JSON input
+ */
+export async function createCourseFromJSON(courseData: {
+    title: string;
+    description: string;
+    nodes: Array<{
+        title: string;
+        type: "lesson" | "assignment" | "simulator";
+        content: any; // Using any for flexibility with JSON input
+    }>;
+}): Promise<ServiceResult<string>> {
+    try {
+        // Use Admin client to bypass RLS for creation
+        const supabase = createSupabaseAdmin();
+
+        // 1. Create Course
+        const { data: newCourse, error: courseError } = await supabase
+            .from("courses")
+            .insert({
+                title: courseData.title,
+                description: courseData.description,
+            })
+            .select("id")
+            .single();
+
+        if (courseError) throw courseError;
+        if (!newCourse) throw new Error("Failed to create course");
+
+        const courseId = newCourse.id;
+
+        // 2. Create Nodes
+        const nodesToInsert = courseData.nodes.map((node, index) => ({
+            course_id: courseId,
+            title: node.title,
+            type: node.type,
+            content: node.content, // Using the 'content' column (jsonb)
+            content_json: node.content, // Keeping legacy support if needed
+            position_index: index,
+            is_mandatory: true,
+        }));
+
+        const { error: nodesError } = await supabase
+            .from("nodes")
+            .insert(nodesToInsert);
+
+        if (nodesError) throw nodesError;
+
+        return { data: courseId, error: null };
+    } catch (err) {
+        console.error("createCourseFromJSON error:", err);
         return { data: null, error: (err as Error).message };
     }
 }

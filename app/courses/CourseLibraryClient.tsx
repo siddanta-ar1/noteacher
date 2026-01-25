@@ -73,9 +73,9 @@ export default function CourseLibraryClient({
       {/* Course Grid */}
       <main className="max-w-6xl mx-auto px-6 -mt-20 relative z-20">
         {/* Results count */}
-        <div className="flex items-center justify-between mb-6">
-          <p className="text-ink-500 font-medium">
-            Showing <strong className="text-ink-900">{filtered.length}</strong> courses
+        <div className="flex text-white items-center justify-between mb-6">
+          <p className="text-white font-medium">
+            Showing <strong className="text-white">{filtered.length}</strong> courses
           </p>
         </div>
 
