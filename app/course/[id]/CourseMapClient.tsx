@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ChevronLeft, Play, Clock, BookOpen, CheckCircle2, Lock } from "lucide-react";
+import { ChevronLeft, Play, Clock, BookOpen, CheckCircle2 } from "lucide-react";
 import PathMap, { MapNode } from "@/components/map/PathMap";
 import type { CourseWithNodes, UserProgress } from "@/types";
 import { Badge } from "@/components/ui";
@@ -36,9 +36,9 @@ export default function CourseMapClient({
         };
     });
 
-    // Calculate progress stats
+    // Calculate progress stats based on mapNodes to ensure sync with visual bars
     const totalNodes = course.nodes.length;
-    const completedNodes = userProgress.filter(p => p.status === "completed").length;
+    const completedNodes = mapNodes.filter(n => n.status === "completed").length;
     const progressPercent = totalNodes > 0 ? Math.round((completedNodes / totalNodes) * 100) : 0;
 
     // Find current node to resume
@@ -58,56 +58,80 @@ export default function CourseMapClient({
                 animate={{ y: 0 }}
                 className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-border/50 shadow-sm"
             >
-                <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between gap-8">
+                <div className="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between gap-8">
                     <Link
                         href="/home"
-                        className="flex items-center gap-2 text-ink-500 hover:text-primary transition-colors font-bold text-sm shrink-0"
+                        className="flex items-center gap-2 text-ink-500 hover:text-primary transition-colors font-bold text-sm shrink-0 group"
                     >
-                        <div className="w-8 h-8 rounded-full bg-surface-raised flex items-center justify-center hover:bg-primary-light hover:text-primary transition-colors">
+                        <div className="w-8 h-8 rounded-full bg-surface-raised flex items-center justify-center group-hover:bg-primary-light group-hover:text-primary transition-colors">
                             <ChevronLeft size={18} />
                         </div>
-                        <span className="hidden sm:inline">Dashboard</span>
+                        <span className="hidden sm:inline group-hover:text-primary">Dashboard</span>
                     </Link>
 
-                    {/* Centered Progress Section */}
-                    <div className="flex-1 max-w-lg flex flex-col items-center justify-center">
-                        <div className="flex w-full items-center justify-between text-[10px] font-black uppercase tracking-widest text-ink-400 mb-1.5">
-                            <span>Level Progress</span>
-                            <span>{completedNodes} / {totalNodes} Completed</span>
+                    {/* Premium Segmented Progress Bar */}
+                    <div className="flex-1 max-w-xl">
+                        <div className="flex justify-between items-end mb-2">
+                            <div className="flex flex-col">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-ink-400">
+                                    Course Progress
+                                </span>
+                                <span className="text-sm font-bold text-ink-900">
+                                    {completedNodes} of {totalNodes} lessons
+                                </span>
+                            </div>
+                            <span className="text-sm font-black text-primary">
+                                {progressPercent}%
+                            </span>
                         </div>
 
-                        {/* Segmented Progress Bar */}
-                        <div className="flex w-full gap-1 h-2 rounded-full overflow-hidden bg-surface-raised">
+                        {/* Interactive Segments container */}
+                        <div className="flex w-full gap-1.5 h-3">
                             {course.nodes.map((node, i) => {
-                                const isCompleted = i < completedNodes;
-                                const isCurrent = i === completedNodes;
+                                // Use the calculated status from mapNodes to ensure sync with the map below
+                                const nodeStatus = mapNodes[i].status;
+                                const isCompleted = nodeStatus === "completed";
+                                const isCurrent = nodeStatus === "current";
+                                const isLocked = nodeStatus === "locked";
+
                                 return (
-                                    <motion.div
-                                        key={node.id}
-                                        initial={{ scaleY: 0 }}
-                                        animate={{ scaleY: 1 }}
-                                        transition={{ delay: i * 0.05 }}
-                                        className={`flex-1 transition-all duration-500 ${isCompleted
-                                                ? "bg-power-teal"
-                                                : isCurrent
-                                                    ? "bg-power-teal/30 animate-pulse"
-                                                    : "bg-surface-sunken"
-                                            }`}
-                                    />
+                                    <div key={node.id} className="relative flex-1 group">
+                                        {/* Tooltip */}
+                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-ink-900 text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none shadow-xl transform translate-y-1 group-hover:translate-y-0 duration-200">
+                                            {node.title}
+                                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-ink-900" />
+                                        </div>
+
+                                        {/* The Bar Segment */}
+                                        <motion.div
+                                            initial={{ scaleY: 0 }}
+                                            animate={{ scaleY: 1 }}
+                                            transition={{ delay: i * 0.03 }}
+                                            className={`
+                                                w-full h-full rounded-full transition-all duration-300
+                                                ${isCompleted
+                                                    ? "bg-gradient-to-r from-power-teal to-emerald-400 shadow-[0_0_10px_rgba(20,184,166,0.3)]"
+                                                    : isCurrent
+                                                        ? "bg-primary animate-pulse shadow-[0_0_15px_rgba(59,130,246,0.5)] ring-2 ring-primary/20 ring-offset-1"
+                                                        : "bg-surface-sunken hover:bg-ink-200"
+                                                }
+                                            `}
+                                        />
+                                    </div>
                                 );
                             })}
                         </div>
                     </div>
 
-                    <div className="shrink-0">
+                    <div className="shrink-0 hidden md:block">
                         <Badge variant={progressPercent >= 100 ? "success" : "default"} className="shadow-sm">
                             {progressPercent >= 100 ? (
                                 <span className="flex items-center gap-1">
                                     <CheckCircle2 size={12} />
-                                    Complete
+                                    Certificate Ready
                                 </span>
                             ) : (
-                                <span>{progressPercent}%</span>
+                                <span>Keep Going!</span>
                             )}
                         </Badge>
                     </div>
@@ -115,27 +139,26 @@ export default function CourseMapClient({
             </motion.header>
 
             {/* Hero Section */}
-            <div className="relative pt-32 pb-16 px-6 bg-white overflow-hidden">
-                {/* Background gradient */}
+            <div className="relative pt-36 pb-20 px-6 bg-white overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
-                <div className="absolute top-0 right-0 w-96 h-96 bg-power-teal/5 rounded-full blur-3xl -mr-32 -mt-32" />
 
-                <div className="max-w-3xl mx-auto text-center relative z-10">
+                <div className="max-w-4xl mx-auto flex flex-col items-center relative z-10">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="mb-6 relative"
                     >
-                        <Badge variant="primary" className="mb-4">
-                            <BookOpen size={12} />
-                            Course Roadmap
-                        </Badge>
+                        <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full" />
+                        <div className="w-20 h-20 bg-gradient-to-br from-primary to-power-purple rounded-3xl flex items-center justify-center text-white shadow-2xl relative rotate-3 hover:rotate-0 transition-transform duration-500">
+                            <BookOpen size={32} />
+                        </div>
                     </motion.div>
 
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-3xl md:text-5xl font-black text-ink-900 mb-4 leading-tight"
+                        className="text-4xl md:text-6xl font-black text-ink-900 mb-4 text-center leading-[0.9]"
                     >
                         {course.title}
                     </motion.h1>
@@ -144,26 +167,24 @@ export default function CourseMapClient({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="text-lg text-ink-500 max-w-xl mx-auto leading-relaxed mb-6"
+                        className="text-xl text-ink-500 max-w-2xl text-center leading-relaxed mb-8 font-medium"
                     >
                         {course.description || "Master the concepts through interactive lessons and practical assignments."}
                     </motion.p>
 
-                    {/* Stats */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="flex items-center justify-center gap-6 text-sm"
+                        className="flex gap-4"
                     >
-                        <div className="flex items-center gap-2 text-ink-500 bg-surface-raised px-4 py-2 rounded-full">
-                            <BookOpen size={16} className="text-primary" />
-                            <span><strong className="text-ink-900">{totalNodes}</strong> lessons</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-ink-500 bg-surface-raised px-4 py-2 rounded-full">
-                            <Clock size={16} className="text-power-orange" />
-                            <span><strong className="text-ink-900">~{estimatedMinutes}</strong> min left</span>
-                        </div>
+                        {/* Quick Resume Button */}
+                        <Link href={`/lesson/${firstIncompleteNode.id}`}>
+                            <button className="px-8 py-4 bg-ink-900 text-white rounded-2xl font-bold flex items-center gap-2 hover:bg-black transition-colors shadow-xl">
+                                <Play size={20} className="fill-white" />
+                                {completedNodes > 0 ? "Resume Learning" : "Start Course"}
+                            </button>
+                        </Link>
                     </motion.div>
                 </div>
             </div>
@@ -172,35 +193,6 @@ export default function CourseMapClient({
             <main className="max-w-xl mx-auto px-6 pb-40">
                 <PathMap nodes={mapNodes} />
             </main>
-
-            {/* Floating Action Button */}
-            <motion.div
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="fixed bottom-8 left-0 right-0 flex justify-center z-40 pointer-events-none px-6"
-            >
-                <Link href={`/lesson/${firstIncompleteNode.id}`} className="pointer-events-auto">
-                    <motion.button
-                        whileHover={{ scale: 1.03, y: -2 }}
-                        whileTap={{ scale: 0.97 }}
-                        className="group flex items-center gap-4 bg-primary text-white pl-5 pr-8 py-4 rounded-full shadow-2xl transition-all"
-                        style={{ boxShadow: "var(--shadow-primary-lg)" }}
-                    >
-                        <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
-                            <Play className="w-6 h-6 fill-current ml-0.5" />
-                        </div>
-                        <div className="text-left">
-                            <p className="text-xs text-white/70 font-bold uppercase tracking-wider">
-                                {completedNodes > 0 ? "Continue" : "Start"} Learning
-                            </p>
-                            <p className="font-bold text-lg leading-tight">
-                                {firstIncompleteNode.title}
-                            </p>
-                        </div>
-                    </motion.button>
-                </Link>
-            </motion.div>
         </div>
     );
 }
