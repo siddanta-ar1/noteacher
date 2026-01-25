@@ -13,7 +13,7 @@ type Message = {
 export default function AIChatModal({
   isOpen,
   onClose,
-  context, // New Prop for Lesson Context
+  context,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -30,7 +30,6 @@ export default function AIChatModal({
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
@@ -39,7 +38,7 @@ export default function AIChatModal({
     if (!input.trim() || isTyping) return;
 
     const userText = input;
-    setInput(""); // Clear input immediately
+    setInput("");
 
     // 1. Add User Message
     const userMsg: Message = {
@@ -51,14 +50,14 @@ export default function AIChatModal({
     setIsTyping(true);
 
     try {
-      // 2. Call the Real API
+      // 2. Call the Backend API
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: userText,
-          history: messages.slice(1), // Send history (skip greeting)
-          context: context, // Pass the lesson content
+          history: messages.slice(1),
+          context: context,
         }),
       });
 
@@ -73,14 +72,13 @@ export default function AIChatModal({
         text: data.reply,
       };
       setMessages((prev) => [...prev, aiMsg]);
-    } catch (error) {
-      // Error Fallback
+    } catch (error: any) {
       setMessages((prev) => [
         ...prev,
         {
           id: Date.now().toString(),
           role: "ai",
-          text: "⚠️ Connection lost. My neural link is unstable. Please check your API Key.",
+          text: `⚠️ Error: ${error.message || "Connection lost."}`,
         },
       ]);
     } finally {
@@ -92,7 +90,6 @@ export default function AIChatModal({
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -101,14 +98,12 @@ export default function AIChatModal({
             className="fixed inset-0 bg-navy/60 backdrop-blur-sm z-[60]"
           />
 
-          {/* Modal Container */}
           <motion.div
             initial={{ opacity: 0, y: 100, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.9 }}
             className="fixed inset-x-4 bottom-4 md:bottom-10 md:inset-x-auto md:right-10 md:w-[28rem] h-[32rem] bg-white rounded-[2.5rem] shadow-2xl z-[70] flex flex-col overflow-hidden border-4 border-white"
           >
-            {/* Header */}
             <div className="bg-navy p-6 flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-power-teal rounded-full flex items-center justify-center shadow-lg shadow-power-teal/20">
@@ -131,7 +126,6 @@ export default function AIChatModal({
               </button>
             </div>
 
-            {/* Chat Area */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50">
               {messages.map((msg) => (
                 <motion.div
@@ -141,28 +135,17 @@ export default function AIChatModal({
                   className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                 >
                   <div
-                    className={`
-                    w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm
-                    ${msg.role === "ai" ? "bg-white text-navy" : "bg-navy text-white"}
-                  `}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm ${msg.role === "ai" ? "bg-white text-navy" : "bg-navy text-white"}`}
                   >
                     {msg.role === "ai" ? <Bot size={16} /> : <User size={16} />}
                   </div>
                   <div
-                    className={`
-                    p-4 rounded-2xl max-w-[80%] text-sm font-medium shadow-sm
-                    ${
-                      msg.role === "ai"
-                        ? "bg-white text-slate-700 rounded-tl-none border border-slate-100"
-                        : "bg-navy text-white rounded-tr-none shadow-navy/20"
-                    }
-                  `}
+                    className={`p-4 rounded-2xl max-w-[80%] text-sm font-medium shadow-sm ${msg.role === "ai" ? "bg-white text-slate-700 rounded-tl-none border border-slate-100" : "bg-navy text-white rounded-tr-none shadow-navy/20"}`}
                   >
                     {msg.text}
                   </div>
                 </motion.div>
               ))}
-
               {isTyping && (
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -176,7 +159,6 @@ export default function AIChatModal({
               <div ref={bottomRef} />
             </div>
 
-            {/* Input Area */}
             <div className="p-4 bg-white border-t border-slate-100">
               <form
                 onSubmit={(e) => {

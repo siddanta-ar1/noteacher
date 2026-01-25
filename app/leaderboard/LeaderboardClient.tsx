@@ -17,7 +17,7 @@ import Link from "next/link";
 // --- Types ---
 type LeaderboardEntry = {
   id: string;
-  full_name: string;
+  full_name: string | null; // FIX: Allow null here
   avatar_url: string | null;
   xp: number;
   ranking: number;
@@ -126,6 +126,10 @@ export default function LeaderboardClient({
             <section className="flex items-end justify-center gap-4 md:gap-8 pb-12 border-b-2 border-slate-50 min-h-[400px]">
               {podium.map((item) => {
                 if (!item.entry) return null; // Handle if < 3 users exist
+
+                // FIX: Safe access for name
+                const displayName = item.entry.full_name || "Unknown";
+
                 return (
                   <div
                     key={item.rank}
@@ -141,7 +145,8 @@ export default function LeaderboardClient({
                         <Crown className="absolute -top-8 md:-top-10 text-power-orange w-10 h-10 md:w-12 md:h-12 drop-shadow-lg" />
                       )}
                       <span className="text-white font-black text-2xl md:text-3xl uppercase">
-                        {item.entry.full_name[0]}
+                        {/* FIX: Access character safely */}
+                        {displayName[0]}
                       </span>
                     </motion.div>
 
@@ -160,7 +165,7 @@ export default function LeaderboardClient({
                       </p>
                     </div>
                     <p className="mt-6 font-black text-slate-900 text-sm md:text-base truncate w-full text-center">
-                      {item.entry.full_name}
+                      {displayName}
                     </p>
                   </div>
                 );
@@ -174,25 +179,30 @@ export default function LeaderboardClient({
                   Challengers
                 </h3>
                 <div className="space-y-4">
-                  {rest.map((user) => (
-                    <div
-                      key={user.id}
-                      className={`flex items-center gap-4 p-4 rounded-3xl border-2 ${user.id === currentUserId ? "border-navy bg-navy/5" : "border-slate-100 bg-white"}`}
-                    >
-                      <div className="w-12 text-center font-black text-slate-300 italic text-xl">
-                        #{user.ranking}
+                  {rest.map((user) => {
+                    // FIX: Safe access here too
+                    const userName = user.full_name || "Unknown";
+                    return (
+                      <div
+                        key={user.id}
+                        className={`flex items-center gap-4 p-4 rounded-3xl border-2 ${user.id === currentUserId ? "border-navy bg-navy/5" : "border-slate-100 bg-white"}`}
+                      >
+                        <div className="w-12 text-center font-black text-slate-300 italic text-xl">
+                          #{user.ranking}
+                        </div>
+                        <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center font-bold text-slate-500 text-xs">
+                          {/* FIX: Safe substring */}
+                          {userName.substring(0, 2).toUpperCase()}
+                        </div>
+                        <div className="flex-1 font-bold text-slate-700">
+                          {userName}
+                        </div>
+                        <div className="font-black text-sm text-slate-900">
+                          {user.xp} XP
+                        </div>
                       </div>
-                      <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center font-bold text-slate-500 text-xs">
-                        {user.full_name.substring(0, 2).toUpperCase()}
-                      </div>
-                      <div className="flex-1 font-bold text-slate-700">
-                        {user.full_name}
-                      </div>
-                      <div className="font-black text-sm text-slate-900">
-                        {user.xp} XP
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </section>
             )}

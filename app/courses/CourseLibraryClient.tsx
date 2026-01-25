@@ -1,177 +1,108 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Zap,
-  BookOpen,
-  Star,
-  ChevronRight,
-  Search,
-  Filter,
-  Layers,
-  Cpu,
-} from "lucide-react";
+import { Search, Zap, BookOpen, Filter } from "lucide-react";
 import Link from "next/link";
-import { ReactNode } from "react";
 
-// Strict typing for IconMap
-const IconMap: Record<string, ReactNode> = {
-  Zap: <Zap size={20} />,
-  BookOpen: <BookOpen size={20} />,
-  Layers: <Layers size={20} />,
-  Star: <Star size={20} />,
-  Cpu: <Cpu size={20} />,
-};
-
-// Exporting type so it can be reused if needed
-export type Course = {
+type Course = {
   id: string;
   title: string;
-  description?: string;
-  xp?: number;
-  difficulty?: string;
-  iconName?: string;
-  startNodeId?: string;
-  learners?: string;
-  rank?: number;
-  color?: string;
-  height?: string;
+  description: string | null;
+  nodes: { count: number }[];
 };
 
 export default function CourseLibraryClient({
-  courses,
+  initialCourses,
 }: {
-  courses: Course[];
+  initialCourses: any[];
 }) {
-  // Logic is now safe because 'courses' comes fully hydrated from the server.
+  const [search, setSearch] = useState("");
 
-  // Reorder for visual podium (Rank 2 left, Rank 1 center, Rank 3 right)
-  const podium = [
-    courses.find((c) => c.rank === 2),
-    courses.find((c) => c.rank === 1),
-    courses.find((c) => c.rank === 3),
-  ].filter((c): c is Course => !!c); // Type guard filter to remove undefined
+  const filtered = initialCourses.filter((c) =>
+    c.title.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
-    <div className="min-h-screen bg-white pb-32">
-      <header className="py-20 px-6 text-center relative">
-        <Link
-          href="/home"
-          className="absolute top-6 left-6 text-slate-400 hover:text-navy transition-colors flex items-center gap-2 group"
-        >
-          <div className="p-2 bg-slate-100 rounded-full group-hover:bg-slate-200 transition-colors">
-            <ChevronRight className="rotate-180" size={20} />
-          </div>
-          <span className="font-bold text-sm">Dashboard</span>
-        </Link>
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <span className="bg-navy/5 text-navy px-6 py-2 rounded-full text-xs font-black uppercase tracking-[0.3em]">
-            Course Library
-          </span>
-          <h1 className="text-6xl font-black text-slate-900 mt-6 tracking-tighter italic">
-            Choose Your <span className="text-power-purple">Mission</span>
-          </h1>
-        </motion.div>
+    <div className="min-h-screen bg-slate-50 pb-20">
+      {/* Header */}
+      <header className="bg-navy pt-20 pb-32 px-6 rounded-b-[3rem] shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -mr-20 -mt-20" />
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <span className="bg-power-teal/20 text-power-teal px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border border-power-teal/20">
+              Library v1.0
+            </span>
+            <h1 className="text-4xl md:text-6xl font-black text-white mt-6 mb-8 tracking-tight">
+              Neural <span className="text-power-teal italic">Upgrades</span>
+            </h1>
+
+            {/* Search Bar */}
+            <div className="bg-white p-2 rounded-2xl shadow-xl flex items-center max-w-xl">
+              <div className="w-12 h-12 flex items-center justify-center text-slate-400">
+                <Search size={24} />
+              </div>
+              <input
+                type="text"
+                placeholder="Search for a skill..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="flex-1 bg-transparent border-none outline-none text-lg font-bold text-navy placeholder:text-slate-300 h-12"
+              />
+              <button className="bg-navy text-white px-6 h-12 rounded-xl font-bold hover:bg-navy-dark transition-colors">
+                Find
+              </button>
+            </div>
+          </motion.div>
+        </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-8">
-        <div className="grid lg:grid-cols-12 gap-24 items-start">
-          {/* LEFT: Featured Podium */}
-          <div className="lg:col-span-8 space-y-24">
-            <section>
-              <div className="flex justify-between items-end mb-12">
-                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">
-                  Featured Paths
-                </h3>
-                <button className="flex items-center gap-2 text-navy font-bold text-sm hover:underline">
-                  <Search size={16} /> Search all
-                </button>
-              </div>
+      {/* Grid */}
+      <main className="max-w-6xl mx-auto px-6 -mt-20 relative z-20">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.length > 0 ? (
+            filtered.map((course, i) => (
+              <motion.div
+                key={course.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <Link href={`/home`} className="block group h-full">
+                  <div className="bg-white p-8 rounded-[2.5rem] shadow-lg border-2 border-slate-100 hover:border-navy hover:shadow-2xl transition-all h-full flex flex-col">
+                    <div className="flex justify-between items-start mb-6">
+                      <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <BookOpen className="text-navy w-8 h-8" />
+                      </div>
+                      <div className="bg-slate-100 px-3 py-1 rounded-full text-xs font-bold text-slate-500">
+                        {course.nodes[0]?.count || 0} Modules
+                      </div>
+                    </div>
 
-              {/* Podium View */}
-              {podium.length > 0 ? (
-                <div className="flex items-end justify-center gap-6 md:gap-12 pb-12 border-b-2 border-slate-50 min-h-[300px]">
-                  {podium.map((path) => (
-                    <Link
-                      key={path.id}
-                      href={
-                        path.startNodeId ? `/lesson/${path.startNodeId}` : "#"
-                      }
-                      className="flex flex-col items-center flex-1 max-w-[200px] group cursor-pointer"
-                    >
-                      <motion.div
-                        whileHover={{ y: -10 }}
-                        className={`w-full ${path.height} ${path.color} rounded-t-[3rem] p-8 flex flex-col items-center justify-between shadow-2xl border-b-[12px] border-black/10 relative`}
-                      >
-                        <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
-                          <Star className="text-white fill-white" size={20} />
-                        </div>
-                        <div className="text-center">
-                          <p className="text-white font-black text-lg leading-tight mb-2 line-clamp-2">
-                            {path.title}
-                          </p>
-                          <p className="text-white/60 text-[10px] font-black uppercase tracking-widest">
-                            {path.learners} Active
-                          </p>
-                        </div>
-                      </motion.div>
-                      <div className="mt-6 w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center border-2 border-slate-100 group-hover:bg-navy group-hover:text-white transition-all">
-                        <ChevronRight size={24} />
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="py-12 text-center text-slate-400 italic">
-                  More courses coming soon...
-                </div>
-              )}
-            </section>
-          </div>
+                    <h3 className="text-2xl font-black text-slate-900 mb-3 group-hover:text-navy transition-colors">
+                      {course.title}
+                    </h3>
+                    <p className="text-slate-500 font-medium leading-relaxed mb-8 line-clamp-3">
+                      {course.description || "No description provided."}
+                    </p>
 
-          {/* RIGHT: List */}
-          <div className="lg:col-span-4 space-y-16">
-            <section className="bg-slate-50/50 rounded-[3.5rem] p-12 border-2 border-slate-100 shadow-sm">
-              <div className="flex items-center justify-between mb-12">
-                <h3 className="text-2xl font-black text-slate-900">Explore</h3>
-                <Filter className="text-power-teal" size={24} />
-              </div>
-              <div className="space-y-6">
-                {courses.map((course) => (
-                  <Link
-                    key={course.id}
-                    href={
-                      course.startNodeId ? `/lesson/${course.startNodeId}` : "#"
-                    }
-                    className="block"
-                  >
-                    <motion.div
-                      whileHover={{ x: 10 }}
-                      className="p-6 bg-white border-2 border-slate-100 rounded-3xl cursor-pointer hover:border-navy transition-all flex items-center gap-4 group"
-                    >
-                      <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 group-hover:bg-navy group-hover:text-white transition-all">
-                        {IconMap[course.iconName || "BookOpen"] || (
-                          <BookOpen size={20} />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-black text-slate-900 text-sm line-clamp-1">
-                          {course.title}
-                        </h4>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase">
-                          {course.difficulty || "Intermediate"} •{" "}
-                          {course.xp || 1500} XP
-                        </p>
-                      </div>
-                    </motion.div>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          </div>
+                    <div className="mt-auto pt-6 border-t border-slate-100 flex items-center text-power-teal font-black text-sm uppercase tracking-wide gap-2">
+                      <Zap size={16} className="fill-current" />
+                      Start Course
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))
+          ) : (
+            <div className="col-span-full py-20 text-center text-slate-400 font-bold">
+              No courses found matching "{search}"
+            </div>
+          )}
         </div>
       </main>
     </div>

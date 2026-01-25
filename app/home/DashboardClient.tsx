@@ -1,3 +1,4 @@
+// app/home/DashboardClient.tsx
 "use client";
 
 import { motion } from "framer-motion";
@@ -9,6 +10,7 @@ import {
   ChevronRight,
   Zap,
   CheckCircle,
+  Map as MapIcon, // New Icon
 } from "lucide-react";
 import Link from "next/link";
 
@@ -18,7 +20,8 @@ type DashboardProps = {
     title: string;
     chapter: string;
     progress: number;
-    id: string;
+    id: string; // This is the Node ID
+    courseId?: string; // We might need to fetch this to link to the map
   } | null;
   courses: Array<{
     id: string;
@@ -26,7 +29,7 @@ type DashboardProps = {
     progress: number;
     color: string;
     iconName: string;
-    startNodeId?: string; // New Prop
+    startNodeId?: string;
   }>;
 };
 
@@ -39,15 +42,22 @@ export default function DashboardClient({
 }: DashboardProps) {
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* HEADER (Kept same as before, focusing on the fix) */}
+      {/* HEADER */}
       <header className="bg-navy p-6 pb-24 rounded-b-[3rem] shadow-2xl shadow-navy/20 relative z-0">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-white text-2xl font-black italic">Dashboard</h1>
-            <p className="text-white/60 text-xs font-bold uppercase tracking-widest mt-1">
-              Welcome back, {profile.name.split(" ")[0]}
-            </p>
-          </div>
+          <Link href="/profile" className="group">
+            {" "}
+            {/* Link to Profile */}
+            <div>
+              <h1 className="text-white text-2xl font-black italic group-hover:text-power-teal transition-colors">
+                Dashboard
+              </h1>
+              <p className="text-white/60 text-xs font-bold uppercase tracking-widest mt-1 group-hover:text-white transition-colors">
+                Welcome back, {profile.name.split(" ")[0] || "Cadet"}
+              </p>
+            </div>
+          </Link>
+
           <div className="flex items-center gap-3">
             <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl flex items-center gap-2 border border-white/20">
               <Zap className="w-4 h-4 text-power-orange fill-power-orange" />
@@ -97,6 +107,7 @@ export default function DashboardClient({
                     </span>
                   </div>
                 </div>
+                {/* Resume Button goes straight to lesson */}
                 <Link href={`/lesson/${activeMission.id}`}>
                   <button className="px-10 py-4 bg-navy text-white rounded-2xl font-black border-b-4 border-navy-dark active:translate-y-1 active:border-b-0 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 group/btn">
                     Resume{" "}
@@ -110,10 +121,10 @@ export default function DashboardClient({
                   <Trophy className="text-power-orange w-8 h-8" />
                 </div>
                 <h2 className="text-xl font-black text-slate-900">
-                  All Systems Go!
+                  Ready for Assignment
                 </h2>
                 <p className="text-slate-400 font-medium">
-                  Select a new course below to start.
+                  Select a roadmap below to begin.
                 </p>
               </div>
             )}
@@ -123,24 +134,22 @@ export default function DashboardClient({
 
       {/* COURSE GRID */}
       <main className="max-w-5xl mx-auto px-6 -mt-12 pb-20 relative z-10">
-        <h3 className="text-2xl font-black text-slate-900 mb-8 pl-2">
-          Your Neural Paths
+        <h3 className="text-2xl font-black text-slate-900 mb-8 pl-2 flex items-center gap-2">
+          <MapIcon className="text-slate-300" /> Neural Roadmaps
         </h3>
+
         {courses.length > 0 ? (
           <div className="grid md:grid-cols-3 gap-6">
             {courses.map((course) => {
               const Icon = IconMap[course.iconName] || BookOpen;
               return (
-                // THE FIX: Link to /lesson/[id] instead of /courses
-                <Link
-                  href={
-                    course.startNodeId
-                      ? `/lesson/${course.startNodeId}`
-                      : "/courses"
-                  }
-                  key={course.id}
-                >
-                  <div className="bg-white border-2 border-slate-100 p-6 rounded-[2rem] hover:shadow-xl transition-all cursor-pointer group h-full flex flex-col hover:border-navy">
+                // UPDATE: Link to the Map Page (/course/[id])
+                <Link href={`/course/${course.id}`} key={course.id}>
+                  <div className="bg-white border-2 border-slate-100 p-6 rounded-[2rem] hover:shadow-xl transition-all cursor-pointer group h-full flex flex-col hover:border-navy relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <MapIcon className="text-navy/20 w-12 h-12 -mr-2 -mt-2" />
+                    </div>
+
                     <div
                       className={`w-12 h-12 ${course.color} rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-inherit text-white`}
                     >
@@ -153,11 +162,11 @@ export default function DashboardClient({
                     <div className="flex items-center justify-between mt-4">
                       {course.progress >= 100 ? (
                         <span className="text-xs font-bold text-power-teal flex items-center gap-1">
-                          <CheckCircle className="w-3 h-3" /> Completed
+                          <CheckCircle className="w-3 h-3" /> Mastered
                         </span>
                       ) : (
                         <span className="text-xs font-bold text-slate-400">
-                          {course.progress}% Completed
+                          {course.progress}% Explored
                         </span>
                       )}
                       <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-navy group-hover:translate-x-1 transition-all" />
@@ -168,8 +177,10 @@ export default function DashboardClient({
             })}
           </div>
         ) : (
-          <div className="text-center py-20 opacity-50">
-            <p>No courses found. Run the seed script!</p>
+          <div className="text-center py-20 opacity-50 bg-white rounded-3xl border-2 border-dashed border-slate-200">
+            <p className="font-bold text-slate-400">
+              System Offline. Run the seed script.
+            </p>
           </div>
         )}
       </main>

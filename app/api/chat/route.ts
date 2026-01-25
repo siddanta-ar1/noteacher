@@ -7,13 +7,14 @@ export async function POST(req: Request) {
 
     if (!process.env.GEMINI_API_KEY) {
       return NextResponse.json(
-        { error: "GEMINI_API_KEY missing" },
+        { error: "GEMINI_API_KEY is missing in .env.local" },
         { status: 500 },
       );
     }
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+    // Using gemini-1.5-flash-latest
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash-latest",
       systemInstruction: `
@@ -30,21 +31,24 @@ RULES:
       `,
     });
 
+    const formattedHistory = history.map((msg: any) => ({
+      role: msg.role === "ai" ? "model" : "user",
+      parts: [{ text: msg.text || "" }],
+    }));
+
     const chat = model.startChat({
-      history: history.map((msg: any) => ({
-        role: msg.role === "ai" ? "model" : "user",
-        parts: [{ text: msg.text }],
-      })),
+      history: formattedHistory,
     });
 
     const result = await chat.sendMessage(message);
-    const reply = result.response.text();
+    const response = await result.response;
+    const reply = response.text();
 
     return NextResponse.json({ reply });
   } catch (error: any) {
     console.error("Gemini API Error:", error);
     return NextResponse.json(
-      { error: "Failed to generate response" },
+      { error: error.message || "Failed to generate response" },
       { status: 500 },
     );
   }
