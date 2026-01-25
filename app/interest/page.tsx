@@ -3,15 +3,16 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check, Cpu, Globe, Zap, Code } from "lucide-react";
-import { saveInterests } from "./actions"; // We will create this next
 import { useRouter } from "next/navigation";
+import { saveInterests } from "@/services";
+import { INTERESTS, ROUTES } from "@/config";
 
-const INTERESTS = [
-  { id: "cs", label: "Computer Science", icon: Code },
-  { id: "ee", label: "Electrical Eng.", icon: Zap },
-  { id: "mech", label: "Mechanical", icon: Cpu },
-  { id: "civil", label: "Civil Eng.", icon: Globe },
-];
+const ICON_MAP = {
+  Code,
+  Zap,
+  Cpu,
+  Globe,
+} as const;
 
 export default function InterestPage() {
   const [selected, setSelected] = useState<string[]>([]);
@@ -20,7 +21,7 @@ export default function InterestPage() {
 
   const toggle = (id: string) => {
     setSelected((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
   };
 
@@ -28,7 +29,7 @@ export default function InterestPage() {
     if (selected.length === 0) return;
     setLoading(true);
     await saveInterests(selected);
-    router.push("/home"); // Redirect to dashboard
+    router.push(ROUTES.HOME);
   };
 
   return (
@@ -46,17 +47,16 @@ export default function InterestPage() {
         <div className="grid grid-cols-2 gap-4 mb-12">
           {INTERESTS.map((item) => {
             const isSelected = selected.includes(item.id);
-            const Icon = item.icon;
+            const Icon = ICON_MAP[item.icon as keyof typeof ICON_MAP];
             return (
               <motion.button
                 key={item.id}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => toggle(item.id)}
-                className={`p-6 rounded-[2rem] border-4 transition-all flex flex-col items-center gap-4
-                  ${
-                    isSelected
-                      ? "bg-power-teal border-power-teal text-white shadow-lg shadow-power-teal/20"
-                      : "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10"
+                className={`p-6 rounded-[2rem] border-4 transition-all flex flex-col items-center gap-4 relative
+                  ${isSelected
+                    ? "bg-power-teal border-power-teal text-white shadow-lg shadow-power-teal/20"
+                    : "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10"
                   }
                 `}
               >

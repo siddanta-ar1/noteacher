@@ -2,25 +2,22 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Zap, BookOpen, Filter } from "lucide-react";
+import { Search, Zap, BookOpen } from "lucide-react";
 import Link from "next/link";
+import type { CourseWithNodeCount } from "@/types";
+import { ROUTES } from "@/config";
 
-type Course = {
-  id: string;
-  title: string;
-  description: string | null;
-  nodes: { count: number }[];
-};
+interface CourseLibraryClientProps {
+  initialCourses: CourseWithNodeCount[];
+}
 
 export default function CourseLibraryClient({
   initialCourses,
-}: {
-  initialCourses: any[];
-}) {
+}: CourseLibraryClientProps) {
   const [search, setSearch] = useState("");
 
   const filtered = initialCourses.filter((c) =>
-    c.title.toLowerCase().includes(search.toLowerCase()),
+    c.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -72,7 +69,8 @@ export default function CourseLibraryClient({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Link href={`/home`} className="block group h-full">
+                {/* FIX: Link to course map instead of /home */}
+                <Link href={ROUTES.course(course.id)} className="block group h-full">
                   <div className="bg-white p-8 rounded-[2.5rem] shadow-lg border-2 border-slate-100 hover:border-navy hover:shadow-2xl transition-all h-full flex flex-col">
                     <div className="flex justify-between items-start mb-6">
                       <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">

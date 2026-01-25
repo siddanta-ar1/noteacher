@@ -1,19 +1,18 @@
-import { createServerSupabaseClient } from "@/lib/supabase-server";
+import { getCoursesWithNodeCount } from "@/services";
 import CourseLibraryClient from "./CourseLibraryClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function CoursesPage() {
-  const supabase = await createServerSupabaseClient();
+  const { data: courses, error } = await getCoursesWithNodeCount();
 
-  // Fetch all courses with their node count
-  const { data: courses } = await supabase.from("courses").select(`
-    id,
-    title,
-    description,
-    thumbnail_url,
-    nodes ( count )
-  `);
+  if (error) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <p className="text-slate-500 font-bold">Failed to load courses</p>
+      </div>
+    );
+  }
 
   return <CourseLibraryClient initialCourses={courses || []} />;
 }

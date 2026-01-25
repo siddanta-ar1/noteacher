@@ -15,7 +15,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { createBrowserClient } from "@supabase/ssr";
-import { login, signup } from "./actions";
+import { login, signup } from "@/services";
+import { Input } from "@/components/ui";
+import { ROUTES, SITE_CONFIG } from "@/config";
 
 export default function LoginPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -25,10 +27,9 @@ export default function LoginPage() {
     text: string;
   } | null>(null);
 
-  // We use the browser client for OAuth because it redirects the window
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
   const handleOAuth = async () => {
@@ -36,7 +37,7 @@ export default function LoginPage() {
     await supabase.auth.signInWithOAuth({
       provider: "github",
       options: {
-        redirectTo: `${location.origin}/auth/callback`,
+        redirectTo: `${location.origin}${ROUTES.AUTH_CALLBACK}`,
       },
     });
   };
@@ -52,17 +53,18 @@ export default function LoginPage() {
       } else {
         const res = await signup(formData);
         if (res?.error) throw new Error(res.error);
-        if (res?.success) {
+        if (res?.data?.needsConfirmation) {
           setMessage({
             type: "success",
             text: "Check your email to confirm your account!",
           });
           setIsLoading(false);
-          return; // Don't redirect yet
+          return;
         }
       }
-    } catch (err: any) {
-      setMessage({ type: "error", text: err.message });
+    } catch (err: unknown) {
+      const error = err as Error;
+      setMessage({ type: "error", text: error.message });
       setIsLoading(false);
     }
   };
@@ -72,7 +74,7 @@ export default function LoginPage() {
       {/* LEFT: Form Section */}
       <div className="flex flex-col justify-center px-8 sm:px-16 py-12 relative z-10">
         <Link
-          href="/"
+          href={ROUTES.LANDING}
           className="absolute top-8 left-8 flex items-center gap-2 text-slate-400 hover:text-navy transition-colors"
         >
           <Zap size={20} />
@@ -86,9 +88,7 @@ export default function LoginPage() {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-4xl font-black text-slate-900 mb-2">
-              {mode === "signin"
-                ? "Welcome Back, Cadet."
-                : "Initialize Profile."}
+              {mode === "signin" ? "Welcome Back, Cadet." : "Initialize Profile."}
             </h1>
             <p className="text-slate-500 font-medium mb-8">
               {mode === "signin"
@@ -143,62 +143,32 @@ export default function LoginPage() {
             {/* EMAIL FORM */}
             <form action={handleSubmit} className="space-y-4">
               {mode === "signup" && (
-                <div className="space-y-2">
-                  <label className="text-xs font-black text-slate-700 uppercase ml-1">
-                    Full Name
-                  </label>
-                  <div className="relative">
-                    <User
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                      size={18}
-                    />
-                    <input
-                      name="fullName"
-                      required
-                      placeholder="Ada Lovelace"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy/10 focus:border-navy transition-all placeholder:text-slate-400 placeholder:font-medium"
-                    />
-                  </div>
-                </div>
+                <Input
+                  name="fullName"
+                  label="Full Name"
+                  placeholder="Ada Lovelace"
+                  icon={<User size={18} />}
+                  required
+                />
               )}
 
-              <div className="space-y-2">
-                <label className="text-xs font-black text-slate-700 uppercase ml-1">
-                  Email Coordinates
-                </label>
-                <div className="relative">
-                  <Mail
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                    size={18}
-                  />
-                  <input
-                    name="email"
-                    type="email"
-                    required
-                    placeholder="cadet@noteacher.com"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy/10 focus:border-navy transition-all placeholder:text-slate-400 placeholder:font-medium"
-                  />
-                </div>
-              </div>
+              <Input
+                name="email"
+                type="email"
+                label="Email Coordinates"
+                placeholder="cadet@noteacher.com"
+                icon={<Mail size={18} />}
+                required
+              />
 
-              <div className="space-y-2">
-                <label className="text-xs font-black text-slate-700 uppercase ml-1">
-                  Access Key
-                </label>
-                <div className="relative">
-                  <Lock
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                    size={18}
-                  />
-                  <input
-                    name="password"
-                    type="password"
-                    required
-                    placeholder="••••••••"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy/10 focus:border-navy transition-all placeholder:text-slate-400 placeholder:font-medium"
-                  />
-                </div>
-              </div>
+              <Input
+                name="password"
+                type="password"
+                label="Access Key"
+                placeholder="••••••••"
+                icon={<Lock size={18} />}
+                required
+              />
 
               <button
                 type="submit"
@@ -218,9 +188,7 @@ export default function LoginPage() {
 
             <div className="mt-8 text-center">
               <p className="text-slate-500 font-medium">
-                {mode === "signin"
-                  ? "New to the system?"
-                  : "Already have an ID?"}
+                {mode === "signin" ? "New to the system?" : "Already have an ID?"}
                 <button
                   onClick={() => {
                     setMode(mode === "signin" ? "signup" : "signin");
