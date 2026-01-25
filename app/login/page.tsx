@@ -12,6 +12,9 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
+  Sparkles,
+  BookOpen,
+  Trophy,
 } from "lucide-react";
 import Link from "next/link";
 import { createBrowserClient } from "@supabase/ssr";
@@ -75,10 +78,10 @@ export default function LoginPage() {
       <div className="flex flex-col justify-center px-8 sm:px-16 py-12 relative z-10">
         <Link
           href={ROUTES.LANDING}
-          className="absolute top-8 left-8 flex items-center gap-2 text-slate-400 hover:text-navy transition-colors"
+          className="absolute top-8 left-8 flex items-center gap-2 text-ink-400 hover:text-primary transition-colors group"
         >
-          <Zap size={20} />
-          <span className="font-bold text-sm">Back to Base</span>
+          <Zap size={20} className="group-hover:fill-primary transition-colors" />
+          <span className="font-bold text-sm">Back to Home</span>
         </Link>
 
         <div className="max-w-md mx-auto w-full">
@@ -87,24 +90,30 @@ export default function LoginPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-4xl font-black text-slate-900 mb-2">
-              {mode === "signin" ? "Welcome Back, Cadet." : "Initialize Profile."}
-            </h1>
-            <p className="text-slate-500 font-medium mb-8">
-              {mode === "signin"
-                ? "Your neural link is ready. Resume your arc."
-                : "Join the elite 1%. Your journey begins now."}
-            </p>
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-3xl md:text-4xl font-black text-ink-900 mb-2">
+                {mode === "signin" ? "Welcome Back" : "Create Account"}
+              </h1>
+              <p className="text-ink-500">
+                {mode === "signin"
+                  ? "Sign in to continue your learning journey."
+                  : "Join thousands of engineers leveling up."}
+              </p>
+            </div>
 
-            {/* ERROR / SUCCESS MESSAGES */}
+            {/* Messages */}
             <AnimatePresence>
               {message && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  className={`mb-6 p-4 rounded-xl flex items-center gap-3 text-sm font-bold overflow-hidden
-                    ${message.type === "success" ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-600 border border-red-200"}
+                  className={`mb-6 p-4 rounded-xl flex items-center gap-3 text-sm font-medium overflow-hidden
+                    ${message.type === "success"
+                      ? "bg-success-light text-success-dark border border-success/20"
+                      : "bg-error-light text-error-dark border border-error/20"
+                    }
                   `}
                 >
                   {message.type === "success" ? (
@@ -117,11 +126,11 @@ export default function LoginPage() {
               )}
             </AnimatePresence>
 
-            {/* OAUTH BUTTONS */}
+            {/* OAuth Button */}
             <button
               onClick={handleOAuth}
               disabled={isLoading}
-              className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 active:scale-[0.98]"
+              className="w-full py-4 bg-ink-900 text-white rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-ink-700 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50"
             >
               {isLoading ? (
                 <Loader2 className="animate-spin" />
@@ -131,17 +140,18 @@ export default function LoginPage() {
               Continue with GitHub
             </button>
 
+            {/* Divider */}
             <div className="relative my-8 text-center">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-100"></div>
+                <div className="w-full border-t border-border" />
               </div>
-              <span className="relative bg-white px-4 text-xs font-bold text-slate-400 uppercase tracking-widest">
-                Or with Credentials
+              <span className="relative bg-white px-4 text-sm font-medium text-ink-400">
+                or continue with email
               </span>
             </div>
 
-            {/* EMAIL FORM */}
-            <form action={handleSubmit} className="space-y-4">
+            {/* Email Form */}
+            <form action={handleSubmit} className="space-y-5">
               {mode === "signup" && (
                 <Input
                   name="fullName"
@@ -155,8 +165,8 @@ export default function LoginPage() {
               <Input
                 name="email"
                 type="email"
-                label="Email Coordinates"
-                placeholder="cadet@noteacher.com"
+                label="Email"
+                placeholder="you@example.com"
                 icon={<Mail size={18} />}
                 required
               />
@@ -164,7 +174,7 @@ export default function LoginPage() {
               <Input
                 name="password"
                 type="password"
-                label="Access Key"
+                label="Password"
                 placeholder="••••••••"
                 icon={<Lock size={18} />}
                 required
@@ -173,30 +183,32 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-4 bg-navy text-white rounded-2xl font-black text-lg shadow-xl shadow-navy/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-6"
+                className="w-full py-4 bg-primary text-white rounded-2xl font-bold text-lg border-b-4 border-primary-hover active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                style={{ boxShadow: "var(--shadow-primary)" }}
               >
                 {isLoading ? (
                   <Loader2 className="animate-spin" />
                 ) : (
                   <>
-                    {mode === "signin" ? "Engage Link" : "Create Identity"}
+                    {mode === "signin" ? "Sign In" : "Create Account"}
                     <ArrowRight size={20} />
                   </>
                 )}
               </button>
             </form>
 
+            {/* Mode Toggle */}
             <div className="mt-8 text-center">
-              <p className="text-slate-500 font-medium">
-                {mode === "signin" ? "New to the system?" : "Already have an ID?"}
+              <p className="text-ink-500">
+                {mode === "signin" ? "New here?" : "Already have an account?"}
                 <button
                   onClick={() => {
                     setMode(mode === "signin" ? "signup" : "signin");
                     setMessage(null);
                   }}
-                  className="ml-2 text-navy font-black hover:underline"
+                  className="ml-2 text-primary font-bold hover:underline"
                 >
-                  {mode === "signin" ? "Initialize here" : "Sign in"}
+                  {mode === "signin" ? "Create account" : "Sign in"}
                 </button>
               </p>
             </div>
@@ -205,42 +217,79 @@ export default function LoginPage() {
       </div>
 
       {/* RIGHT: Visual Side */}
-      <div className="hidden lg:block bg-navy relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
+      <div className="hidden lg:block bg-primary relative overflow-hidden">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")'
+          }} />
+        </div>
+
+        {/* Gradient overlays */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-power-purple/30 rounded-full blur-[100px]" />
         <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-power-teal/20 rounded-full blur-[80px]" />
 
         <div className="relative h-full flex flex-col items-center justify-center text-center p-16">
+          {/* Main card */}
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="bg-white/5 backdrop-blur-xl border border-white/10 p-12 rounded-[3rem] shadow-2xl"
+            className="bg-white/10 backdrop-blur-xl border border-white/20 p-12 rounded-[3rem] shadow-2xl max-w-md"
           >
-            <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
-              <Zap className="text-white w-12 h-12 fill-white" />
+            <div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <Zap className="text-white w-10 h-10 fill-white" />
             </div>
-            <h2 className="text-3xl font-black text-white italic mb-4">
-              "The 1% don't memorize.
+            <h2 className="text-2xl font-black text-white mb-4 leading-snug">
+              "The top 1% don't memorize.
               <br />
               They understand."
             </h2>
-            <p className="text-white/60 font-medium max-w-md mx-auto">
+            <p className="text-white/70 font-medium">
               Join thousands of engineers mastering hardware through interactive
               scrollytelling.
             </p>
+          </motion.div>
 
-            {/* Floating Badges */}
+          {/* Floating Stats */}
+          <div className="absolute bottom-16 left-16 right-16 flex justify-between">
             <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              className="absolute -top-10 -right-10 bg-power-teal text-white p-4 rounded-2xl shadow-lg border border-white/20"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="bg-white/10 backdrop-blur-md text-white px-5 py-4 rounded-2xl border border-white/20"
             >
-              <span className="font-black text-xs uppercase tracking-widest">
-                Active Users
-              </span>
-              <p className="font-black text-2xl">+12,400</p>
+              <div className="flex items-center gap-2 mb-1">
+                <BookOpen size={16} />
+                <span className="text-xs font-bold opacity-70">Courses</span>
+              </div>
+              <p className="text-2xl font-black">50+</p>
             </motion.div>
+
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="bg-white/10 backdrop-blur-md text-white px-5 py-4 rounded-2xl border border-white/20"
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <Trophy size={16} />
+                <span className="text-xs font-bold opacity-70">Completed</span>
+              </div>
+              <p className="text-2xl font-black">128K+</p>
+            </motion.div>
+          </div>
+
+          {/* Floating badge */}
+          <motion.div
+            animate={{ y: [0, -10, 0] }}
+            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+            className="absolute top-16 right-16 bg-power-teal text-white px-5 py-3 rounded-2xl shadow-lg border border-white/20"
+          >
+            <div className="flex items-center gap-2">
+              <Sparkles size={16} className="fill-white" />
+              <span className="font-bold text-sm">AI-Powered</span>
+            </div>
           </motion.div>
         </div>
       </div>

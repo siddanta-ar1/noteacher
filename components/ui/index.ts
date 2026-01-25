@@ -5,3 +5,7 @@ export * from "./Skeleton";
 export * from "./Input";
 export * from "./Badge";
 export * from "./ErrorBoundary";
+export * from "./ProgressBar";
+export * from "./Avatar";
+export * from "./Alert";
+export * from "./Modal";

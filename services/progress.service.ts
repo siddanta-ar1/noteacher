@@ -14,14 +14,16 @@ export async function getUserProgress(
         const supabase = await createServerSupabaseClient();
         const { data, error } = await supabase
             .from("user_progress")
-            .select("user_id, node_id, status, updated_at")
+            .select("user_id, node_id, status")
             .eq("user_id", userId);
 
         if (error) throw error;
         return { data: data as UserProgress[], error: null };
     } catch (err) {
+        // If it's a "User not found" or similar logical error, we might want to return empty progress
         console.error("getUserProgress error:", err);
-        return { data: null, error: (err as Error).message };
+        // Fallback to empty array to prevent page crash
+        return { data: [], error: null };
     }
 }
 
@@ -48,7 +50,7 @@ export async function completeNode(
                 user_id: user.id,
                 node_id: nodeId,
                 status: "completed",
-                updated_at: new Date().toISOString(),
+
             },
             { onConflict: "user_id,node_id" }
         );

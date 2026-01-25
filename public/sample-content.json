@@ -1,0 +1,99 @@
+{
+    "version": "1.0",
+    "metadata": {
+        "estimatedMinutes": 15,
+        "difficulty": "beginner",
+        "tags": [
+            "fundamentals",
+            "introduction"
+        ],
+        "objectives": [
+            "Understand the core concepts of the topic",
+            "Apply basic principles in practice exercises",
+            "Complete the knowledge check successfully"
+        ]
+    },
+    "blocks": [
+        {
+            "id": "intro-1",
+            "type": "text",
+            "content": "Welcome to this **interactive learning experience**. In this lesson, we'll explore fundamental concepts that will build the foundation for your understanding.",
+            "style": "heading",
+            "animation": {
+                "type": "fade",
+                "duration": 0.8
+            }
+        },
+        {
+            "id": "concept-1",
+            "type": "text",
+            "content": "Every complex system is built from simple building blocks. Understanding these blocks is the first step to mastering the whole system. Think of it like learning the alphabet before writing stories.",
+            "style": "default",
+            "animation": {
+                "type": "slide",
+                "direction": "up"
+            }
+        },
+        {
+            "id": "image-1",
+            "type": "image",
+            "url": "/images/sample-diagram.png",
+            "alt": "Concept diagram showing building blocks",
+            "caption": "The building blocks of complex systems",
+            "size": "large"
+        },
+        {
+            "id": "callout-1",
+            "type": "text",
+            "content": "Key Insight: The best way to learn is by doing. Don't just read—interact with the simulations and complete the exercises.",
+            "style": "callout"
+        },
+        {
+            "id": "divider-1",
+            "type": "divider",
+            "style": "section-break"
+        },
+        {
+            "id": "ai-summary-1",
+            "type": "ai-insight",
+            "showSummary": true,
+            "context": "Introduction to fundamental concepts and building blocks"
+        },
+        {
+            "id": "simulation-1",
+            "type": "simulation",
+            "simulationType": "logic-gates",
+            "instructions": "Experiment with the logic gates below. Try connecting different inputs to see how they affect the output."
+        },
+        {
+            "id": "quiz-1",
+            "type": "quiz",
+            "question": "What is the primary purpose of understanding building blocks in complex systems?",
+            "options": [
+                "To master the foundation before tackling advanced concepts",
+                "To memorize technical terminology",
+                "To skip directly to complex topics"
+            ],
+            "correctIndex": 0,
+            "explanation": "Building blocks provide the foundation. Once you understand them, complex systems become much easier to grasp.",
+            "unlocks": true
+        },
+        {
+            "id": "assignment-1",
+            "type": "assignment",
+            "title": "Reflection Exercise",
+            "description": "Share your initial thoughts on what you've learned so far.",
+            "instructions": "Write a short paragraph (3-5 sentences) about how you see these concepts applying to real-world scenarios.",
+            "submissionTypes": [
+                "text"
+            ],
+            "isBlocking": false
+        },
+        {
+            "id": "conclusion-1",
+            "type": "text",
+            "content": "**Excellent work!** You've completed the introduction. The concepts you've learned here will be essential as we dive deeper into more advanced topics in the next lesson.",
+            "style": "highlight"
+        }
+    ]
+}

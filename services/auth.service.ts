@@ -1,9 +1,12 @@
 "use server";
 
 import { createServerSupabaseClient } from "@/lib/supabase-server";
+import { createAdminSupabaseClient } from "@/lib/supabase-admin";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createProfile } from "./profile.service";
+import { sendConfirmationEmail } from "./email.service";
+import { getSiteUrl } from "@/lib/utils/url";
 import type { ServiceResult } from "@/types";
 
 /**
@@ -45,25 +48,40 @@ export async function signup(
     const fullName = formData.get("fullName") as string;
 
     try {
-        const supabase = await createServerSupabaseClient();
+        const siteUrl = getSiteUrl();
 
-        const { data, error } = await supabase.auth.signUp({
+        // Generate confirmation link manually using Admin client
+        const adminSupabase = createAdminSupabaseClient();
+        const { data: linkData, error: linkError } = await adminSupabase.auth.admin.generateLink({
+            type: "signup",
             email,
             password,
             options: {
                 data: {
                     full_name: fullName,
                 },
+                redirectTo: siteUrl,
             },
         });
 
-        if (error) {
-            return { data: null, error: error.message };
+        if (linkError) {
+            return { data: null, error: linkError.message };
         }
 
-        // Create profile for new user
-        if (data.user) {
-            await createProfile(data.user.id, fullName);
+        const { user } = linkData;
+
+        // Create profile for new user using Admin client to bypass RLS
+        if (user) {
+            await adminSupabase.from("profiles").insert({
+                id: user.id,
+                full_name: fullName,
+                role: "user",
+            });
+
+            // Send confirmation email via Resend
+            if (linkData.properties?.action_link) {
+                await sendConfirmationEmail(email, linkData.properties.action_link);
+            }
         }
 
         return { data: { needsConfirmation: true }, error: null };

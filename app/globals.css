@@ -1,55 +1,490 @@
-/* app/globals.css */
+/* app/globals.css - NOTEacher Design System */
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM TOKENS
+   Premium, accessible, scalable design language
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @theme {
-    /* Core Brand - Navy & White */
+    /* ─────────────────────────────────────────────────────────────────────────
+       BRAND COLORS
+       Core identity - Navy primary with vibrant power accents
+       ───────────────────────────────────────────────────────────────────────── */
+
+    /* Primary - Navy */
+    --color-primary: #0055ff;
+    --color-primary-hover: #0044cc;
+    --color-primary-active: #003399;
+    --color-primary-light: #e6f0ff;
+
+    /* Legacy aliases for backwards compatibility */
     --color-navy: #0055ff;
     --color-navy-dark: #0044cc;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       POWER COLORS (Accents)
+       High-energy accents for engagement and gamification
+       ───────────────────────────────────────────────────────────────────────── */
+    --color-power-teal: #14b8a6;
+    --color-power-teal-hover: #0d9488;
+    --color-power-teal-light: #ccfbf1;
+
+    --color-power-purple: #a855f7;
+    --color-power-purple-hover: #9333ea;
+    --color-power-purple-light: #f3e8ff;
+
+    --color-power-orange: #f97316;
+    --color-power-orange-hover: #ea580c;
+    --color-power-orange-light: #ffedd5;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       SEMANTIC COLORS
+       Contextual feedback - accessible contrast ratios
+       ───────────────────────────────────────────────────────────────────────── */
+    --color-success: #10b981;
+    --color-success-hover: #059669;
+    --color-success-light: #d1fae5;
+    --color-success-dark: #047857;
+
+    --color-warning: #f59e0b;
+    --color-warning-hover: #d97706;
+    --color-warning-light: #fef3c7;
+    --color-warning-dark: #b45309;
+
+    --color-error: #ef4444;
+    --color-error-hover: #dc2626;
+    --color-error-light: #fee2e2;
+    --color-error-dark: #b91c1c;
+
+    --color-info: #3b82f6;
+    --color-info-hover: #2563eb;
+    --color-info-light: #dbeafe;
+    --color-info-dark: #1d4ed8;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       NEUTRAL COLORS (Slate Scale)
+       UI surfaces, text, borders
+       ───────────────────────────────────────────────────────────────────────── */
     --color-canvas: #ffffff;
+    --color-surface: #ffffff;
+    --color-surface-raised: #f8fafc;
+    --color-surface-sunken: #f1f5f9;
     --color-lab-bg: #f8fafc;
 
-    /* Power Colors - High Contrast Highlights */
-    --color-power-teal: #14b8a6;
-    --color-power-purple: #a855f7;
-    --color-power-orange: #f97316;
-
-    /* Neutrals */
+    /* Text hierarchy */
     --color-ink-900: #0f172a;
+    --color-ink-700: #334155;
+    --color-ink-500: #64748b;
     --color-ink-400: #94a3b8;
-    --color-border-light: #e2e8f0;
+    --color-ink-300: #cbd5e1;
 
-    /* Global Radius Strategy */
+    /* Borders */
+    --color-border: #e2e8f0;
+    --color-border-light: #e2e8f0;
+    --color-border-hover: #cbd5e1;
+    --color-border-focus: #0055ff;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       TYPOGRAPHY SCALE
+       Major Third (1.25) ratio - harmonious progression
+       ───────────────────────────────────────────────────────────────────────── */
+    --text-xs: 0.75rem;
+    /* 12px - badges, captions */
+    --text-sm: 0.875rem;
+    /* 14px - secondary text */
+    --text-base: 1rem;
+    /* 16px - body */
+    --text-lg: 1.125rem;
+    /* 18px - large body */
+    --text-xl: 1.25rem;
+    /* 20px - small headings */
+    --text-2xl: 1.5rem;
+    /* 24px - section headings */
+    --text-3xl: 1.875rem;
+    /* 30px - page headings */
+    --text-4xl: 2.25rem;
+    /* 36px - display small */
+    --text-5xl: 3rem;
+    /* 48px - display */
+    --text-6xl: 3.75rem;
+    /* 60px - hero */
+    --text-7xl: 4.5rem;
+    /* 72px - large hero */
+
+    /* Line Heights */
+    --leading-none: 1;
+    --leading-tight: 1.15;
+    --leading-snug: 1.25;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+    --leading-loose: 2;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       SPACING SCALE
+       4px base unit - consistent rhythm
+       ───────────────────────────────────────────────────────────────────────── */
+    --space-0: 0;
+    --space-px: 1px;
+    --space-0-5: 0.125rem;
+    /* 2px */
+    --space-1: 0.25rem;
+    /* 4px */
+    --space-1-5: 0.375rem;
+    /* 6px */
+    --space-2: 0.5rem;
+    /* 8px */
+    --space-2-5: 0.625rem;
+    /* 10px */
+    --space-3: 0.75rem;
+    /* 12px */
+    --space-3-5: 0.875rem;
+    /* 14px */
+    --space-4: 1rem;
+    /* 16px */
+    --space-5: 1.25rem;
+    /* 20px */
+    --space-6: 1.5rem;
+    /* 24px */
+    --space-7: 1.75rem;
+    /* 28px */
+    --space-8: 2rem;
+    /* 32px */
+    --space-9: 2.25rem;
+    /* 36px */
+    --space-10: 2.5rem;
+    /* 40px */
+    --space-11: 2.75rem;
+    /* 44px */
+    --space-12: 3rem;
+    /* 48px */
+    --space-14: 3.5rem;
+    /* 56px */
+    --space-16: 4rem;
+    /* 64px */
+    --space-20: 5rem;
+    /* 80px */
+    --space-24: 6rem;
+    /* 96px */
+    --space-28: 7rem;
+    /* 112px */
+    --space-32: 8rem;
+    /* 128px */
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       BORDER RADIUS
+       Consistent roundness system
+       ───────────────────────────────────────────────────────────────────────── */
+    --radius-none: 0;
+    --radius-sm: 0.375rem;
+    /* 6px - small elements */
+    --radius-md: 0.5rem;
+    /* 8px - inputs, small buttons */
+    --radius-lg: 0.75rem;
+    /* 12px - default cards */
+    --radius-xl: 1rem;
+    /* 16px - modals */
+    --radius-2xl: 1.25rem;
+    /* 20px - buttons */
+    --radius-3xl: 1.5rem;
+    /* 24px - large cards */
+    --radius-4xl: 2rem;
+    /* 32px - hero cards */
+    --radius-5xl: 2.5rem;
+    /* 40px - feature cards */
+    --radius-full: 9999px;
+    /* pills */
+
+    /* Semantic radius */
     --radius-button: 1.25rem;
-    --radius-card: 2.5rem;
+    --radius-card: 2rem;
     --radius-pill: 9999px;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       SHADOWS
+       Layered elevation system
+       ───────────────────────────────────────────────────────────────────────── */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
+    /* Brand colored shadows */
+    --shadow-primary: 0 10px 40px -10px rgba(0, 85, 255, 0.25);
+    --shadow-primary-lg: 0 20px 60px -15px rgba(0, 85, 255, 0.3);
+    --shadow-teal: 0 10px 40px -10px rgba(20, 184, 166, 0.25);
+    --shadow-teal-lg: 0 20px 60px -15px rgba(20, 184, 166, 0.3);
+    --shadow-purple: 0 10px 40px -10px rgba(168, 85, 247, 0.25);
+    --shadow-orange: 0 10px 40px -10px rgba(249, 115, 22, 0.25);
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       TRANSITIONS
+       Smooth, intentional motion
+       ───────────────────────────────────────────────────────────────────────── */
+    --duration-instant: 0ms;
+    --duration-fast: 100ms;
+    --duration-normal: 200ms;
+    --duration-slow: 300ms;
+    --duration-slower: 500ms;
+
+    --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   Reusable patterns and interactive states
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @layer utilities {
-    /* 3D Power Button: The Signature Interaction */
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       3D POWER BUTTONS - Signature Interaction
+       ───────────────────────────────────────────────────────────────────────── */
     .btn-3d {
         @apply transition-all active:translate-y-[4px] active:shadow-none font-black uppercase tracking-widest border-b-[6px];
     }
 
     .btn-3d-navy {
-        @apply bg-navy border-navy-dark text-white hover:bg-navy-dark shadow-xl shadow-navy/20;
+        @apply bg-primary border-primary-hover text-white hover:bg-primary-hover shadow-xl;
+        box-shadow: var(--shadow-primary);
     }
 
     .btn-3d-white {
-        @apply bg-white border-border-light text-ink-400 hover:bg-slate-50;
+        @apply bg-white border-border text-ink-400 hover:bg-surface-raised;
     }
 
-    /* Spacious Container */
+    .btn-3d-teal {
+        @apply bg-power-teal border-power-teal-hover text-white hover:bg-power-teal-hover;
+        box-shadow: var(--shadow-teal);
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       FOCUS STATES - Accessible focus indicators
+       ───────────────────────────────────────────────────────────────────────── */
+    .focus-ring {
+        @apply outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    }
+
+    .focus-ring-inset {
+        @apply outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       GLASS EFFECTS - Frosted glass panels
+       ───────────────────────────────────────────────────────────────────────── */
+    .glass {
+        @apply bg-white/80 backdrop-blur-xl border border-white/20;
+    }
+
+    .glass-dark {
+        @apply bg-ink-900/80 backdrop-blur-xl border border-white/10;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       CONTAINER UTILITIES
+       ───────────────────────────────────────────────────────────────────────── */
     .lab-container {
-        @apply max-w-7xl mx-auto px-8;
+        @apply max-w-7xl mx-auto px-6 md:px-8;
+    }
+
+    .section-container {
+        @apply max-w-5xl mx-auto px-6 md:px-8;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       TEXT UTILITIES
+       ───────────────────────────────────────────────────────────────────────── */
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    .text-gradient-primary {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-power-purple;
+    }
+
+    .text-gradient-teal {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-power-teal to-emerald-400;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       CARD UTILITIES
+       ───────────────────────────────────────────────────────────────────────── */
+    .card-hover {
+        @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+    }
+
+    .card-hover-glow {
+        @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+        --tw-shadow-color: rgba(0, 85, 255, 0.25);
+    }
+
+    .card-interactive {
+        @apply cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-[0.98];
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       ANIMATION UTILITIES
+       ───────────────────────────────────────────────────────────────────────── */
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .animate-slide-up {
+        animation: slideUp 0.4s ease-out;
+    }
+
+    .animate-scale-in {
+        animation: scaleIn 0.3s ease-out;
+    }
+
+    .animate-pulse-soft {
+        animation: pulseSoft 2s ease-in-out infinite;
+    }
+
+    .animate-glow {
+        animation: glow 2s ease-in-out infinite alternate;
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulseSoft {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 20px rgba(0, 85, 255, 0.2);
+    }
+
+    to {
+        box-shadow: 0 0 30px rgba(0, 85, 255, 0.4);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE STYLES
+   Global defaults
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
     --background: var(--color-canvas);
     --foreground: var(--color-ink-900);
+
+    /* Scrollbar theming */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
 }
 
 body {
     background-color: var(--color-lab-bg);
-    font-family: "Inter", sans-serif; /* Or your preferred bold sans-serif */
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--color-ink-900);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection highlight */
+::selection {
+    background-color: rgba(0, 85, 255, 0.1);
+    color: var(--color-ink-900);
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-hover);
+}
+
+/* Focus visible styles - accessibility */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }

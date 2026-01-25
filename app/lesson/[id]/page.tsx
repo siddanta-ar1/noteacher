@@ -1,6 +1,6 @@
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
-import LessonClient from "./LessonClient";
+import LessonClient from "./LessonClientV2";
 
 // UPDATED: params is now a Promise
 type Props = {
@@ -50,6 +50,7 @@ export default async function LessonPage({ params }: Props) {
         title: node.title,
         type: node.type,
         content: node.content_json,
+        course_id: node.course_id,
       }}
       courseNodes={courseNodes || []}
       userProgress={userProgress || []}

@@ -46,14 +46,27 @@ export async function middleware(request: NextRequest) {
     nextUrl.startsWith("/auth") ||
     nextUrl.startsWith("/public"); // for assets if needed
 
-  // If NOT Logged In + Trying to access Private Route -> Redirect to Login
+  // Handle Auth Code Callback on Root
+  if (nextUrl === "/" && request.nextUrl.searchParams.has("code")) {
+    const code = request.nextUrl.searchParams.get("code");
+    const next = request.nextUrl.searchParams.get("next");
+    const newUrl = new URL("/auth/callback", request.url);
+    newUrl.searchParams.set("code", code!);
+    if (next) newUrl.searchParams.set("next", next);
+
+    return NextResponse.redirect(newUrl);
+  }
+
+  // Redirect logic...
   if (!user && !isPublic) {
+    console.log("[Middleware] No user found, redirecting to login. Path:", nextUrl);
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
   // If Logged In + Trying to access Login/Landing -> Redirect to Home
   if (user && (nextUrl === "/login" || nextUrl === "/")) {
+    console.log("[Middleware] User found, redirecting to home");
     url.pathname = "/home";
     return NextResponse.redirect(url);
   }

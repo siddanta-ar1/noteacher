@@ -1,124 +1,222 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase"; // Import the singleton directly
-import { useRouter } from "next/navigation";
-import { User, Save, ChevronLeft, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+  User,
+  MapPin,
+  Calendar,
+  Edit2,
+  Trophy,
+  Zap,
+  BookOpen,
+  Github,
+  Twitter
+} from "lucide-react";
 import Link from "next/link";
-// import { toast } from "sonner";
+import { Avatar, Badge, Card, ProgressBar } from "@/components/ui";
+
+const MOCK_PROFILE = {
+  name: "John Doe",
+  username: "@johndoe",
+  bio: "Full-stack developer learning hardware engineering. Building cool stuff with Verilog and FPGAs.",
+  location: "San Francisco, CA",
+  joined: "January 2024",
+  xp: 12450,
+  level: 5,
+  streak: 12,
+  socials: {
+    github: "github.com/johndoe",
+    twitter: "twitter.com/johndoe"
+  },
+  achievements: [
+    { icon: Zap, color: "text-power-orange", bg: "bg-power-orange-light", title: "Fast Learner", date: "2 days ago" },
+    { icon: Trophy, color: "text-power-purple", bg: "bg-power-purple-light", title: "Course Master", date: "1 week ago" },
+    { icon: BookOpen, color: "text-power-teal", bg: "bg-power-teal-light", title: "Bookworm", date: "2 weeks ago" },
+  ]
+};
 
 export default function ProfilePage() {
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [fullName, setFullName] = useState("");
-  const [userId, setUserId] = useState<string | null>(null);
-  const router = useRouter();
-
-  // Note: We use the 'supabase' singleton imported above
-
-  useEffect(() => {
-    const getProfile = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/login");
-        return;
-      }
-      setUserId(user.id);
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("full_name")
-        .eq("id", user.id)
-        .single();
-
-      if (profile) setFullName(profile.full_name || "");
-      setLoading(false);
-    };
-
-    getProfile();
-  }, [router]);
-
-  const handleSave = async () => {
-    if (!userId || !fullName.trim()) return;
-    setSaving(true);
-
-    const { error } = await supabase
-      .from("profiles")
-      .update({ full_name: fullName, updated_at: new Date().toISOString() })
-      .eq("id", userId);
-
-    if (!error) {
-      // toast.success("Profile updated");
-      router.refresh();
-      setTimeout(() => router.push("/home"), 500);
-    } else {
-      console.error(error);
-      // toast.error("Failed to update profile");
-    }
-    setSaving(false);
-  };
-
-  if (loading)
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="animate-spin text-navy" />
-      </div>
-    );
-
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-md">
-        <Link
-          href="/home"
-          className="inline-flex items-center gap-2 text-slate-400 hover:text-navy font-bold text-sm mb-8 transition-colors"
-        >
-          <ChevronLeft size={16} /> Back to Dashboard
-        </Link>
+    <div className="min-h-screen bg-surface-raised pb-20">
+      {/* Header / Cover */}
+      <div className="h-64 bg-gradient-to-r from-primary to-power-purple relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+      </div>
 
-        <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-xl border-2 border-slate-100">
-          <div className="w-20 h-20 bg-navy rounded-full flex items-center justify-center text-white mx-auto mb-6 shadow-lg shadow-navy/20">
-            <User size={32} />
-          </div>
-
-          <h1 className="text-2xl font-black text-center text-slate-900 mb-2">
-            Cadet Identity
-          </h1>
-          <p className="text-slate-400 text-center text-sm font-medium mb-8">
-            Update your credentials for the leaderboard.
-          </p>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2 ml-4">
-                Full Name / Callsign
-              </label>
-              <input
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="e.g. John Doe"
-                className="w-full h-14 rounded-2xl bg-slate-50 border-2 border-slate-100 px-6 font-bold text-slate-700 outline-none focus:border-navy focus:bg-white transition-all"
-              />
+      <main className="max-w-4xl mx-auto px-6 -mt-32 relative z-10">
+        {/* Profile Card */}
+        <div className="bg-white rounded-[2.5rem] p-8 shadow-xl border border-border mb-8">
+          <div className="flex flex-col md:flex-row gap-8 items-start">
+            {/* Avatar */}
+            <div className="relative -mt-20">
+              <div className="p-2 bg-white rounded-[2.5rem] shadow-sm">
+                <Avatar
+                  name={MOCK_PROFILE.name}
+                  size="xl"
+                  className="w-32 h-32 text-3xl rounded-[2rem]"
+                />
+              </div>
+              <div className="absolute bottom-2 right-2 bg-success text-white px-3 py-1 rounded-full text-xs font-black border-4 border-white">
+                LVL {MOCK_PROFILE.level}
+              </div>
             </div>
 
-            <button
-              onClick={handleSave}
-              disabled={saving || !fullName.trim()}
-              className="w-full h-14 bg-navy text-white rounded-2xl font-black text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:scale-100"
-            >
-              {saving ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                <>
-                  <Save size={18} /> Save & Continue
-                </>
-              )}
-            </button>
+            {/* Info */}
+            <div className="flex-1 w-full">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h1 className="text-3xl font-black text-ink-900 mb-1">{MOCK_PROFILE.name}</h1>
+                  <p className="text-ink-500 font-medium">{MOCK_PROFILE.username}</p>
+                </div>
+                <button className="px-5 py-2.5 border-2 border-border hover:border-primary hover:text-primary rounded-xl font-bold transition-all flex items-center gap-2 text-sm">
+                  <Edit2 size={16} />
+                  Edit Profile
+                </button>
+              </div>
+
+              <p className="text-ink-700 leading-relaxed mb-6 max-w-2xl">
+                {MOCK_PROFILE.bio}
+              </p>
+
+              <div className="flex flex-wrap gap-6 text-sm text-ink-500 mb-8">
+                <div className="flex items-center gap-2">
+                  <MapPin size={16} />
+                  {MOCK_PROFILE.location}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar size={16} />
+                  Joined {MOCK_PROFILE.joined}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Github size={16} />
+                  johndoe
+                </div>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="bg-surface-raised p-4 rounded-2xl text-center border border-border">
+                  <div className="text-2xl font-black text-ink-900 mb-1">
+                    {MOCK_PROFILE.xp.toLocaleString()}
+                  </div>
+                  <div className="text-xs font-bold text-ink-400 uppercase tracking-wider">
+                    Total XP
+                  </div>
+                </div>
+                <div className="bg-surface-raised p-4 rounded-2xl text-center border border-border">
+                  <div className="text-2xl font-black text-ink-900 mb-1">
+                    {MOCK_PROFILE.streak}
+                  </div>
+                  <div className="text-xs font-bold text-ink-400 uppercase tracking-wider">
+                    Day Streak
+                  </div>
+                </div>
+                <div className="bg-surface-raised p-4 rounded-2xl text-center border border-border">
+                  <div className="text-2xl font-black text-ink-900 mb-1">
+                    15
+                  </div>
+                  <div className="text-xs font-bold text-ink-400 uppercase tracking-wider">
+                    Badges
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Left Column */}
+          <div className="md:col-span-2 space-y-8">
+            {/* Current Progress */}
+            <Card padding="lg" rounded="3xl">
+              <h3 className="text-lg font-black text-ink-900 mb-6 flex items-center gap-2">
+                <Zap className="text-primary" size={20} />
+                Active Course
+              </h3>
+              <div className="bg-surface-raised p-6 rounded-2xl border border-border">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <Badge variant="primary" className="mb-2">Hardware Design</Badge>
+                    <h4 className="text-lg font-bold text-ink-900">Digital Logic & Architecture</h4>
+                  </div>
+                  <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-primary font-black">
+                    72%
+                  </div>
+                </div>
+                <ProgressBar value={72} size="md" color="primary" showLabel />
+                <div className="mt-4 flex justify-end">
+                  <button className="text-sm font-bold text-primary hover:underline">
+                    Resume Learning →
+                  </button>
+                </div>
+              </div>
+            </Card>
+
+            {/* Recent Activity */}
+            <Card padding="lg" rounded="3xl">
+              <h3 className="text-lg font-black text-ink-900 mb-6">Recent Activity</h3>
+              <div className="space-y-6">
+                {[1, 2, 3].map((_, i) => (
+                  <div key={i} className="flex gap-4">
+                    <div className="w-10 h-10 bg-power-teal/10 rounded-full flex items-center justify-center shrink-0">
+                      <div className="w-3 h-3 bg-power-teal rounded-full" />
+                    </div>
+                    <div className="pb-6 border-b border-border w-full last:border-0 last:pb-0">
+                      <p className="text-ink-900 font-medium">
+                        Completed lesson <span className="font-bold">Boolean Algebra Basics</span>
+                      </p>
+                      <p className="text-sm text-ink-400 mt-1">2 hours ago • +150 XP</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-8">
+            {/* Achievements */}
+            <Card padding="lg" rounded="3xl">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-black text-ink-900">Achievements</h3>
+                <Link href="#" className="text-xs font-bold text-primary hover:underline">View All</Link>
+              </div>
+              <div className="space-y-4">
+                {MOCK_PROFILE.achievements.map((achievement, i) => (
+                  <div key={i} className="flex items-center gap-4">
+                    <div className={`w-12 h-12 ${achievement.bg} rounded-xl flex items-center justify-center ${achievement.color}`}>
+                      <achievement.icon size={20} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-ink-900 text-sm">{achievement.title}</h4>
+                      <p className="text-xs text-ink-400">{achievement.date}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            {/* Friends/Network */}
+            <Card padding="lg" rounded="3xl">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-black text-ink-900">Friends</h3>
+                <Link href="#" className="text-xs font-bold text-primary hover:underline">View All</Link>
+              </div>
+              <div className="flex -space-x-3 overflow-hidden p-2">
+                {[1, 2, 3, 4, 5].map((_, i) => (
+                  <div key={i} className="w-10 h-10 rounded-full bg-surface-raised border-2 border-white flex items-center justify-center text-xs font-bold text-ink-500">
+                    {String.fromCharCode(65 + i)}
+                  </div>
+                ))}
+                <div className="w-10 h-10 rounded-full bg-surface-sunken border-2 border-white flex items-center justify-center text-xs font-bold text-ink-500">
+                  +12
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
