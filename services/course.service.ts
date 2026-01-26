@@ -81,9 +81,10 @@ export async function getCourseWithNodes(
       `
             )
             .eq("id", courseId)
-            .single();
+            .maybeSingle();
 
         if (error) throw error;
+        if (!data) return { data: null, error: "Course not found" };
 
         // Sort nodes by position
         if (data?.nodes) {

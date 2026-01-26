@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Globe, Server, Smartphone, Monitor } from "lucide-react";
 
 type WebDevSimProps = {
-    mode: "network" | "box-model" | "flexbox" | "dom" | "selectors";
+    mode: "network" | "box-model" | "flexbox" | "dom" | "selectors" | "devtools";
     config?: Record<string, unknown>;
 };
 
@@ -256,6 +256,126 @@ export default function WebDevSimulator({ mode, config }: WebDevSimProps) {
 
                 {solved && <div className="text-green-400 font-bold">Try `.red` or `circle.red`! Correct!</div>}
                 {!solved && <div className="text-slate-500 text-sm">Target the bouncing ball with a class selector.</div>}
+            </div>
+        );
+    }
+
+    // --- MODE 5: DOM TREE VISUALIZER ---
+    if (mode === "dom") {
+        return (
+            <div className="w-full h-96 bg-slate-900 rounded-3xl flex flex-col p-6 border-4 border-slate-800 gap-6 overflow-hidden">
+                <div className="flex-1 flex gap-4">
+                    {/* Tree View */}
+                    <div className="w-1/2 bg-slate-800 rounded-xl p-4 overflow-y-auto font-mono text-sm">
+                        <div className="text-purple-400">html</div>
+                        <div className="pl-4 border-l border-slate-700">
+                            <div className="text-purple-400">head</div>
+                            <div className="text-purple-400">body</div>
+                            <div className="pl-4 border-l border-slate-700">
+                                <div className="text-blue-400 hover:bg-slate-700 cursor-pointer rounded px-1 transition-colors">div.container</div>
+                                <div className="pl-4 border-l border-slate-700">
+                                    <div className="text-green-400 hover:bg-slate-700 cursor-pointer rounded px-1 transition-colors">h1 ("Hello")</div>
+                                    <div className="text-green-400 hover:bg-slate-700 cursor-pointer rounded px-1 transition-colors">p ("World")</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Preview */}
+                    <div className="w-1/2 bg-white rounded-xl p-4 flex flex-col items-center justify-center gap-2 border-2 border-slate-600">
+                        <div className="w-full h-full border-2 border-dashed border-blue-400 p-4 rounded bg-blue-50 relative group">
+                            <span className="absolute top-0 right-0 bg-blue-400 text-white text-[10px] px-1">div</span>
+                            <h1 className="text-2xl font-bold border-2 border-dashed border-green-500 p-2 hover:bg-green-100 transition-colors relative">
+                                Hello
+                                <span className="absolute top-0 right-0 bg-green-500 text-white text-[10px] px-1 opacity-0 group-hover:opacity-100">h1</span>
+                            </h1>
+                            <p className="text-slate-600 border-2 border-dashed border-green-500 p-2 hover:bg-green-100 transition-colors relative mt-2">
+                                World
+                                <span className="absolute top-0 right-0 bg-green-500 text-white text-[10px] px-1 opacity-0 group-hover:opacity-100">p</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div className="text-center text-slate-400 text-xs">Hover over elements to see the DOM mapping</div>
+            </div>
+        );
+    }
+
+    // --- MODE 6: DEVTOOLS INSPECTOR ---
+    if (mode === "devtools") {
+        const [inspecting, setInspecting] = useState(false);
+        const [target, setTarget] = useState<string | null>(null);
+
+        return (
+            <div className="w-full h-96 bg-slate-900 rounded-3xl flex flex-col border-4 border-slate-800 overflow-hidden">
+                {/* Browser Toolbar */}
+                <div className="h-10 bg-slate-800 flex items-center px-4 gap-2 border-b border-slate-700">
+                    <div className="flex gap-1.5">
+                        <div className="w-3 h-3 rounded-full bg-red-400" />
+                        <div className="w-3 h-3 rounded-full bg-yellow-400" />
+                        <div className="w-3 h-3 rounded-full bg-green-400" />
+                    </div>
+                    <div className="flex-1 bg-slate-900 h-6 rounded px-2 text-xs text-slate-400 flex items-center">
+                        localhost:3000
+                    </div>
+                </div>
+
+                <div className="flex-1 flex flex-col relative">
+                    {/* Web Content */}
+                    <div className="flex-1 bg-white p-8 flex flex-col gap-4 items-start justify-center relative"
+                        onMouseLeave={() => inspecting && setTarget(null)}>
+
+                        <h1
+                            className={`text-4xl font-black text-navy border-2 ${inspecting && target === 'h1' ? 'border-blue-500 bg-blue-100' : 'border-transparent'}`}
+                            onMouseEnter={() => inspecting && setTarget('h1')}
+                        >
+                            Inspect Me!
+                            {inspecting && target === 'h1' && <span className="absolute -top-6 left-0 bg-blue-500 text-white text-xs px-1">h1.font-black</span>}
+                        </h1>
+
+                        <button
+                            className={`px-6 py-3 bg-power-teal text-navy font-bold rounded-lg border-2 ${inspecting && target === 'button' ? 'border-blue-500 bg-teal-200' : 'border-transparent'}`}
+                            onMouseEnter={() => inspecting && setTarget('button')}
+                        >
+                            Click Button
+                            {inspecting && target === 'button' && <span className="absolute -top-6 left-0 bg-blue-500 text-white text-xs px-1">button.btn</span>}
+                        </button>
+                    </div>
+
+                    {/* DevTools Drawer */}
+                    <div className="h-40 bg-slate-900 border-t border-slate-700 flex flex-col">
+                        <div className="flex items-center justify-between px-4 py-2 bg-slate-800/50 border-b border-white/5">
+                            <div className="text-xs font-bold text-slate-400 flex gap-4">
+                                <span className="text-white border-b-2 border-power-teal">Elements</span>
+                                <span>Console</span>
+                                <span>Network</span>
+                            </div>
+                            <button
+                                onClick={() => setInspecting(!inspecting)}
+                                className={`p-1.5 rounded transition-colors ${inspecting ? 'bg-blue-500 text-white' : 'text-slate-400 hover:bg-slate-800'}`}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6" /><path d="m12 12 4 10 1.7-4.3L22 16Z" /></svg>
+                            </button>
+                        </div>
+                        <div className="p-4 font-mono text-xs text-slate-300 overflow-y-auto">
+                            {target === 'h1' ? (
+                                <div className="animate-pulse bg-slate-800 p-2 rounded">
+                                    <span className="text-blue-400">&lt;h1</span> <span className="text-yellow-400">class</span>=<span className="text-green-400">"text-4xl..."</span>&gt;
+                                    Inspect Me!
+                                    <span className="text-blue-400">&lt;/h1&gt;</span>
+                                </div>
+                            ) : target === 'button' ? (
+                                <div className="animate-pulse bg-slate-800 p-2 rounded">
+                                    <span className="text-blue-400">&lt;button</span> <span className="text-yellow-400">class</span>=<span className="text-green-400">"px-6..."</span>&gt;
+                                    Click Button
+                                    <span className="text-blue-400">&lt;/button&gt;</span>
+                                </div>
+                            ) : (
+                                <div className="text-slate-500 italic">Select an element to inspect its source code...</div>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }

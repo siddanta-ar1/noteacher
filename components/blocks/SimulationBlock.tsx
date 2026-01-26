@@ -22,10 +22,15 @@ const SIMULATION_REGISTRY: Record<string, React.LazyExoticComponent<any> | React
     "box-model": WebDevSimulator,
     "flexbox": WebDevSimulator,
     "selectors": WebDevSimulator,
+    "devtools": WebDevSimulator,
+    "dom": WebDevSimulator,
 
     "circuit": () => <ComingSoonPlaceholder type="Circuit Simulator" />,
     "number-line": () => <ComingSoonPlaceholder type="Number Line" />,
-    "probability": StatisticsVisualizer, // Mapped to Stats visualizer which has 'gambler' mode
+    "probability": StatisticsVisualizer,
+    "histogram": StatisticsVisualizer,
+    "central-tendency": StatisticsVisualizer,
+    "z-score": StatisticsVisualizer,
 };
 
 interface SimulationBlockProps {

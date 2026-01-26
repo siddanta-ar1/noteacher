@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { RefreshCcw, TrendingUp } from "lucide-react";
 
 type VisualizerProps = {
-  mode: "chaos" | "gambler" | "sample" | "normal" | "trend";
+  mode: "chaos" | "gambler" | "sample" | "normal" | "trend" | "histogram" | "central-tendency" | "z-score";
   trigger: boolean; // Toggles the animation state
 };
 
@@ -245,6 +245,182 @@ export default function StatisticsVisualizer({
             <span className="text-white font-bold text-sm">Linear Fit</span>
           </div>
           <p className="text-xs text-slate-400 font-mono">R² = {trigger ? "0.89" : "---"}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // --- MODE 5: HISTOGRAM (Binning) ---
+  if (mode === "histogram") {
+    const [binSize, setBinSize] = useState(10);
+    // Generate random data (e.g. grades 0-100)
+    const [data] = useState(() => Array.from({ length: 200 }).map(() => Math.floor(Math.random() * 100)));
+
+    // Calculate bins
+    const bins = Array.from({ length: Math.ceil(100 / binSize) }).map((_, i) => {
+      const start = i * binSize;
+      const end = start + binSize;
+      const count = data.filter(v => v >= start && v < end).length;
+      return { start, end, count };
+    });
+
+    const maxCount = Math.max(...bins.map(b => b.count));
+
+    return (
+      <div className="w-full h-96 bg-slate-900 rounded-3xl flex flex-col p-6 border-4 border-slate-800 gap-6">
+        <div className="flex-1 flex items-end justify-between px-8 gap-1 relative">
+          {bins.map((bin, i) => (
+            <motion.div
+              key={`${binSize}-${i}`}
+              layout
+              className="bg-power-blue rounded-t hover:bg-power-teal transition-colors relative group"
+              style={{
+                height: `${(bin.count / maxCount) * 100}%`,
+                width: `${100 / bins.length}%`
+              }}
+            >
+              <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap z-10">
+                {bin.start}-{bin.end}: {bin.count}
+              </div>
+            </motion.div>
+          ))}
+          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-slate-700" />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between text-xs font-bold text-slate-400 uppercase">
+            <span>More Bars (Precision)</span>
+            <span>Bin Size: {binSize}</span>
+            <span>Fewer Bars (General)</span>
+          </div>
+          <input
+            type="range"
+            min="5"
+            max="50"
+            step="5"
+            value={binSize}
+            onChange={(e) => setBinSize(Number(e.target.value))}
+            className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-power-blue"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // --- MODE 6: CENTRAL TENDENCY (Mean vs Median) ---
+  if (mode === "central-tendency") {
+    const [values, setValues] = useState<number[]>([10, 20, 30, 40, 50]);
+
+    const mean = values.reduce((a, b) => a + b, 0) / values.length;
+    const sorted = [...values].sort((a, b) => a - b);
+    const median = sorted.length % 2 !== 0 ? sorted[Math.floor(sorted.length / 2)] : (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2;
+
+    const addOutlier = () => {
+      setValues(prev => [...prev, 500]); // Huge outlier
+    };
+    const reset = () => setValues([10, 20, 30, 40, 50]);
+
+    return (
+      <div className="w-full h-96 bg-slate-900 rounded-3xl flex flex-col p-6 border-4 border-slate-800 gap-6">
+        <div className="flex gap-4 justify-center">
+          <div className="bg-slate-800 p-4 rounded-xl text-center border-b-4 border-power-blue w-32">
+            <div className="text-xs text-slate-400 uppercase tracking-widest font-bold">Mean</div>
+            <div className="text-2xl font-black text-white">{mean.toFixed(1)}</div>
+          </div>
+          <div className="bg-slate-800 p-4 rounded-xl text-center border-b-4 border-power-purple w-32">
+            <div className="text-xs text-slate-400 uppercase tracking-widest font-bold">Median</div>
+            <div className="text-2xl font-black text-white">{median.toFixed(1)}</div>
+          </div>
+        </div>
+
+        <div className="flex-1 relative flex items-center px-8 border-b-2 border-slate-700">
+          {/* Scale Line */}
+          <div className="absolute left-0 right-0 h-0.5 bg-slate-600" />
+
+          {/* Points */}
+          {values.map((v, i) => {
+            // Scale 0-600 to 0-100%
+            const percent = (v / 600) * 100;
+            return (
+              <motion.div
+                key={i}
+                layout
+                initial={{ scale: 0 }}
+                animate={{ scale: 1, left: `${percent}%` }}
+                className="absolute w-4 h-4 rounded-full bg-slate-400 -ml-2 top-1/2 -translate-y-1/2 border-2 border-slate-900 z-10"
+              />
+            );
+          })}
+
+          {/* Indicators */}
+          <motion.div
+            layout
+            animate={{ left: `${(mean / 600) * 100}%` }}
+            className="absolute w-1 h-12 bg-power-blue -ml-0.5 top-1/2 -translate-y-1/2 z-0"
+          >
+            <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-power-blue text-[10px] font-bold">AVG</div>
+          </motion.div>
+          <motion.div
+            layout
+            animate={{ left: `${(median / 600) * 100}%` }}
+            className="absolute w-1 h-8 bg-power-purple -ml-0.5 top-1/2 -translate-y-1/2 z-0"
+          >
+            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-power-purple text-[10px] font-bold">MED</div>
+          </motion.div>
+        </div>
+
+        <div className="flex justify-center gap-4">
+          <button onClick={addOutlier} className="px-6 py-2 rounded-lg bg-power-teal text-navy font-bold">Add Outlier (500)</button>
+          <button onClick={reset} className="px-6 py-2 rounded-lg bg-slate-700 text-white font-bold">Reset</button>
+        </div>
+      </div>
+    );
+  }
+
+  // --- MODE 7: Z-SCORE (Standardizing) ---
+  if (mode === "z-score") {
+    const [value, setValue] = useState(1500);
+    const mean = 1000;
+    const sd = 200;
+    const z = (value - mean) / sd;
+
+    return (
+      <div className="w-full h-96 bg-slate-900 rounded-3xl flex flex-col p-6 border-4 border-slate-800 gap-8 items-center justify-center">
+        <div className="text-center space-y-2">
+          <h3 className="text-xl font-black text-white">Compare SAT Scores</h3>
+          <p className="text-slate-400 text-sm">Mean = {mean}, SD = {sd}</p>
+        </div>
+
+        <div className="w-full max-w-md bg-slate-800 p-8 rounded-2xl flex flex-col gap-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10">
+            <h1 className="text-9xl font-black text-white">Z</h1>
+          </div>
+
+          <div className="flex justify-between items-center relative z-10">
+            <div className="text-left">
+              <div className="text-xs font-bold text-slate-400 uppercase">Your Score</div>
+              <div className="text-4xl font-black text-white">{value}</div>
+            </div>
+            <div className="text-right">
+              <div className="text-xs font-bold text-slate-400 uppercase">Z-Score</div>
+              <div className={`text-4xl font-black ${z > 0 ? 'text-power-teal' : 'text-power-orange'}`}>
+                {z > 0 ? '+' : ''}{z.toFixed(2)}
+              </div>
+            </div>
+          </div>
+
+          <input
+            type="range"
+            min="400"
+            max="1600"
+            step="10"
+            value={value}
+            onChange={(e) => setValue(Number(e.target.value))}
+            className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-white"
+          />
+          <div className="text-center text-xs text-slate-500">
+            Slide to change score. <br /> Z = ({value} - {mean}) / {sd}
+          </div>
         </div>
       </div>
     );
