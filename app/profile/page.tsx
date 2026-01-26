@@ -20,7 +20,7 @@ const MOCK_PROFILE = {
   username: "@johndoe",
   bio: "Full-stack developer learning hardware engineering. Building cool stuff with Verilog and FPGAs.",
   location: "San Francisco, CA",
-  joined: "January 2024",
+  joined: "January 2026",
   xp: 12450,
   level: 5,
   streak: 12,

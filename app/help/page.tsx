@@ -83,7 +83,7 @@ export default function HelpPage() {
             </header>
 
             {/* Content */}
-            <main className="max-w-3xl mx-auto px-6 -mt-8 space-y-8">
+            <main className="max-w-3xl mx-auto px-6 -mt-8 space-y-8 relative z-20">
                 {/* Quick Links */}
                 <div className="grid md:grid-cols-3 gap-4">
                     {resources.map((resource, i) => (
