@@ -13,6 +13,7 @@ import type {
     AIInsightBlock,
     ContentBlockType,
     AnimationConfig,
+    AnimationBlock,
 } from "@/types/content";
 
 /**
@@ -34,22 +35,22 @@ export function parseContentJSON(raw: unknown): CourseContentJSON {
         return DEFAULT_CONTENT;
     }
 
-    const content = raw as Partial<CourseContentJSON>;
+    const content = raw as Record<string, unknown>;
 
     // Handle legacy format (segments array)
-    if ("segments" in raw && Array.isArray((raw as any).segments)) {
-        return migrateLegacyFormat(raw as any);
+    if ("segments" in content && Array.isArray(content.segments)) {
+        return migrateLegacyFormat(content);
     }
 
     // Handle blocks array
-    if ("blocks" in raw && Array.isArray((raw as any).blocks)) {
-        const parsedBlocks = (raw as any).blocks
+    if ("blocks" in content && Array.isArray(content.blocks)) {
+        const parsedBlocks = content.blocks
             .map(parseBlock)
             .filter((b: ContentBlock | null): b is ContentBlock => b !== null);
 
         return {
-            version: content.version || "1.0",
-            metadata: content.metadata || {},
+            version: (content.version as "1.0") || "1.0",
+            metadata: (content.metadata as any) || {},
             blocks: parsedBlocks,
         };
     }
@@ -94,7 +95,7 @@ function migrateLegacyFormat(legacy: {
         blocks.push({
             id: "legacy-sim",
             type: "simulation",
-            simulationType: legacy.visualizerMode as any || "statistics",
+            simulationId: legacy.visualizerMode || "statistics",
         });
     }
 
@@ -153,6 +154,9 @@ function parseBlock(block: unknown): ContentBlock | null {
 
         case "ai-insight":
             return parseAIInsightBlock(b, baseBlock);
+
+        case "animation":
+            return parseAnimationBlock(b, baseBlock);
 
         default:
             console.warn(`[ContentParser] Unknown block type: ${b.type}`);
@@ -232,20 +236,13 @@ function parseSimulationBlock(
     b: Record<string, unknown>,
     base: { id: string; animation?: AnimationConfig }
 ): SimulationBlock {
-    const validTypes = [
-        "logic-gates",
-        "statistics",
-        "circuit",
-        "number-line",
-        "probability",
-        "custom",
-    ];
+    // Registry is dynamic now, so we accept any string ID
     return {
         ...base,
         type: "simulation",
-        simulationType: validTypes.includes(b.simulationType as string)
-            ? (b.simulationType as SimulationBlock["simulationType"])
-            : "custom",
+        simulationId: typeof b.simulationId === "string"
+            ? b.simulationId
+            : (b.simulationType as string || "custom"), // Backwards compatibility
         config:
             b.config && typeof b.config === "object"
                 ? (b.config as Record<string, unknown>)
@@ -301,6 +298,22 @@ function parseAIInsightBlock(
         showSummary: b.showSummary !== false, // Default to true
         showSimulation: b.showSimulation === true,
         context: b.context ? String(b.context) : undefined,
+    };
+}
+
+function parseAnimationBlock(
+    b: Record<string, unknown>,
+    base: { id: string; animation?: AnimationConfig }
+): AnimationBlock {
+    return {
+        ...base,
+        type: "animation",
+        format: (b.format === "lottie" ? "lottie" : "video") as "lottie" | "video",
+        url: String(b.url || ""),
+        autoplay: b.autoplay === true,
+        loop: b.loop !== false, // Default to true
+        caption: b.caption ? String(b.caption) : undefined,
+        height: typeof b.height === "number" ? b.height : undefined,
     };
 }
 

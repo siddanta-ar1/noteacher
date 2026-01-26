@@ -21,9 +21,10 @@ export async function getCourses(): Promise<ServiceResult<Course[]>> {
 
         if (error) throw error;
         return { data, error: null };
-    } catch (err) {
-        console.error("getCourses error:", err);
-        return { data: null, error: (err as Error).message };
+    } catch (err: unknown) {
+        console.error("getCourses error:", JSON.stringify(err, null, 2));
+        const msg = err instanceof Error ? err.message : (err as { message?: string })?.message || "Failed to fetch courses";
+        return { data: null, error: msg };
     }
 }
 
@@ -46,9 +47,10 @@ export async function getCoursesWithNodeCount(): Promise<
 
         if (error) throw error;
         return { data: data as CourseWithNodeCount[], error: null };
-    } catch (err) {
-        console.error("getCoursesWithNodeCount error:", err);
-        return { data: null, error: (err as Error).message };
+    } catch (err: unknown) {
+        console.error("getCoursesWithNodeCount error:", JSON.stringify(err, null, 2));
+        const msg = err instanceof Error ? err.message : (err as { message?: string })?.message || "Failed to fetch courses";
+        return { data: null, error: msg };
     }
 }
 
@@ -92,9 +94,10 @@ export async function getCourseWithNodes(
         }
 
         return { data: data as CourseWithNodes, error: null };
-    } catch (err) {
-        console.error("getCourseWithNodes error:", err);
-        return { data: null, error: (err as Error).message };
+    } catch (err: unknown) {
+        console.error("getCourseWithNodes error:", JSON.stringify(err, null, 2));
+        const errorMessage = err instanceof Error ? err.message : (err as { message?: string })?.message || "An unexpected error occurred while fetching the course";
+        return { data: null, error: errorMessage };
     }
 }
 
@@ -121,9 +124,10 @@ export async function getCoursesForDashboard(): Promise<
 
         if (error) throw error;
         return { data: data as CourseWithNodes[], error: null };
-    } catch (err) {
-        console.error("getCoursesForDashboard error:", err);
-        return { data: null, error: (err as Error).message };
+    } catch (err: unknown) {
+        console.error("getCoursesForDashboard error:", JSON.stringify(err, null, 2));
+        const msg = err instanceof Error ? err.message : (err as { message?: string })?.message || "Failed to fetch dashboard";
+        return { data: null, error: msg };
     }
 }
 
@@ -176,9 +180,10 @@ export async function createCourseFromJSON(courseData: {
         if (nodesError) throw nodesError;
 
         return { data: courseId, error: null };
-    } catch (err) {
-        console.error("createCourseFromJSON error:", err);
-        return { data: null, error: (err as Error).message };
+    } catch (err: unknown) {
+        console.error("createCourseFromJSON error:", JSON.stringify(err, null, 2));
+        const msg = err instanceof Error ? err.message : (err as { message?: string })?.message || "Failed to create course";
+        return { data: null, error: msg };
     }
 }
 
@@ -251,8 +256,9 @@ export async function updateCourseFromJSON(courseId: string, courseData: {
         }
 
         return { data: courseId, error: null };
-    } catch (err) {
-        console.error("updateCourseFromJSON error:", err);
-        return { data: null, error: (err as Error).message };
+    } catch (err: unknown) {
+        console.error("updateCourseFromJSON error:", JSON.stringify(err, null, 2));
+        const msg = err instanceof Error ? err.message : (err as { message?: string })?.message || "Failed to update course";
+        return { data: null, error: msg };
     }
 }

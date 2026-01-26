@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { RefreshCcw, TrendingUp } from "lucide-react";
 
 type VisualizerProps = {
-  mode: "chaos" | "gambler" | "sample";
+  mode: "chaos" | "gambler" | "sample" | "normal" | "trend";
   trigger: boolean; // Toggles the animation state
 };
 
@@ -58,22 +58,22 @@ export default function StatisticsVisualizer({
               animate={
                 trigger
                   ? {
-                      x: 0,
-                      y: 0,
-                      height: item.value * 2, // Scale to height
-                      width: 4,
-                      borderRadius: 2,
-                      backgroundColor: item.value > 80 ? "#4ade80" : "#38bdf8", // Color coding
-                      opacity: 1,
-                    }
+                    x: 0,
+                    y: 0,
+                    height: item.value * 2, // Scale to height
+                    width: 4,
+                    borderRadius: 2,
+                    backgroundColor: item.value > 80 ? "#4ade80" : "#38bdf8", // Color coding
+                    opacity: 1,
+                  }
                   : {
-                      x: item.x,
-                      y: item.y,
-                      height: 8,
-                      width: 8,
-                      backgroundColor: "#64748b",
-                      opacity: 0.5,
-                    }
+                    x: item.x,
+                    y: item.y,
+                    height: 8,
+                    width: 8,
+                    backgroundColor: "#64748b",
+                    opacity: 0.5,
+                  }
               }
               transition={{ duration: 1.2, type: "spring", bounce: 0.2 }}
             />
@@ -155,6 +155,97 @@ export default function StatisticsVisualizer({
           <RefreshCcw size={18} className={flipping ? "animate-spin" : ""} />
           FLIP COIN
         </button>
+      </div>
+    );
+  }
+
+  // --- MODE 3: NORMAL DISTRIBUTION (Bell Curve) ---
+  if (mode === "normal") {
+    return (
+      <div className="w-full h-96 bg-slate-900 rounded-3xl flex flex-col items-center justify-center p-6 border-4 border-slate-800 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
+
+        <div className="relative z-10 w-full max-w-lg h-64 flex items-end justify-center gap-1">
+          {Array.from({ length: 40 }).map((_, i) => {
+            // Gaussian function approximation
+            const x = (i - 20) / 6;
+            const y = Math.exp(-0.5 * x * x);
+            const height = y * 200;
+
+            return (
+              <motion.div
+                key={i}
+                initial={{ height: 0 }}
+                animate={{ height: trigger ? height : 10 }}
+                transition={{ duration: 0.5, delay: i * 0.02 }}
+                className="w-3 bg-power-teal/80 rounded-t-sm"
+              />
+            );
+          })}
+        </div>
+
+        <div className="mt-8 text-center bg-slate-800/80 p-4 rounded-xl backdrop-blur">
+          <p className="text-white font-bold">Standard Deviation (σ)</p>
+          <div className="flex gap-4 mt-2 text-xs text-slate-400">
+            <span className="text-power-teal">68% within 1σ</span>
+            <span className="text-power-blue">95% within 2σ</span>
+            <span className="text-power-purple">99.7% within 3σ</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- MODE 4: TREND (Regression) ---
+  if (mode === "trend") {
+    // Generate linear data with some noise
+    const points = Array.from({ length: 20 }).map((_, i) => ({
+      id: i,
+      x: i * 15 + 10,
+      y: i * 10 + 20 + (Math.random() * 40 - 20),
+    }));
+
+    return (
+      <div className="w-full h-96 bg-slate-900 rounded-3xl relative overflow-hidden flex items-center justify-center border-4 border-slate-800">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
+
+        <svg className="absolute inset-0 w-full h-full pointer-events-none">
+          {/* Data Points */}
+          {points.map((p) => (
+            <circle
+              key={p.id}
+              cx={p.x}
+              cy={350 - p.y} // Invert Y for SVG coords
+              r="4"
+              fill="#94a3b8"
+              opacity="0.5"
+            />
+          ))}
+
+          {/* Regression Line */}
+          {trigger && (
+            <motion.line
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+              x1={10}
+              y1={350 - (10 * 10 / 15 + 20)} // Rough fitting
+              x2={300}
+              y2={350 - (300 * 10 / 15 + 20)}
+              stroke="#F472B6" // Power Pink
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+          )}
+        </svg>
+
+        <div className="absolute bottom-4 right-4 bg-slate-800/90 p-3 rounded-lg backdrop-blur border border-white/10">
+          <div className="flex items-center gap-2 mb-1">
+            <TrendingUp size={16} className="text-pink-400" />
+            <span className="text-white font-bold text-sm">Linear Fit</span>
+          </div>
+          <p className="text-xs text-slate-400 font-mono">R² = {trigger ? "0.89" : "---"}</p>
+        </div>
       </div>
     );
   }

@@ -11,6 +11,7 @@ import type {
     AssignmentBlock as AssignmentBlockType,
     DividerBlock as DividerBlockType,
     AIInsightBlock as AIInsightBlockType,
+    AnimationBlock as AnimationBlockType,
 } from "@/types/content";
 
 // Block Components
@@ -21,6 +22,7 @@ import SimulationBlockComponent from "./SimulationBlock";
 import AssignmentBlockComponent from "./AssignmentBlock";
 import DividerBlockComponent from "./DividerBlock";
 import AISummaryBlock from "./AISummaryBlock";
+import AnimationBlockComponent from "./AnimationBlock";
 
 interface BlockRendererProps {
     blocks: ContentBlock[];
@@ -227,6 +229,9 @@ function renderBlock(
                     sectionIndex={index}
                 />
             );
+
+        case "animation":
+            return <AnimationBlockComponent block={block as AnimationBlockType} />;
 
         default:
             console.warn(`Unknown block type: ${(block as any).type}`);

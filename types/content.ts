@@ -8,7 +8,8 @@ export type ContentBlockType =
     | "simulation"
     | "assignment"
     | "divider"
-    | "ai-insight";
+    | "ai-insight"
+    | "animation";
 
 // Animation configuration for blocks
 export interface AnimationConfig {
@@ -51,18 +52,10 @@ export interface QuizBlock extends BaseBlock {
     unlocks?: boolean; // Does completing this unlock next section?
 }
 
-// Simulation Block
-export type SimulationType =
-    | "logic-gates"
-    | "statistics"
-    | "circuit"
-    | "number-line"
-    | "probability"
-    | "custom";
-
+// Simulation Registry Type - open string for IDs
 export interface SimulationBlock extends BaseBlock {
     type: "simulation";
-    simulationType: SimulationType;
+    simulationId: string; // Updated from enum to string for registry pattern
     config?: Record<string, unknown>;
     instructions?: string;
 }
@@ -96,6 +89,17 @@ export interface AIInsightBlock extends BaseBlock {
     context?: string; // Optional context to pass to AI
 }
 
+// Animation Block (Video or Lottie)
+export interface AnimationBlock extends BaseBlock {
+    type: "animation";
+    format: "video" | "lottie";
+    url: string; // Remote URL
+    autoplay?: boolean;
+    loop?: boolean;
+    caption?: string;
+    height?: number; // Optional height constraint
+}
+
 // Union type of all content blocks
 export type ContentBlock =
     | TextBlock
@@ -104,7 +108,8 @@ export type ContentBlock =
     | SimulationBlock
     | AssignmentBlock
     | DividerBlock
-    | AIInsightBlock;
+    | AIInsightBlock
+    | AnimationBlock;
 
 // Course Content JSON - the main schema
 export interface CourseContentJSON {

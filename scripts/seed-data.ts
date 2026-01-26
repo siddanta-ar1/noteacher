@@ -89,10 +89,18 @@ async function main() {
                     { id: uuid(), type: "text", content: "Every time you open a browser, you are starting a conversation. But who are you talking to?" },
                     { id: uuid(), type: "image", url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1000", caption: "The Connected World", animation: { type: "scale" } },
                     { id: uuid(), type: "text", content: "The web is built on a **Client-Server** model. You (the Client) ask for a page, and a computer somewhere else (the Server) sends it back." },
+                    {
+                        id: uuid(),
+                        type: "animation",
+                        format: "video",
+                        url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+                        caption: "How the Internet Works (Animation)",
+                        autoplay: false
+                    },
                     { id: uuid(), type: "divider", style: "section-break" },
                     { id: uuid(), type: "text", style: "heading", content: "The Request Cycle" },
                     { id: uuid(), type: "text", content: "1. You type `google.com`.\n2. Your browser sends a **GET** request.\n3. The server finds the files.\n4. The server sends a **Response** (HTML, CSS, JS)." },
-                    { id: uuid(), type: "simulation", simulationType: "custom", config: { type: "visual" }, instructions: "Visualize the data packet travel (Placeholder)." },
+                    { id: uuid(), type: "simulation", simulationId: "network-visualizer", config: { mode: "network" }, instructions: "Visualize the data packet travel." },
                     { id: uuid(), type: "divider", style: "line" },
                     { id: uuid(), type: "text", content: "But how does it know *where* to go? That's DNS (Domain Name System). It's the phonebook of the internet." },
                     { id: uuid(), type: "ai-insight", prompt: "Explain DNS like I'm 5", showSummary: true },
@@ -117,7 +125,7 @@ async function main() {
                     { id: uuid(), type: "text", style: "heading", content: "The Browser Console" },
                     { id: uuid(), type: "text", content: "Your browser isn't just for viewing. It's for debugging. Right-click and hit 'Inspect'." },
                     { id: uuid(), type: "text", content: "This opens the **DevTools**. You can change the code of any website live (only on your screen)." },
-                    { id: uuid(), type: "simulation", simulationType: "custom", config: { type: "visual" }, instructions: "Try inspecting this element (Simulation Placeholder)." },
+                    { id: uuid(), type: "simulation", simulationId: "custom", config: { type: "visual" }, instructions: "Try inspecting this element (Simulation Placeholder)." },
                     { id: uuid(), type: "ai-insight", prompt: "What are the most useful VS Code extensions for beginners?", showSummary: true },
                     { id: uuid(), type: "quiz", question: "What creates the industry standard editor VS Code?", options: ["Google", "Microsoft", "Facebook"], correctIndex: 1, unlocks: true }
                 ]
@@ -141,7 +149,7 @@ async function main() {
                     { id: uuid(), type: "text", style: "heading", content: "The Hierarchy" },
                     { id: uuid(), type: "text", content: "HTML is a tree. You have `<html>`, inside that `<body>`, inside that `<h1>`." },
                     { id: uuid(), type: "text", content: "Nesting correctly is crucial. Indentation helps you see the structure." },
-                    { id: uuid(), type: "simulation", simulationType: "custom", config: { type: "visual" }, instructions: "Drag and drop tags to nest them (Placeholder)." },
+                    { id: uuid(), type: "simulation", simulationId: "custom", config: { type: "visual" }, instructions: "Drag and drop tags to nest them (Placeholder)." },
                     { id: uuid(), type: "quiz", question: "Which tag creates a large heading?", options: ["<p>", "<h1>", "<head>"], correctIndex: 1, unlocks: true }
                 ]
             }
@@ -184,7 +192,7 @@ async function main() {
                     { id: uuid(), type: "text", style: "heading", content: "Selectors" },
                     { id: uuid(), type: "text", content: "How do you tell CSS *which* element to style? Selectors." },
                     { id: uuid(), type: "text", content: "- `p { ... }` targets all paragraphs.\n- `.class { ... }` targets a class.\n- `#id { ... }` targets a specific ID." },
-                    { id: uuid(), type: "simulation", simulationType: "custom", config: { type: "visual" }, instructions: "Select the red circles (Selector Game Placeholder)." },
+                    { id: uuid(), type: "simulation", simulationId: "selectors", config: { mode: "selectors" }, instructions: "Select the red circles." },
                     { id: uuid(), type: "quiz", question: "Which selector targets a class?", options: ["#name", ".name", "name"], correctIndex: 1, unlocks: true }
                 ]
             }
@@ -204,7 +212,7 @@ async function main() {
                     { id: uuid(), type: "image", url: "https://images.unsplash.com/photo-1610433572201-110753c6cff9?auto=format&fit=crop&q=80&w=1000", caption: "The Box Model Diagram" },
                     { id: uuid(), type: "divider", style: "line" },
                     { id: uuid(), type: "text", content: "1. **Content**: The text or image.\n2. **Padding**: Space *inside* the border.\n3. **Border**: The line around the padding.\n4. **Margin**: Space *outside* the border." },
-                    { id: uuid(), type: "simulation", simulationType: "custom", config: { type: "visual" }, instructions: "Adjust padding and margin to see the difference (Placeholder)." },
+                    { id: uuid(), type: "simulation", simulationId: "box-model", config: { mode: "box-model" }, instructions: "Adjust padding and margin to see the difference." },
                     { id: uuid(), type: "quiz", question: "Which property adds space OUTSIDE the border?", options: ["Padding", "Margin", "Content"], correctIndex: 1, unlocks: true }
                 ]
             }
@@ -226,7 +234,7 @@ async function main() {
                     { id: uuid(), type: "divider", style: "section-break" },
                     { id: uuid(), type: "text", style: "subheading", content: "Justify & Align" },
                     { id: uuid(), type: "text", content: "`justify-content` controls the main axis (usually horizontal). `align-items` controls the cross axis (usually vertical)." },
-                    { id: uuid(), type: "simulation", simulationType: "custom", config: { type: "visual" }, instructions: "Flexbox Froggy Style Game (Placeholder)" },
+                    { id: uuid(), type: "simulation", simulationId: "flexbox", config: { mode: "flexbox" }, instructions: "Align the frogs using Flexbox properties." },
                     { id: uuid(), type: "quiz", question: "To center an item horizontally in a row, use:", options: ["align-items: center", "justify-content: center", "margin: auto"], correctIndex: 1, unlocks: true }
                 ]
             }
@@ -267,7 +275,7 @@ async function main() {
                     { id: uuid(), type: "text", style: "heading", content: "Variables & Types" },
                     { id: uuid(), type: "text", content: "Store data in variables using `let` or `const`." },
                     { id: uuid(), type: "text", style: "code", content: "let score = 0;\nconst name = 'Alex';" },
-                    { id: uuid(), type: "simulation", simulationType: "logic-gates", instructions: "Understand logic flow (Logic Gates Sim)." },
+                    { id: uuid(), type: "simulation", simulationId: "logic-gates", instructions: "Understand logic flow (Logic Gates Sim)." },
                     { id: uuid(), type: "quiz", question: "Which keyword creates a variable that cannot be changed?", options: ["var", "let", "const"], correctIndex: 2, unlocks: true }
                 ]
             }
@@ -306,7 +314,7 @@ async function main() {
                     { id: uuid(), type: "text", content: "You can change them: `element.innerText = 'New Title'`." },
                     { id: uuid(), type: "divider", style: "line" },
                     { id: uuid(), type: "text", content: "This is how features like 'Dark Mode' or 'Live Search' work without reloading the page." },
-                    { id: uuid(), type: "simulation", simulationType: "custom", config: { type: "visual" }, instructions: "Click elements to change their text (Placeholder)." },
+                    { id: uuid(), type: "simulation", simulationId: "custom", config: { type: "visual" }, instructions: "Click elements to change their text (Placeholder)." },
                     { id: uuid(), type: "ai-insight", prompt: "Safety risks of innerHTML", showSummary: true }
                 ]
             }
@@ -350,7 +358,7 @@ async function main() {
                     { id: uuid(), type: "divider", style: "section-break" },
                     { id: uuid(), type: "text", style: "heading", content: "The Data Cluster Illusion" },
                     { id: uuid(), type: "text", content: "Look at the simulation below. Your brain will try to find 'clumps' or 'groups'. But the data is completely random." },
-                    { id: uuid(), type: "simulation", simulationType: "statistics", config: { mode: "chaos" }, instructions: "Generate random noise. Try to spot patterns that aren't there.", animation: { type: "scale" } },
+                    { id: uuid(), type: "simulation", simulationId: "statistics", config: { mode: "chaos" }, instructions: "Generate random noise. Try to spot patterns that aren't there." },
                     { id: uuid(), type: "text", content: "This is why we need statistics. To tell the difference between a signal and noise." },
                     { id: uuid(), type: "ai-insight", prompt: "What is Apophenia?", showSummary: true },
                     { id: uuid(), type: "quiz", question: "Why do we need statistics?", options: ["To do math homework", "To validate patterns objectively", "To confuse people"], correctIndex: 1, unlocks: true }
@@ -372,7 +380,7 @@ async function main() {
                     { id: uuid(), type: "divider", style: "section-break" },
                     { id: uuid(), type: "text", style: "subheading", content: "The Histogram" },
                     { id: uuid(), type: "text", content: "A histogram groups data into 'bins'. It shows the shape of the data distribution." },
-                    { id: uuid(), type: "simulation", simulationType: "custom", config: { type: "visual" }, instructions: "Change bin size on this histogram (Placeholder)." },
+                    { id: uuid(), type: "simulation", simulationId: "custom", config: { type: "visual" }, instructions: "Change bin size on this histogram (Placeholder)." },
                     { id: uuid(), type: "quiz", question: "What does the height of a bar in a histogram represent?", options: ["The value", "The frequency count", "The time"], correctIndex: 1, unlocks: true }
                 ]
             }
@@ -391,7 +399,7 @@ async function main() {
                     { id: uuid(), type: "divider", style: "line" },
                     { id: uuid(), type: "text", content: "1. **Mean**: Sum / Count. Sensitive to outliers.\n2. **Median**: The middle value. Robost to outliers.\n3. **Mode**: The most common value." },
                     { id: uuid(), type: "text", content: "Example: If Bill Gates walks into a bar, the 'mean' income skyrockets, but the 'median' income stays the same." },
-                    { id: uuid(), type: "simulation", simulationType: "custom", config: { type: "visual" }, instructions: "Add an outlier and watch the Mean vs Median move (Placeholder)." },
+                    { id: uuid(), type: "simulation", simulationId: "custom", config: { type: "visual" }, instructions: "Add an outlier and watch the Mean vs Median move (Placeholder)." },
                     { id: uuid(), type: "quiz", question: "Which measure is best for house prices?", options: ["Mean", "Median", "Mode"], correctIndex: 1, unlocks: true }
                 ]
             }
@@ -410,7 +418,7 @@ async function main() {
                     { id: uuid(), type: "divider", style: "section-break" },
                     { id: uuid(), type: "text", style: "heading", content: "Standard Deviation (SD)" },
                     { id: uuid(), type: "text", content: "This is the most common way to measure spread. In a normal distribution, most data is within 1 SD of the mean." },
-                    { id: uuid(), type: "simulation", simulationType: "statistics", config: { mode: "trend" }, instructions: "Watch the spread calculation." },
+                    { id: uuid(), type: "simulation", simulationId: "statistics", config: { mode: "trend" }, instructions: "Watch the spread calculation." },
                     { id: uuid(), type: "ai-insight", prompt: "Why do we square differences in Variance?", showSummary: true },
                     { id: uuid(), type: "quiz", question: "A low standard deviation means:", options: ["Data is spread out", "Data is clustered around the mean", "Data is incorrect"], correctIndex: 1, unlocks: true }
                 ]
@@ -431,7 +439,7 @@ async function main() {
                     { id: uuid(), type: "divider", style: "section-break" },
                     { id: uuid(), type: "text", style: "heading", content: "The 68-95-99.7 Rule" },
                     { id: uuid(), type: "text", content: "- 68% of data is within 1 SD.\n- 95% within 2 SD.\n- 99.7% within 3 SD." },
-                    { id: uuid(), type: "simulation", simulationType: "custom", config: { type: "visual" }, instructions: "Galton Board Simulation (Placeholder)" },
+                    { id: uuid(), type: "simulation", simulationId: "statistics", config: { mode: "normal" }, instructions: "Visualize the Standard Deviation distribution." },
                     { id: uuid(), type: "quiz", question: "What percent of data is within 2 SDs in a Normal Calc?", options: ["50%", "68%", "95%"], correctIndex: 2, unlocks: true }
                 ]
             }
@@ -451,7 +459,7 @@ async function main() {
                     { id: uuid(), type: "divider", style: "line" },
                     { id: uuid(), type: "text", content: "A Z-score tells you how many standard deviations away from the mean a value is." },
                     { id: uuid(), type: "text", style: "code", content: "Z = (Value - Mean) / SD" },
-                    { id: uuid(), type: "simulation", simulationType: "custom", config: { type: "visual" }, instructions: "Calculate Z-Score interaction (Placeholder)." },
+                    { id: uuid(), type: "simulation", simulationId: "custom", config: { type: "visual" }, instructions: "Calculate Z-Score interaction (Placeholder)." },
                     { id: uuid(), type: "quiz", question: "What is the Z-score of the Mean?", options: ["1", "0", "-1"], correctIndex: 1, unlocks: true }
                 ]
             }
@@ -491,7 +499,7 @@ async function main() {
                     { id: uuid(), type: "divider", style: "section-break" },
                     { id: uuid(), type: "text", style: "heading", content: "The Gambler's Fallacy" },
                     { id: uuid(), type: "text", content: "If a coin flips Heads 5 times, is Tails 'due'? No. The coin has no memory." },
-                    { id: uuid(), type: "simulation", simulationType: "probability", config: { coinFlips: 10 }, instructions: "Flip a coin 10 times. Look for streaks." },
+                    { id: uuid(), type: "simulation", simulationId: "probability", config: { mode: "gambler" }, instructions: "Flip a coin 10 times. Look for streaks." },
                     { id: uuid(), type: "text", content: "In the short run, anything can happen. In the long run, it averages out." },
                     { id: uuid(), type: "quiz", question: "Probability of Heads is:", options: ["50%", "Depends on last flip", "Unknown"], correctIndex: 0, unlocks: true }
                 ]
@@ -510,7 +518,7 @@ async function main() {
                     { id: uuid(), type: "text", content: "This law guarantees stable long-term results for random events." },
                     { id: uuid(), type: "text", content: "A casino always wins in the long run because of this law." },
                     { id: uuid(), type: "divider", style: "section-break" },
-                    { id: uuid(), type: "simulation", simulationType: "probability", config: { coinFlips: 100 }, instructions: "Flip 100 coins. Notice how the ratio gets closer to 50%." },
+                    { id: uuid(), type: "simulation", simulationId: "probability", config: { coinFlips: 100 }, instructions: "Flip 100 coins. Notice how the ratio gets closer to 50%." },
                     { id: uuid(), type: "ai-insight", prompt: "How do insurance companies use Law of Large Numbers?", showSummary: true },
                     { id: uuid(), type: "quiz", question: "As sample size increases:", options: ["Variance acts wild", "Mean gets closer to true probability", "Nothing happens"], correctIndex: 1, unlocks: true }
                 ]
@@ -550,7 +558,7 @@ async function main() {
                     { id: uuid(), type: "text", content: "`y = mx + b`" },
                     { id: uuid(), type: "image", url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000", caption: "Linear Regression Line" },
                     { id: uuid(), type: "divider", style: "section-break" },
-                    { id: uuid(), type: "simulation", simulationType: "statistics", config: { mode: "trend" }, instructions: "Visualize fitting a line to data." },
+                    { id: uuid(), type: "simulation", simulationId: "statistics", config: { mode: "trend" }, instructions: "Visualize fitting a line to data." },
                     { id: uuid(), type: "text", content: "$R^2$ tells you how well the line fits the data. 1 is perfect, 0 is useless." },
                     { id: uuid(), type: "quiz", question: "What does the slope (m) represent?", options: ["The starting value", "The rate of change", "The error"], correctIndex: 1, unlocks: true }
                 ]

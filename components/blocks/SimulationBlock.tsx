@@ -9,6 +9,24 @@ const Workbench = lazy(() => import("@/components/simulator/Workbench"));
 const StatisticsVisualizer = lazy(
     () => import("@/components/lesson/visualizers/StatisticsVisualizer")
 );
+const WebDevSimulator = lazy(
+    () => import("@/components/lesson/visualizers/WebDevSimulator")
+);
+
+const SIMULATION_REGISTRY: Record<string, React.LazyExoticComponent<any> | React.ComponentType<any>> = {
+    // Registered components
+    "logic-gates": Workbench,
+    "statistics": StatisticsVisualizer,
+    "web-dev": WebDevSimulator, // Generic entry
+    "network-visualizer": WebDevSimulator, // Specific aliases
+    "box-model": WebDevSimulator,
+    "flexbox": WebDevSimulator,
+    "selectors": WebDevSimulator,
+
+    "circuit": () => <ComingSoonPlaceholder type="Circuit Simulator" />,
+    "number-line": () => <ComingSoonPlaceholder type="Number Line" />,
+    "probability": StatisticsVisualizer, // Mapped to Stats visualizer which has 'gambler' mode
+};
 
 interface SimulationBlockProps {
     block: SimulationBlock;
@@ -20,40 +38,14 @@ interface SimulationBlockProps {
 export default function SimulationBlockComponent({
     block,
 }: SimulationBlockProps) {
-    const { simulationType, instructions, config } = block;
+    const { simulationId, instructions, config } = block;
 
-    const renderSimulation = () => {
-        switch (simulationType) {
-            case "logic-gates":
-                return (
-                    <Suspense fallback={<LoadingFallback />}>
-                        <Workbench />
-                    </Suspense>
-                );
+    // Dynamic Registry Lookup
+    const SimulationComponent = SIMULATION_REGISTRY[simulationId];
 
-            case "statistics":
-                return (
-                    <Suspense fallback={<LoadingFallback />}>
-                        <StatisticsVisualizer
-                            mode={(config?.mode as "chaos" | "gambler" | "sample") ?? "chaos"}
-                            trigger={true}
-                        />
-                    </Suspense>
-                );
-
-            case "circuit":
-                return <ComingSoonPlaceholder type="Circuit Simulator" />;
-
-            case "number-line":
-                return <ComingSoonPlaceholder type="Number Line" />;
-
-            case "probability":
-                return <ComingSoonPlaceholder type="Probability Explorer" />;
-
-            default:
-                return <ComingSoonPlaceholder type={simulationType} />;
-        }
-    };
+    if (!SimulationComponent) {
+        return <ComingSoonPlaceholder type={simulationId} />;
+    }
 
     return (
         <div className="space-y-4">
@@ -69,11 +61,15 @@ export default function SimulationBlockComponent({
 
             {/* Simulation container */}
             <div className="h-[500px] w-full bg-slate-900 rounded-3xl overflow-hidden border-4 border-slate-100 shadow-xl relative">
-                {renderSimulation()}
+                <Suspense fallback={<LoadingFallback />}>
+                    <SimulationComponent {...(config || {})} />
+                </Suspense>
             </div>
         </div>
     );
 }
+
+
 
 /**
  * Loading fallback for lazy-loaded simulators
