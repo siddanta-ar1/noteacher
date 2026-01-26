@@ -29,7 +29,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             font-bold rounded-2xl 
             transition-all duration-200 ease-out
             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
-            disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none
+            disabled:opacity-50 disabled:cursor-not-allowed
             active:scale-[0.98]
         `;
 

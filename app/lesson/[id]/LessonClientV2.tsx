@@ -74,6 +74,12 @@ export default function LessonClientV2({
     // Keyboard navigation
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
+            // Ignore if typing in an input
+            const target = e.target as HTMLElement;
+            if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
+                return;
+            }
+
             if (e.key === "ArrowDown" || e.key === " ") {
                 e.preventDefault();
                 containerRef.current?.scrollBy({ top: 200, behavior: "smooth" });

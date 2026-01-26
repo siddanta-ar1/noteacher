@@ -51,7 +51,7 @@ export function Sidebar() {
 
     return (
         <>
-            <aside className="w-20 lg:w-72 bg-white border-r border-border p-4 lg:p-6 sticky top-0 h-screen z-50 flex flex-col">
+            <aside className="w-20 lg:w-72 bg-white border-r border-border p-4 lg:p-6 sticky top-0 h-screen z-50 flex flex-col overflow-y-auto">
                 {/* Logo */}
                 <Link href={ROUTES.HOME} className="flex items-center gap-3 mb-10 px-2 group">
                     <div className="bg-primary p-2.5 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow" style={{ boxShadow: "var(--shadow-primary)" }}>

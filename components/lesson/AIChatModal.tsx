@@ -165,14 +165,15 @@ export default function AIChatModal({
                   e.preventDefault();
                   handleSend();
                 }}
-                className="flex items-center gap-2 bg-slate-50 p-2 rounded-full border border-slate-200 focus-within:border-navy focus-within:ring-2 focus-within:ring-navy/10 transition-all"
+                className="flex items-center gap-2 bg-slate-50 p-2 rounded-full border border-slate-200 focus-within:border-navy focus-within:ring-2 focus-within:ring-navy/10 transition-all shadow-sm"
               >
                 <input
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => e.stopPropagation()}
                   placeholder="Ask about this concept..."
-                  className="flex-1 bg-transparent border-none outline-none px-4 text-slate-700 placeholder:text-slate-400 font-medium"
+                  className="flex-1 bg-transparent border-none outline-none px-4 text-slate-700 placeholder:text-slate-400 font-medium focus:ring-0"
                 />
                 <button
                   type="submit"
