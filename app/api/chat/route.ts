@@ -1,6 +1,7 @@
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
+import Groq from "groq-sdk";
 
 // --- Mock Engine ---
 function getMockReply(message: string): string {
@@ -24,21 +25,27 @@ function getMockReply(message: string): string {
 }
 
 export async function POST(req: Request) {
-  let endpointStatus = "real";
+  let message, history, context;
+
+  // 0. Parse Body ONCE safely
+  try {
+    const body = await req.json();
+    message = body.message;
+    history = body.history || [];
+    context = body.context;
+  } catch (e) {
+    return NextResponse.json({ error: "Invalid Request Body" }, { status: 400 });
+  }
 
   try {
-    const { message, history = [], context } = await req.json();
-
     // 1. Check API Key presence
     if (!process.env.GEMINI_API_KEY) {
-      console.warn("Missing GEMINI_API_KEY, using mock.");
-      return NextResponse.json({ reply: getMockReply(message) });
+      throw new Error("Missing GEMINI_API_KEY");
     }
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-    // 2. Try Primary Model (1.5-flash is best for speed/cost)
-    // If this fails, the catch block will trigger the mock fallback
+    // 2. Try Primary Model (1.5-flash)
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
       systemInstruction: `
@@ -62,12 +69,40 @@ RULES: Keep answers under 3 sentences. Use emojis. Guide users.
     return NextResponse.json({ reply });
 
   } catch (error: any) {
-    console.error("Gemini API Error (Falling back to Mock):", error.message);
+    console.error("Gemini API Error:", error.message);
 
-    // 3. Fallback to Mock Engine
-    // We catch 404s, 500s, or any other API error here
+    // 3. Fallback to Groq (DeepSeek)
+    if (process.env.GROQ_API_KEY) {
+      try {
+        console.log("Attempting fallback to Groq (DeepSeek)...");
+        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+        // Reuse variables from top
+        const systemPrompt = `You are "NOTEacher AI". Explain engineering concepts simply using analogies. ${context ? `CONTEXT: ${context}` : ""} Keep answers under 3 sentences. Use emojis.`;
+
+        const messages = [
+          { role: "system", content: systemPrompt },
+          ...history.map((msg: any) => ({ role: msg.role === "ai" ? "assistant" : "user", content: msg.text })),
+          { role: "user", content: message }
+        ];
+
+        const chatCompletion = await groq.chat.completions.create({
+          messages: messages as any,
+          model: "deepseek-r1-distill-llama-70b",
+        });
+
+        const reply = chatCompletion.choices[0]?.message?.content || "";
+        return NextResponse.json({ reply, source: "deepseek-groq" });
+
+      } catch (groqError: any) {
+        console.error("Groq/DeepSeek Error:", groqError.message);
+        // Continue to mock fallback
+      }
+    }
+
+    // 4. Fallback to Mock Engine
     try {
-      const { message } = await req.clone().json().catch(() => ({ message: "" })); // recover body if possible
+      // Reuse variables from top
       const mockReply = getMockReply(message || "Hello");
 
       return NextResponse.json({
