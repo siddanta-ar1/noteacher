@@ -2,6 +2,7 @@
 import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
 import path from "path";
+import crypto from "crypto";
 
 // Load environment variables from .env.local
 dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
@@ -70,7 +71,7 @@ async function main() {
     console.log("🔗 Inserting nodes...");
 
     // Helper to create UUIDs for blocks
-    const uuid = () => Math.random().toString(36).substring(2, 15);
+    const uuid = () => crypto.randomUUID();
 
     const nodes = [
         // ==========================================
