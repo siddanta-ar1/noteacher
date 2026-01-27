@@ -4,6 +4,7 @@ import React from "react";
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Zap, LayoutDashboard, BookOpen, Trophy, Settings, HelpCircle, Sparkles, Wrench } from "lucide-react";
 import { cn } from "@/utils/cn";
@@ -53,9 +54,16 @@ export function Sidebar() {
         <>
             <aside className="w-20 lg:w-72 bg-white border-r border-border p-4 lg:p-6 sticky top-0 h-screen z-50 flex flex-col overflow-y-auto">
                 {/* Logo */}
+                {/* Logo */}
                 <Link href={ROUTES.HOME} className="flex items-center gap-3 mb-10 px-2 group">
-                    <div className="bg-primary p-2.5 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow" style={{ boxShadow: "var(--shadow-primary)" }}>
-                        <Zap className="text-white w-6 h-6 fill-white" />
+                    <div className="relative w-10 h-10 transition-all">
+                        <Image
+                            src="/logo.png"
+                            alt="NOTEacher Logo"
+                            fill
+                            className="object-contain"
+                            priority
+                        />
                     </div>
                     <span className="text-2xl font-black text-primary hidden lg:block italic tracking-tighter">
                         NOT<span className="text-power-purple">Eacher</span>
