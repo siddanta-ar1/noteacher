@@ -14,10 +14,13 @@
 import OpenAI from "openai";
 
 // Model Configuration
+// Model Configuration
 const MODELS = {
-    // Best free multimodal model (text + images)
-    PRIMARY: "google/gemini-2.0-flash-exp:free",
-    // Reliable fallback for text-only tasks
+    // Primary model for text tasks (Arcee Trinity)
+    PRIMARY: "arcee-ai/trinity-large-preview:free",
+    // Special model for Vision tasks (Llama 3.2 11B Vision - replacement for Gemini)
+    VISION: "meta-llama/llama-3.2-11b-vision-instruct:free",
+    // Fallback model (Llama 3.3 70B)
     FALLBACK: "meta-llama/llama-3.3-70b-instruct:free",
 } as const;
 
@@ -42,6 +45,7 @@ export interface GenerateOptions {
     messages?: Message[];
     userMessage?: string;
     maxTokens?: number;
+    model?: string;
 }
 
 export interface ImageAnalysisOptions {
@@ -76,7 +80,7 @@ function isRetryableError(error: unknown): boolean {
  * @returns Generated text response
  */
 export async function generateAIResponse(options: GenerateOptions): Promise<string> {
-    const { systemPrompt, messages = [], userMessage, maxTokens = 1024 } = options;
+    const { systemPrompt, messages = [], userMessage, maxTokens = 1024, model } = options;
 
     // Build message array
     const chatMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
@@ -96,10 +100,13 @@ export async function generateAIResponse(options: GenerateOptions): Promise<stri
         chatMessages.push({ role: "user", content: userMessage });
     }
 
+    // Determine primary model to use (default to PRIMARY, or use requested model)
+    const primaryModel = model || MODELS.PRIMARY;
+
     // Try primary model first
     try {
         const response = await openai.chat.completions.create({
-            model: MODELS.PRIMARY,
+            model: primaryModel,
             messages: chatMessages,
             max_tokens: maxTokens,
             temperature: 0.7,
@@ -107,9 +114,13 @@ export async function generateAIResponse(options: GenerateOptions): Promise<stri
 
         return response.choices[0]?.message?.content || "";
     } catch (primaryError) {
-        console.error("[AI Client] Primary model failed:", primaryError);
+        console.error(`[AI Client] Request to ${primaryModel} failed:`, primaryError);
 
-        // Retry with fallback model if error is retryable
+        // Retry with fallback model if error is retryable AND we haven't already tried the fallback
+        // (If the requested model IS the fallback, we don't need to retry with itself unless we want to, but valid logic usually is try another)
+        // For now, if we requested specific model, we might want to still fallback to 'FALLBACK' if generic, or maybe just retry same if 503?
+        // Let's keep the existing logic: if primary fails, try FALLBACK.
+
         if (isRetryableError(primaryError)) {
             console.log("[AI Client] Retrying with fallback model...");
 
@@ -161,10 +172,10 @@ export async function analyzeImage(options: ImageAnalysisOptions): Promise<strin
         },
     ];
 
-    // Try primary model (Gemini Flash is multimodal)
+    // Try VISION model (Gemini Flash is multimodal)
     try {
         const response = await openai.chat.completions.create({
-            model: MODELS.PRIMARY,
+            model: MODELS.VISION,
             messages,
             max_tokens: maxTokens,
             temperature: 0.3, // Lower temperature for more accurate transcription
@@ -184,7 +195,7 @@ export async function analyzeImage(options: ImageAnalysisOptions): Promise<strin
 
             try {
                 const response = await openai.chat.completions.create({
-                    model: MODELS.PRIMARY,
+                    model: MODELS.VISION,
                     messages,
                     max_tokens: maxTokens,
                     temperature: 0.3,

@@ -27,10 +27,17 @@ interface BaseBlock {
 }
 
 // Text Block - supports Markdown
+export interface Citation {
+    id: string;
+    text: string;
+    url?: string;
+}
+
 export interface TextBlock extends BaseBlock {
     type: "text";
     content: string;
     style?: "default" | "callout" | "quote" | "highlight" | "heading";
+    citations?: Citation[];
 }
 
 // Image Block
