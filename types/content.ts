@@ -131,6 +131,8 @@ export interface ContentMetadata {
     tags?: string[];
     objectives?: string[];
     prerequisites?: string[];
+    aiSummary?: string;
+    teacherContext?: string;
 }
 
 // Assignment from database

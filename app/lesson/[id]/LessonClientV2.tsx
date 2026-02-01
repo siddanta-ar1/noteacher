@@ -14,6 +14,7 @@ import type { ContentBlock } from "@/types/content";
 // Existing components
 import LessonControlBar from "@/components/lesson/LessonControlBar";
 import AIChatModal from "@/components/lesson/AIChatModal";
+import AISummaryButton from "@/components/lesson/AISummaryButton";
 import { completeNode } from "@/app/lesson/actions";
 import { Badge, ProgressBar, Avatar } from "@/components/ui";
 
@@ -370,6 +371,12 @@ export default function LessonClientV2({
                 isOpen={isChatOpen}
                 onClose={() => setIsChatOpen(false)}
                 context={`Currently viewing: ${currentContext}\n\nLesson: ${node.title}`}
+            />
+
+            {/* AI SUMMARY BUTTON */}
+            <AISummaryButton
+                summary={parsedContent.metadata?.aiSummary}
+                context={parsedContent.metadata?.teacherContext}
             />
         </div>
     );

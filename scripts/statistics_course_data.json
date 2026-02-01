@@ -1,0 +1,258 @@
+{
+    "courseTitle": "Statistics 101: Understanding the World",
+    "courseDescription": "A journey from raw data to understanding the world through statistical thinking.",
+    "levels": [
+        {
+            "id": "level_0",
+            "title": "Level 0: Statistical Thinking (Foundation)",
+            "description": "Why statistics exists and how it helps us process information.",
+            "topics": [
+                {
+                    "id": "topic_1",
+                    "title": "Topic 1: Why Statistics Exists?",
+                    "subtopics": [
+                        {
+                            "id": "sub_1_1",
+                            "title": "The Principal’s Dilemma (The Problem)",
+                            "aiSummary": "Humans have a cognitive limit of about 7 items. Statistics exists to compress massive data like 1,000 grades into a single understandable number.",
+                            "teacherContext": "The user is currently learning about 'Cognitive Load' and why raw data is overwhelming. If they ask questions, use the analogy of 'trying to drink from a firehose' (raw data) vs 'drinking from a cup' (statistics).",
+                            "blocks": [
+                                {
+                                    "id": "b_1_1_hook",
+                                    "type": "text",
+                                    "style": "heading",
+                                    "content": "# The Limit of Your Brain\n\nImagine you are the Principal of \"Metropolis High School.\" It is the end of the year, and the School Board has called you for an emergency meeting. They have one simple question:\n\n**\"Did the students improve this year?\"**\n\nYou have the data. On your desk sits a stack of 1,000 report cards. Every single math score, history grade, and attendance record is right there in front of you. The answer is in the pile.\n\nBut can you answer them?"
+                                },
+                                {
+                                    "id": "b_1_1_sim",
+                                    "type": "simulation",
+                                    "simulationId": "RawDataScroll",
+                                    "instructions": "Below is the raw list of student math scores. Scroll through them and try to estimate if the school is doing 'Good' (mostly above 70) or 'Bad' (mostly below 70). You have 10 seconds before the School Board asks for your answer."
+                                },
+                                {
+                                    "id": "b_1_1_explanation",
+                                    "type": "text",
+                                    "content": "### Why You Failed\n\nYou didn't fail because you aren't smart. You failed because you are human.\n\nYour brain has a \"RAM limit.\" In 1956, cognitive psychologist George A. Miller published a famous paper proving that the average human working memory can only hold about 7 items (plus or minus two) at once.\n\nWhen you looked at that list of 1,000 scores, your brain tried to hold them all. Once you passed the 7th number, your brain had to \"overwrite\" the previous ones to make room.\n\nThis is why Statistics exists. It is not just \"math.\" It is a survival tool for your brain. It allows us to compress 1,000 items (which we can't handle) into 1 item (which we can). [[cit1]]",
+                                    "citations": [
+                                        {
+                                            "id": "cit1",
+                                            "text": "Miller, G. A. (1956). \"The Magical Number Seven, Plus or Minus Two.\"",
+                                            "url": "https://psychclassics.yorku.ca/Miller/"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "b_1_1_quiz",
+                                    "type": "quiz",
+                                    "question": "If the Principal decides to just read the scores of the first 5 students on the list to save time, what statistical error is he committing?",
+                                    "options": [
+                                        "Calculation Error (The math is wrong).",
+                                        "Sampling Bias (The first 5 might not represent the whole 1,000).",
+                                        "Rounding Error (The numbers aren't precise)."
+                                    ],
+                                    "correctIndex": 1,
+                                    "explanation": "Correct! The first 5 students might be the \"Honor Roll\" students (sorted alphabetically or by rank). If you judge the whole school by them, you see a false reality. You need a way to summarize the whole list."
+                                },
+                                {
+                                    "id": "b_1_1_visual",
+                                    "type": "image",
+                                    "style": "default",
+                                    "url": "/images/stats/noise_to_signal.png",
+                                    "caption": "Statistics turns the Noise (Left) into a Signal (Right). The Mean: 68.4. Now you can answer the board."
+                                },
+                                {
+                                    "id": "b_1_1_assign",
+                                    "type": "assignment",
+                                    "title": "The 'Miller's Law' Test",
+                                    "instructions": "Look at your phone's 'Screen Time' or 'Battery Usage' settings. You will see a list of apps and percentages. Scroll through the raw list of every app you used. Now look at the 'Daily Average' number at the top.",
+                                    "submissionTypes": [
+                                        "text",
+                                        "audio"
+                                    ],
+                                    "description": "Explain in 2 sentences (or 15 seconds of audio): How does that single 'Daily Average' number change how you feel about your phone usage compared to the raw list?"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "sub_1_2",
+                            "title": "Statistics as Compression (The Solution)",
+                            "aiSummary": "Summary Statistics (Mean, Median, Mode) are tools to squeeze massive amounts of information into a single number, but this process acts as 'Lossy Compression', hiding specific details.",
+                            "teacherContext": "The user is learning about 'Lossy Compression' in statistics. If they ask about 'Lossless' compression, explain that in stats, we always lose detail to gain clarity. Guide them to understand that the 'Average' is a useful fiction.",
+                            "blocks": [
+                                {
+                                    "id": "b_1_2_hook",
+                                    "type": "text",
+                                    "content": "### The MP3 of Reality\n\nRemember the 1,000 exam papers you couldn't read?\n\nImagine you are at a live concert. The sound is rich, loud, and complex. Now, imagine listening to the recording of that concert on your phone as an MP3 file.\n\nThe MP3 is not the concert. It threw away 90% of the data to make the file small enough to fit in your pocket. But you can still recognize the song.\n\n**Statistics is the MP3 of data.**\n\nWe take the complex, messy \"Live Concert\" of reality (1,000 student lives, 1,000 exam struggles) and we run a mathematical algorithm to throw away the noise and keep the melody. We call that melody \"The Average.\""
+                                },
+                                {
+                                    "id": "b_1_2_sim",
+                                    "type": "simulation",
+                                    "simulationId": "DataCompressionVis",
+                                    "instructions": "Drag the hydraulic press down to 'Squeeze' the 1,000 student scores into a single number. Watch how the dots merge into a single diamond."
+                                },
+                                {
+                                    "id": "b_1_2_deep",
+                                    "type": "text",
+                                    "content": "### What Did We Lose?\n\nWe solved the Principal's Dilemma. We gave him one number: 68.4.\n\nBut there is a catch. This is **Lossy Compression**.\n\nLook at that Golden Diamond (68.4). By looking only at that number, can you tell me if any student scored a perfect 100? Can you tell me if anyone failed with a 0?\n\nNo. You cannot.\n\nThe \"Average\" hides the extremes. A school with 500 geniuses (100%) and 500 failures (0%) has an average of 50%. A school where everyone is \"meh\" (50%) also has an average of 50%.\n\nTo the statistician, these two schools look identical until we use more tools (like Variance, which we will learn later). [[cit_shannon]]",
+                                    "citations": [
+                                        {
+                                            "id": "cit_shannon",
+                                            "text": "Shannon, C. E. (1948). \"A Mathematical Theory of Communication.\"",
+                                            "url": "https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "b_1_2_vis",
+                                    "type": "image",
+                                    "url": "/images/stats/forest_pixel.png",
+                                    "caption": "Raw Data gives you the leaves. Statistics gives you the forest."
+                                },
+                                {
+                                    "id": "b_1_2_quiz",
+                                    "type": "quiz",
+                                    "question": "A politician claims, \"The average wealth of citizens in this town is $1,000,000!\" The town actually has 9,999 poor people ($0) and one billionaire ($10,000,000,000). Why is his statistic technically \"true\" but a \"lie\"?",
+                                    "options": [
+                                        "He calculated the math wrong.",
+                                        "He used \"Lossy Compression\" to hide the inequality (The Outlier distorted the Mean).",
+                                        "He should have used a Pie Chart."
+                                    ],
+                                    "correctIndex": 1,
+                                    "explanation": "Exactly. The \"Average\" compressed the billionaire and the poor people together, creating a \"Middle Class\" that doesn't actually exist. This is the danger of compression."
+                                },
+                                {
+                                    "id": "b_1_2_assign",
+                                    "type": "assignment",
+                                    "title": "The 'One Word' Diary",
+                                    "submissionTypes": [
+                                        "text",
+                                        "photo"
+                                    ],
+                                    "instructions": "Think about your entire day yesterday. All 24 hours. The waking up, the breakfast, the commute, the conversations, the feelings. Compress that entire day into a single 'Data Point' (a rating from 1-10). Reflect: What specific event did you 'delete' to make it fit that number?"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "sub_1_3",
+                            "title": "Signal vs. Noise",
+                            "aiSummary": "Signal is the meaningful pattern (trend), while Noise is random fluctuation. Statistics acts as a filter to separate the signal from the noise.",
+                            "teacherContext": "The user is learning to distinguish 'Signal' (Trend) from 'Noise' (Variance). If they ask about 'Outliers', explain that outliers are extreme noise. Use the 'Grandpa who smoked' example if they get stuck.",
+                            "blocks": [
+                                {
+                                    "id": "b_1_3_hook",
+                                    "type": "text",
+                                    "content": "### Tuning the Radio\n\nImagine you are driving a car far away from the city. You try to tune into your favorite radio station.\n\nYou hear crackles, pops, and hissing sounds. That is **Noise**. Underneath the hiss, you can faintly hear the song. That is the **Signal**.\n\nReality is a noisy radio station.\n\n*   **Signal**: The school is generally improving.\n*   **Noise**: One student had the flu during the exam and scored a zero.\n\nIf the Principal focuses on that one student with the flu, he is listening to the static, not the song. Statistics is the antenna that filters out the hiss."
+                                },
+                                {
+                                    "id": "b_1_3_sim",
+                                    "type": "simulation",
+                                    "simulationId": "SignalNoiseGraph",
+                                    "instructions": "The blue dots represent the daily sales of an ice cream shop. They bounce up and down wildly (Noise). Draw a line with your mouse to show where the sales are actually going (Signal)."
+                                },
+                                {
+                                    "id": "b_1_3_deep",
+                                    "type": "text",
+                                    "content": "### The Danger of Anecdotes\n\nWe love stories. If your friend says, \"My grandpa smoked 3 packs a day and lived to be 95,\" your brain thinks: \"Smoking must be safe!\"\n\n**That Grandpa is Noise.**\n\nHe is a statistical outlier—a random pop of static on the radio. The **Signal** (the data from millions of smokers) says that smoking kills.\n\nWhen you trust an anecdote over data, you are letting \"Noise\" drown out the \"Signal.\" In statistics, we measure this noise using a tool called **Variance**."
+                                },
+                                {
+                                    "id": "b_1_3_slider",
+                                    "type": "simulation",
+                                    "simulationId": "NoiseSlider",
+                                    "instructions": "This slider controls the 'Noise' added to a perfect Sine Wave. See if you can still spot the wave at 50% or 100% noise."
+                                },
+                                {
+                                    "id": "b_1_3_quiz",
+                                    "type": "quiz",
+                                    "question": "A basketball player usually scores 20 points a game (The Signal). Tonight, he scored 45 points because he was \"in the zone.\" If you bet that he will score 45 points again tomorrow, what mistake are you making?",
+                                    "options": [
+                                        "You are mistaking Noise (a lucky night) for Signal (his actual skill level).",
+                                        "You are underestimating the Signal.",
+                                        "You are ignoring the Law of Large Numbers."
+                                    ],
+                                    "correctIndex": 0,
+                                    "explanation": "Correct! This is called \"Chasing the Noise.\" Just like the radio static, random spikes happen, but they usually disappear (regress to the mean) the next day."
+                                },
+                                {
+                                    "id": "b_1_3_assign",
+                                    "type": "assignment",
+                                    "title": "The 'Headline Hunter'",
+                                    "submissionTypes": [
+                                        "photo",
+                                        "text"
+                                    ],
+                                    "instructions": "Go to a news website. Find a headline that reports on a single event as if it is a permanent trend (e.g., 'Stock Market Crashes!' just because it went down 1% today). Take a screenshot. Label the 'Noise' (The daily change). Guess what the 'Signal' actually is (The yearly trend)."
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "topic_2",
+                    "title": "Topic 2: Statistics vs. Intuition",
+                    "subtopics": [
+                        {
+                            "id": "sub_2_1",
+                            "title": "The Gambler's Fallacy",
+                            "aiSummary": "The Gambler's Fallacy is the mistaken belief that if an event happens frequently during a certain period, it will happen less frequently in the future. For independent events, the universe has no memory.",
+                            "teacherContext": "The user is fighting the 'Gambler's Fallacy'. If they argue that 'Probability must balance out,' agree with them but emphasize WHEN. It balances at N=Infinity, not N=5. Use the 'Dice' analogy: The dice have no brain.",
+                            "blocks": [
+                                {
+                                    "id": "b_2_1_hook",
+                                    "type": "text",
+                                    "content": "### The \"Due\" Factor\n\nYou are at a casino roulette table. The wheel has landed on **RED** five times in a row. `R - R - R - R - R`\n\nYou have $100. Where do you put your money?\n\nMost people scream: \"**BLACK!** It has to be Black! Red can't happen 6 times in a row!\"\n\nIf you thought \"Black,\" you just lost your money to the **Gambler's Fallacy**. You believe the universe keeps a scorecard. It doesn't."
+                                },
+                                {
+                                    "id": "b_2_1_sim",
+                                    "type": "simulation",
+                                    "simulationId": "CoinStreakSim",
+                                    "instructions": "The coin below has already flipped Heads (H) 3 times. Bet on the next flip. Try to win $1,000. Notice that the odds are always 50/50."
+                                },
+                                {
+                                    "id": "b_2_1_deep",
+                                    "type": "text",
+                                    "content": "### The Universe Has No Memory\n\nIn statistics, we call these **Independent Events**. When you flip a coin, it doesn't look at the last flip. It is an inanimate object. It doesn't know it just landed on Heads. The odds are reset to 50/50 every single time.\n\nIntuition says: \"It will balance out now.\"\n\nStatistics says: \"It will balance out eventually (over 1,000,000 flips), but right now, anything can happen.\"\n\nThinking a result is \"due\" is the fastest way to go broke. [[cit_tversky]]",
+                                    "citations": [
+                                        {
+                                            "id": "cit_tversky",
+                                            "text": "Tversky, A., & Kahneman, D. (1971). \"Belief in the law of small numbers.\"",
+                                            "url": "https://psycnet.apa.org/record/1971-29465-001"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "b_2_1_vis",
+                                    "type": "animation",
+                                    "format": "video",
+                                    "url": "animations/level_0/topic_2/long_run_vs_short_run.mp4",
+                                    "caption": "In the short run, Chaos. In the long run, Order."
+                                },
+                                {
+                                    "id": "b_2_1_quiz",
+                                    "type": "quiz",
+                                    "question": "A couple has 4 daughters. They are trying for a 5th child because, \"We are due for a boy!\" What is the probability their 5th child is a boy?",
+                                    "options": [
+                                        "90% (Nature needs to balance the family).",
+                                        "50% (Sperm does not check the history of previous siblings).",
+                                        "10% (They clearly have \"Girl Genes\")."
+                                    ],
+                                    "correctIndex": 1,
+                                    "explanation": "Correct. Biology, like a coin, typically treats each conception as an independent event. The previous 4 daughters do not influence the 5th pregnancy."
+                                },
+                                {
+                                    "id": "b_2_1_assign",
+                                    "type": "assignment",
+                                    "title": "The 'Hot Hand' Hunt",
+                                    "submissionTypes": [
+                                        "text",
+                                        "photo"
+                                    ],
+                                    "instructions": "Watch 5 minutes of a sports game or listen to a commentator. Catch them committing the Gambler's Fallacy. Look for phrases like: 'He's on fire!', 'He's due for a goal'. Submit the exact quote and why it might be a statistical illusion."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
