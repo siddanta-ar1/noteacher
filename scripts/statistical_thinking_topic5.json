@@ -1,0 +1,89 @@
+[
+    {
+        "id": "node_stats_0_5",
+        "title": "Correlation vs. Causation",
+        "type": "lesson",
+        "blocks": [
+            {
+                "type": "text",
+                "content": "## Level 0: Statistical Thinking\n\n### Topic 5: Correlation vs. Causation\n\n**The Golden Rule:** Just because two things move together, doesn't mean one causes the other."
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "text",
+                "content": "### The Ice Cream Murder Mystery\n\n#### A Classic Example"
+            },
+            {
+                "type": "text",
+                "content": "In summer, **Ice Cream sales** go UP. **Drowning deaths** also go UP.\n\n*   **Wrong Conclusion:** Ice Cream causes Drowning.\n*   **The Truth:** A third variable—**Heat**—causes both.\n\nThis is a Spurious Correlation. The variables are correlated (related), but there is no causal link."
+            },
+            {
+                "type": "simulation",
+                "content": "PatternDetector"
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "text",
+                "content": "### Spurious Correlations\n\nDid you know that per capita cheese consumption correlates with the number of people who died by becoming tangled in their bedsheets? (True data from Tyler Vigen)."
+            },
+            {
+                "type": "text",
+                "content": "Always ask: **\"Is there a third variable (Z) driving both X and Y?\"**"
+            },
+            {
+                "type": "citation",
+                "content": "Pearl, J. (2009). *Causality: Models, Reasoning, and Inference*."
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "Ice-cream sales and beach crowds both increase in summer. What is true?",
+                    "options": [
+                        "Ice-cream drives people to beaches",
+                        "Beaches make people hungry",
+                        "Both are affected by a third factor (Summer/Heat)",
+                        "Ice-cream causes heat"
+                    ],
+                    "correctIndex": 2
+                }
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "Two things increase at the same time. This is:",
+                    "options": [
+                        "Causation",
+                        "Correlation",
+                        "Coincidence",
+                        "A mistake"
+                    ],
+                    "correctIndex": 1
+                }
+            }
+        ]
+    },
+    {
+        "id": "node_stats_0_5_assignment",
+        "title": "Assignment: Correlation vs. Causation Hunt",
+        "type": "assignment",
+        "blocks": [
+            {
+                "type": "assignment",
+                "title": "Pattern Hunter",
+                "description": "Train your brain to distinguish between 'Moving Together' and 'Causing Each Other'.",
+                "instructions": "Review the situations below. For each, answer: 'Do they move together?' (Correlation) and 'Is it Causation?'\n\n1. More umbrellas are seen when roads are wet.\n2. Students who study more often get higher marks.\n3. More mobile phone usage is seen in cities with higher populations.\n\nExample Answer (1): Yes (Correlation). No (Causation) - Rain causes both.",
+                "submissionTypes": [
+                    "text"
+                ],
+                "isBlocking": true
+            }
+        ]
+    }
+]

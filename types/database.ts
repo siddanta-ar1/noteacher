@@ -2,7 +2,7 @@
 // These should be regenerated using `supabase gen types typescript` when schema changes
 
 export type NodeType = 'lesson' | 'assignment' | 'simulator';
-export type ProgressStatus = 'locked' | 'unlocked' | 'completed';
+export type ProgressStatus = 'locked' | 'unlocked' | 'current' | 'completed';
 export type UserRole = 'user' | 'admin';
 
 // ============ BASE TYPES ============
@@ -18,12 +18,33 @@ export interface Course {
 export interface Node {
     id: string;
     course_id: string;
+    mission_id?: string; // Links node to mission in hierarchy
     title: string;
     type: NodeType;
     is_mandatory: boolean;
     content_json: LessonContent | null;
     content: Record<string, unknown>;
     position_index: number;
+}
+
+export interface Level {
+    id: string;
+    course_id: string;
+    title: string;
+    description?: string;
+    position_index: number;
+    created_at?: string;
+    updated_at?: string;
+}
+
+export interface Mission {
+    id: string;
+    level_id: string;
+    title: string;
+    description?: string;
+    position_index: number;
+    created_at?: string;
+    updated_at?: string;
 }
 
 export interface Profile {
@@ -34,6 +55,8 @@ export interface Profile {
     wallet_balance: number;
     role: UserRole;
     updated_at: string;
+    created_at: string;
+    email?: string;
 }
 
 export interface UserProgress {
@@ -86,6 +109,20 @@ export interface CourseWithNodeCount extends Course {
 
 export interface NodeWithProgress extends Node {
     status: ProgressStatus;
+}
+
+// ============ HIERARCHY JOIN TYPES ============
+
+export interface MissionWithNodes extends Mission {
+    nodes: Node[];
+}
+
+export interface LevelWithMissions extends Level {
+    missions: MissionWithNodes[];
+}
+
+export interface CourseWithHierarchy extends Course {
+    levels: LevelWithMissions[];
 }
 
 // ============ LEADERBOARD ============

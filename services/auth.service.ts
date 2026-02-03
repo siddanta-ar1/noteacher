@@ -15,8 +15,16 @@ import type { ServiceResult } from "@/types";
 export async function login(
     formData: FormData
 ): Promise<ServiceResult<boolean>> {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    // Input validation
+    if (!email || typeof email !== "string" || !email.includes("@")) {
+        return { data: null, error: "Please enter a valid email address" };
+    }
+    if (!password || typeof password !== "string" || password.length < 6) {
+        return { data: null, error: "Password must be at least 6 characters" };
+    }
 
     try {
         const supabase = await createServerSupabaseClient();
@@ -38,54 +46,94 @@ export async function login(
 }
 
 /**
- * Sign up with email and password
+ * Sign up with email and password (no email verification)
  */
 export async function signup(
     formData: FormData
 ): Promise<ServiceResult<{ needsConfirmation: boolean }>> {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const fullName = formData.get("fullName") as string;
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const fullName = formData.get("fullName");
+    const username = formData.get("username");
+
+    // Input validation
+    if (!email || typeof email !== "string" || !email.includes("@")) {
+        return { data: null, error: "Please enter a valid email address" };
+    }
+    if (!password || typeof password !== "string" || password.length < 8) {
+        return { data: null, error: "Password must be at least 8 characters" };
+    }
+    if (!fullName || typeof fullName !== "string" || fullName.trim().length < 2) {
+        return { data: null, error: "Please enter your full name" };
+    }
+    if (!username || typeof username !== "string" || username.trim().length < 3) {
+        return { data: null, error: "Username must be at least 3 characters" };
+    }
+
+    // Validate username format (alphanumeric + underscore only)
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        return { data: null, error: "Username can only contain letters, numbers, and underscores" };
+    }
 
     try {
-        const siteUrl = getSiteUrl();
-
-        // Generate confirmation link manually using Admin client
         const adminSupabase = createAdminSupabaseClient();
-        const { data: linkData, error: linkError } = await adminSupabase.auth.admin.generateLink({
-            type: "signup",
+
+        // Check if username is already taken
+        const { data: existingUser } = await adminSupabase
+            .from("profiles")
+            .select("username")
+            .eq("username", username.toLowerCase())
+            .single();
+
+        if (existingUser) {
+            return { data: null, error: "Username is already taken" };
+        }
+
+        // Create user directly with admin client (bypasses email confirmation)
+        const { data: userData, error: createError } = await adminSupabase.auth.admin.createUser({
             email,
             password,
-            options: {
-                data: {
-                    full_name: fullName,
-                },
-                redirectTo: siteUrl,
+            email_confirm: true, // Auto-confirm email
+            user_metadata: {
+                full_name: fullName,
+                username: username.toLowerCase(),
             },
         });
 
-        if (linkError) {
-            return { data: null, error: linkError.message };
+        if (createError) {
+            return { data: null, error: createError.message };
         }
 
-        const { user } = linkData;
+        const { user } = userData;
 
-        // Create profile for new user using Admin client to bypass RLS
+        // Create profile for new user
         if (user) {
             await adminSupabase.from("profiles").insert({
                 id: user.id,
                 full_name: fullName,
+                username: username.toLowerCase(),
                 role: "user",
             });
-
-            // Send confirmation email via Resend
-            if (linkData.properties?.action_link) {
-                await sendConfirmationEmail(email, linkData.properties.action_link);
-            }
         }
 
-        return { data: { needsConfirmation: true }, error: null };
+        // Now sign in the user so they're logged in immediately
+        const supabase = await createServerSupabaseClient();
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (signInError) {
+            return { data: null, error: signInError.message };
+        }
+
+        revalidatePath("/", "layout");
+        redirect("/home");
     } catch (err) {
+        // redirect throws an error, so we need to rethrow it
+        if ((err as Error).message === "NEXT_REDIRECT") {
+            throw err;
+        }
         console.error("signup error:", err);
         return { data: null, error: (err as Error).message };
     }

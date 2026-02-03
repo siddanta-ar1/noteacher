@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Badge, Card } from "@/components/ui";
+import { getProfile } from "@/services/profile.service";
 
 interface SettingItemProps {
     icon: React.ElementType;
@@ -60,6 +61,33 @@ function Toggle({ enabled = false }: { enabled?: boolean }) {
 }
 
 export default function SettingsPage() {
+    const [profile, setProfile] = React.useState<any>(null); // Use proper type if available
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        async function loadProfile() {
+            try {
+                const { data, error } = await getProfile();
+                if (error) {
+                    console.error("Settings loadProfile error:", error);
+                }
+                if (data) {
+                    setProfile(data);
+                }
+            } catch (e) {
+                console.error("Settings loadProfile exception:", e);
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadProfile();
+    }, []);
+
+    const displayProfile = profile || {
+        full_name: "Guest User",
+        email: "guest@example.com"
+    };
+
     return (
         <div className="min-h-screen bg-surface-raised pb-20">
             {/* Header */}
@@ -90,11 +118,11 @@ export default function SettingsPage() {
                 <Card padding="lg" rounded="3xl">
                     <div className="flex items-center gap-4 mb-6">
                         <div className="w-16 h-16 bg-gradient-to-br from-primary to-power-purple rounded-2xl flex items-center justify-center text-white text-xl font-black">
-                            JD
+                            {displayProfile.full_name ? displayProfile.full_name.substring(0, 2).toUpperCase() : "GU"}
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-lg font-black text-ink-900">John Doe</h3>
-                            <p className="text-ink-400">john@example.com</p>
+                            <h3 className="text-lg font-black text-ink-900">{displayProfile.full_name || "Guest User"}</h3>
+                            <p className="text-ink-400">{displayProfile.email || "No Email"}</p>
                         </div>
                         <button className="px-4 py-2 bg-surface-raised text-ink-700 rounded-xl font-bold text-sm hover:bg-surface-sunken transition-colors flex items-center gap-2">
                             <User size={16} />

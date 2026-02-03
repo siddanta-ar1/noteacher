@@ -11,6 +11,7 @@ export const SITE_CONFIG = {
 
     // Branding
     logo: {
+        src: '/logo.png',
         text: 'NOTEacher',
         accent: 'Eacher',
     },

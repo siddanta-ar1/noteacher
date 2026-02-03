@@ -1,4 +1,4 @@
-import { getCourseWithNodes, getUserProgress } from "@/services";
+import { getUserProgress } from "@/services";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 import CourseMapClient from "./CourseMapClient";
@@ -18,8 +18,9 @@ export default async function CoursePage({ params }: Props) {
     if (!user) redirect("/login");
 
     // 2. Fetch Data Parallel
+    const { getCourseWithHierarchy } = await import("@/services");
     const [courseResult, progressResult] = await Promise.all([
-        getCourseWithNodes(id),
+        getCourseWithHierarchy(id),
         getUserProgress(user.id),
     ]);
 

@@ -2,8 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { ChevronLeft, Keyboard, BookOpen, Menu, X, CheckCircle2, Lock, Zap } from "lucide-react";
-import Link from "next/link";
+import { CheckCircle2, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 // New modular block system
@@ -16,7 +15,7 @@ import LessonControlBar from "@/components/lesson/LessonControlBar";
 import AIChatModal from "@/components/lesson/AIChatModal";
 import AISummaryButton from "@/components/lesson/AISummaryButton";
 import { completeNode } from "@/app/lesson/actions";
-import { Badge, ProgressBar, Avatar } from "@/components/ui";
+import { Badge } from "@/components/ui";
 
 type LessonClientProps = {
     node: {
@@ -26,14 +25,10 @@ type LessonClientProps = {
         content: any;
         course_id?: string;
     };
-    courseNodes: any[];
-    userProgress: any[];
 };
 
 export default function LessonClientV2({
     node,
-    courseNodes,
-    userProgress,
 }: LessonClientProps) {
     const router = useRouter();
     const containerRef = useRef<HTMLDivElement>(null);
@@ -59,7 +54,6 @@ export default function LessonClientV2({
 
     // State
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [currentContext, setCurrentContext] = useState("");
 
     // Initialize unlockedIndex to the first blocking block or end
@@ -171,127 +165,16 @@ export default function LessonClientV2({
         }
     };
 
-    // Calculate progress
-    const currentNodeIndex = courseNodes.findIndex((n) => n.id === node.id);
-    const totalNodes = courseNodes.length;
-
     return (
-        <div className="flex h-screen bg-surface-raised overflow-hidden">
+        <div className="flex h-full flex-col bg-surface-raised overflow-hidden relative">
             {/* PROGRESS BAR (Top Fixed) */}
             <motion.div
-                className="fixed top-0 left-0 right-0 h-1.5 bg-brand-gradient origin-left z-50"
+                className="absolute top-0 left-0 right-0 h-1.5 bg-brand-gradient origin-left z-50"
                 style={{
                     scaleX,
                     background: "linear-gradient(to right, var(--color-power-teal), var(--color-success))"
                 }}
             />
-
-            {/* SIDEBAR TOGGLE (Mobile/Collapsed) */}
-            <button
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="fixed top-4 left-4 z-40 p-2 bg-white rounded-xl shadow-lg border border-border lg:hidden"
-            >
-                {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-
-            {/* SIDEBAR */}
-            <aside
-                className={`
-                    fixed inset-y-0 left-0 z-30 w-80 bg-white border-r border-border flex flex-col transition-transform duration-300 transform
-                    lg:relative lg:translate-x-0
-                    ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-                `}
-            >
-                {/* Header */}
-                <div className="p-6 border-b border-border">
-                    <Link
-                        href={node.course_id ? `/course/${node.course_id}` : "/home"}
-                        className="flex items-center gap-2 text-ink-500 hover:text-primary text-sm font-bold transition-colors mb-4"
-                    >
-                        <ChevronLeft size={16} />
-                        Back to Map
-                    </Link>
-                    <Badge variant="teal" className="mb-3">
-                        {node.type || "Lesson"}
-                    </Badge>
-                    <h2 className="text-xl font-black text-ink-900 leading-tight">
-                        {node.title}
-                    </h2>
-
-                    {/* Metadata */}
-                    {parsedContent.metadata && (
-                        <div className="flex items-center gap-3 mt-4">
-                            {parsedContent.metadata.estimatedMinutes && (
-                                <div className="flex items-center gap-1.5 text-xs font-bold text-ink-500 bg-surface-raised px-2.5 py-1 rounded-md">
-                                    <BookOpen size={14} className="text-primary" />
-                                    {parsedContent.metadata.estimatedMinutes} min
-                                </div>
-                            )}
-                            {parsedContent.metadata.difficulty && (
-                                <div className="flex items-center gap-1.5 text-xs font-bold text-ink-500 bg-surface-raised px-2.5 py-1 rounded-md capitalize">
-                                    <Zap size={14} className="text-power-orange" />
-                                    {parsedContent.metadata.difficulty}
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
-
-                {/* Node navigation */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                    {courseNodes.map((n, index) => {
-                        const progress = userProgress.find((p) => p.node_id === n.id);
-                        const isDone = progress?.status === "completed";
-                        const isCurrent = n.id === node.id;
-                        const isUnlocked = progress?.status === "unlocked" || isCurrent || isDone;
-
-                        return (
-                            <Link
-                                key={n.id}
-                                href={isUnlocked ? `/lesson/${n.id}` : "#"}
-                                className={`
-                                    relative p-4 rounded-xl text-sm font-bold transition-all border-2
-                                    ${isCurrent
-                                        ? "bg-primary-light border-primary text-primary shadow-sm"
-                                        : isDone
-                                            ? "bg-surface-sunken border-transparent text-ink-500 hover:bg-surface-raised"
-                                            : isUnlocked
-                                                ? "bg-white border-transparent text-ink-900 hover:border-border hover:shadow-sm"
-                                                : "bg-surface-sunken border-transparent text-ink-300 opacity-60 cursor-not-allowed"
-                                    }
-                                `}
-                            >
-                                <div className="flex items-center justify-between z-10 relative">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`
-                                            w-6 h-6 rounded-full flex items-center justify-center text-[10px]
-                                            ${isCurrent ? "bg-primary text-white" : isDone ? "bg-power-teal text-white" : "bg-ink-200 text-ink-500"}
-                                        `}>
-                                            {isDone ? <CheckCircle2 size={12} /> : index + 1}
-                                        </div>
-                                        <span className="line-clamp-1">{n.title}</span>
-                                    </div>
-                                    {!isUnlocked && <Lock size={12} />}
-                                </div>
-                            </Link>
-                        );
-                    })}
-                </div>
-
-                {/* Keyboard hint */}
-                <div className="p-4 border-t border-border bg-surface-raised/50">
-                    <div className="flex items-center justify-between text-xs font-bold text-ink-400">
-                        <div className="flex items-center gap-1.5">
-                            <Keyboard size={14} />
-                            <span>Navigate</span>
-                        </div>
-                        <div className="flex gap-1">
-                            <span className="px-1.5 py-0.5 rounded border border-border bg-white">↑</span>
-                            <span className="px-1.5 py-0.5 rounded border border-border bg-white">↓</span>
-                        </div>
-                    </div>
-                </div>
-            </aside>
 
             {/* MAIN CONTENT */}
             <main
@@ -302,10 +185,9 @@ export default function LessonClientV2({
                     {/* Header */}
                     <header className="mb-16 text-center md:text-left">
                         <div className="inline-flex items-center gap-2 mb-6">
-                            <span className="w-2 h-2 rounded-full bg-power-teal animate-pulse" />
-                            <span className="text-xs font-black uppercase tracking-widest text-power-teal">
-                                Unit {currentNodeIndex + 1} of {totalNodes}
-                            </span>
+                            <Badge variant="teal">
+                                {node.type || "Lesson"}
+                            </Badge>
                         </div>
                         <h1 className="text-4xl md:text-5xl font-black text-ink-900 mt-2 leading-tight">
                             {node.title}
@@ -329,13 +211,19 @@ export default function LessonClientV2({
                     </header>
 
                     {/* Block content */}
-                    <BlockRenderer
-                        blocks={blocks}
-                        unlockedIndex={unlockedIndex}
-                        onUnlock={handleUnlock}
-                        onUpdateContext={setCurrentContext}
-                        nodeId={node.id}
-                    />
+                    {blocks.length > 0 ? (
+                        <BlockRenderer
+                            blocks={blocks}
+                            unlockedIndex={unlockedIndex}
+                            onUnlock={handleUnlock}
+                            onUpdateContext={setCurrentContext}
+                            nodeId={node.id}
+                        />
+                    ) : (
+                        <div className="py-12 text-center border-2 border-dashed border-border rounded-xl bg-surface-sunken">
+                            <p className="text-ink-500 font-medium">This lesson has no content yet.</p>
+                        </div>
+                    )}
 
                     {/* Complete button */}
                     <div className="pt-24 pb-32 flex justify-center">

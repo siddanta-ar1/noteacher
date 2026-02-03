@@ -63,6 +63,22 @@
     --color-info-dark: #1d4ed8;
 
     /* ─────────────────────────────────────────────────────────────────────────
+       VS CODE EXPLORER THEME
+       Dark developer-centric theme for course navigation
+       ───────────────────────────────────────────────────────────────────────── */
+    --color-vscode-bg: #1e1e1e;
+    --color-vscode-sidebar-bg: #252526;
+    --color-vscode-hover: #2a2d2e;
+    --color-vscode-active: #37373d;
+    --color-vscode-selection: #094771;
+    --color-vscode-border: #3c3c3c;
+    --color-vscode-text: #cccccc;
+    --color-vscode-text-muted: #858585;
+    --color-vscode-folder: #dcb67a;
+    --color-vscode-file: #75beff;
+    --color-vscode-indent: #404040;
+
+    /* ─────────────────────────────────────────────────────────────────────────
        NEUTRAL COLORS (Slate Scale)
        UI surfaces, text, borders
        ───────────────────────────────────────────────────────────────────────── */

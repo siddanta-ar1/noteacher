@@ -1,0 +1,153 @@
+{
+    "title": "Statistics: From Basics to Real-World Mastery",
+    "description": "Statistics is the software patch for the human brain's inability to process large datasets.",
+    "thumbnail_url": "/thumbnails/stats-thinking.png",
+    "nodes": [
+        {
+            "id": "node_stats_0_1",
+            "title": "Why Statistics Exists?",
+            "type": "lesson",
+            "blocks": [
+                {
+                    "type": "text",
+                    "content": "## Level 0: Statistical Thinking\n\n### Topic 1: Why Statistics Exists?\n\n**Theme:** The human brain is a biological masterpiece, but it has a specific \"Bug\": It cannot process large datasets. Statistics is the software patch for that bug."
+                },
+                {
+                    "type": "divider"
+                },
+                {
+                    "type": "text",
+                    "content": "### Subtopic 1.1: Conclusion of Data Cluster (The Limitation)\n\n#### The Principal's Nightmare"
+                },
+                {
+                    "type": "text",
+                    "content": "The human mind is limited. We can see a tree, but we struggle to count the forest.\n\nImagine you are a School Principal. You have just finished final exams. On your desk is a stack of 1,000 exam papers.\n\nYou want to know: \"Did the school perform well this year?\"\n\nYou try to read them one by one. 85, 42, 99, 76, 12... After the 10th paper, your brain starts to fog. You cannot extract the \"Truth\" from this \"Data Cluster\" using just your eyes.\n\nThis is called **\"Cognitive Overload.\"** Psychological studies show we can only hold about 7 items in our working memory at once."
+                },
+                {
+                    "type": "simulation",
+                    "content": "DataFog"
+                },
+                {
+                    "type": "citation",
+                    "content": "Hacking, I. (1990). *The Taming of Chance*. (Explains how society moved from looking at individuals to looking at populations)."
+                },
+                {
+                    "type": "divider"
+                },
+                {
+                    "type": "text",
+                    "content": "### Subtopic 1.2: Understanding Collective Phenomena (The Big Picture)\n\n#### The Frog in the Well"
+                },
+                {
+                    "type": "text",
+                    "content": "Humans are \"locally minded.\" We only truly understand what we can see with our own eyes—our street, our family, our workplace.\n\n**Local View:** You see a baby born next door. You see a funeral down the street.\n\n**Global View:** You have no idea how many babies were born in the entire nation today.\n\nWhy does this matter? If you are the Government, you can't rely on \"Local View.\" If the death rate in a specific state spikes, you need to know immediately to change policy. You cannot wait to hear about it one funeral at a time."
+                },
+                {
+                    "type": "simulation",
+                    "content": "ScopeSlider"
+                },
+                {
+                    "type": "divider"
+                },
+                {
+                    "type": "text",
+                    "content": "### Subtopic 1.3: The \"Small Sample\" Trap (Anecdotes)\n\n#### The Burger Fallacy"
+                },
+                {
+                    "type": "text",
+                    "content": "Our brains weigh our own experiences more heavily than the truth of the \"many.\"\n\n**The Scenario:** You want to eat at Burger Palace. Your friend screams, \"No! I ate there in 2018 and threw up!\"\n\nYou stop. You are scared. But consider this:\n\n*   Your friend is one person.\n*   Burger Palace serves 1,000 people a day safely.\n\nBy listening to your friend, you are falling into the **Small Sample Trap**. You are letting an \"Anecdote\" (N=1) defeat the \"Data\" (N=1000)."
+                },
+                {
+                    "type": "simulation",
+                    "content": "ReviewRoulette"
+                },
+                {
+                    "type": "divider"
+                },
+                {
+                    "type": "quiz",
+                    "content": {
+                        "question": "Why does having a lot of data become a problem?",
+                        "options": [
+                            "Data becomes expensive",
+                            "Data becomes outdated",
+                            "The human brain cannot understand everything at once",
+                            "Data disappears"
+                        ],
+                        "correctIndex": 2
+                    }
+                },
+                {
+                    "type": "quiz",
+                    "content": {
+                        "question": "What is the main reason statistics exists?",
+                        "options": [
+                            "To make exams harder",
+                            "To confuse people with numbers",
+                            "To help understand large amounts of information",
+                            "To replace human thinking"
+                        ],
+                        "correctIndex": 2
+                    }
+                },
+                {
+                    "type": "quiz",
+                    "content": {
+                        "question": "Which situation best shows the need for statistics?",
+                        "options": [
+                            "Reading one book",
+                            "Choosing one apple",
+                            "Selecting best photos from 10,000 pictures",
+                            "Drinking one glass of water"
+                        ],
+                        "correctIndex": 2
+                    }
+                },
+                {
+                    "type": "quiz",
+                    "content": {
+                        "question": "Why are individual cases not enough to understand reality?",
+                        "options": [
+                            "They are boring",
+                            "They may not represent the whole picture",
+                            "They are always wrong",
+                            "They change every day"
+                        ],
+                        "correctIndex": 1
+                    }
+                },
+                {
+                    "type": "quiz",
+                    "content": {
+                        "question": "What does statistics mainly help us do?",
+                        "options": [
+                            "Memorize numbers",
+                            "Avoid thinking",
+                            "Turn confusion into clarity",
+                            "Predict everything perfectly"
+                        ],
+                        "correctIndex": 2
+                    }
+                }
+            ]
+        },
+        {
+            "id": "node_stats_0_1_assignment",
+            "title": "Assignment: Spot Statistics",
+            "type": "assignment",
+            "blocks": [
+                {
+                    "type": "assignment",
+                    "title": "Field Work: Spot the Statistics in Your Daily Life",
+                    "description": "Realize you are already an unconscious statistician.",
+                    "instructions": "For one full day, observe your decisions. Write down one decision where you compared options or used past experience vs gut feeling.\n\nExample:\nDecision: \"I waited for the second bus.\"\nData Used: \"The crowd size at the stop vs. my memory of the schedule.\"\n\nSubmit your observation below as text or a photo of your notes.",
+                    "submissionTypes": [
+                        "text",
+                        "photo"
+                    ],
+                    "isBlocking": true
+                }
+            ]
+        }
+    ]
+}

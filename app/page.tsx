@@ -3,6 +3,7 @@
 import React from "react";
 
 import { motion, Variants } from "framer-motion";
+import Image from "next/image";
 import {
   Zap,
   ArrowRight,
@@ -55,8 +56,14 @@ export default function LandingPage() {
       >
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="bg-primary p-2 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow" style={{ boxShadow: "var(--shadow-primary)" }}>
-              <Zap className="text-white w-5 h-5 fill-white" />
+            <div className="relative w-10 h-10 transition-all">
+              <Image
+                src="/logo.png"
+                alt="NOTEacher Logo"
+                fill
+                className="object-contain rounded-xl"
+                priority
+              />
             </div>
             <span className="text-xl font-black text-primary italic tracking-tighter">
               NOT<span className="text-power-purple">Eacher</span>

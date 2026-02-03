@@ -216,25 +216,22 @@ export async function analyzeImage(options: ImageAnalysisOptions): Promise<strin
  * TODO: Audio Transcription (Whisper)
  * 
  * OpenRouter does not currently support audio/Whisper models.
- * For audio submission features, use Groq's Whisper API:
+ * For audio submission features, use Groq's Whisper API.
  * 
- * Example with Groq:
+ * This function is intentionally NOT EXPORTED until implemented.
+ * When ready to implement, use Groq:
+ * 
  * ```typescript
  * import Groq from "groq-sdk";
- * 
  * const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
- * 
  * const transcription = await groq.audio.transcriptions.create({
  *     file: audioFile,
  *     model: "whisper-large-v3",
  * });
  * ```
- * 
- * This will be implemented when audio submission feature is enabled.
  */
-export async function transcribeAudio(_audioFile: File): Promise<string> {
-    // Placeholder - OpenRouter doesn't support audio yet
-    // Use Groq's Whisper API for audio transcription
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function transcribeAudio(_audioFile: File): Promise<string> {
     throw new Error(
         "Audio transcription not yet implemented. " +
         "OpenRouter does not support Whisper. " +

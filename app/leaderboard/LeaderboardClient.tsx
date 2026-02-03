@@ -293,7 +293,7 @@ export default function LeaderboardClient({
               <div className="space-y-12">
                 {QUESTS.map((quest) => (
                   <div key={quest.id} className="group cursor-pointer">
-                    <div className="flex justify-between mb-4">
+                    <div className="flex justify-between mb-5">
                       <span className="font-black text-slate-900 text-lg group-hover:text-navy transition-colors">
                         {quest.title}
                       </span>

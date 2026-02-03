@@ -14,28 +14,51 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Avatar, Badge, Card, ProgressBar } from "@/components/ui";
-
-const MOCK_PROFILE = {
-  name: "John Doe",
-  username: "@johndoe",
-  bio: "Full-stack developer learning hardware engineering. Building cool stuff with Verilog and FPGAs.",
-  location: "San Francisco, CA",
-  joined: "January 2026",
-  xp: 12450,
-  level: 5,
-  streak: 12,
-  socials: {
-    github: "github.com/johndoe",
-    twitter: "twitter.com/johndoe"
-  },
-  achievements: [
-    { icon: Zap, color: "text-power-orange", bg: "bg-power-orange-light", title: "Fast Learner", date: "2 days ago" },
-    { icon: Trophy, color: "text-power-purple", bg: "bg-power-purple-light", title: "Course Master", date: "1 week ago" },
-    { icon: BookOpen, color: "text-power-teal", bg: "bg-power-teal-light", title: "Bookworm", date: "2 weeks ago" },
-  ]
-};
+import { useEffect, useState } from "react";
+import { getProfile } from "@/services/profile.service";
+import { Profile } from "@/types";
 
 export default function ProfilePage() {
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadProfile() {
+      const { data, error } = await getProfile();
+      if (data) {
+        setProfile(data);
+      }
+      setLoading(false);
+    }
+    loadProfile();
+  }, []);
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center bg-surface-raised">Loading...</div>;
+  }
+
+  // Fallback if no profile found (should ideally redirect or show error)
+  const displayProfile = profile || {
+    full_name: "Guest User",
+    role: "user",
+    avatar_url: null,
+    id: "",
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    email: "guest@example.com" // Placeholder if needed
+  };
+
+  const joinedDate = new Date(displayProfile.created_at || displayProfile.updated_at || Date.now()).toLocaleDateString("en-US", { month: 'long', year: 'numeric' });
+
+  // Mock stats that are not yet in DB
+  const stats = {
+    xp: 12450,
+    level: 5,
+    streak: 12,
+    location: "Earth",
+    github: "github"
+  };
+
   return (
     <div className="min-h-screen bg-surface-raised pb-20">
       {/* Header / Cover */}
@@ -52,13 +75,14 @@ export default function ProfilePage() {
             <div className="relative -mt-20">
               <div className="p-2 bg-white rounded-[2.5rem] shadow-sm">
                 <Avatar
-                  name={MOCK_PROFILE.name}
+                  name={displayProfile.full_name || "User"}
                   size="xl"
                   className="w-32 h-32 text-3xl rounded-[2rem]"
+                  src={displayProfile.avatar_url || undefined}
                 />
               </div>
               <div className="absolute bottom-2 right-2 bg-success text-white px-3 py-1 rounded-full text-xs font-black border-4 border-white">
-                LVL {MOCK_PROFILE.level}
+                LVL {stats.level}
               </div>
             </div>
 
@@ -66,8 +90,8 @@ export default function ProfilePage() {
             <div className="flex-1 w-full">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h1 className="text-3xl font-black text-ink-900 mb-1">{MOCK_PROFILE.name}</h1>
-                  <p className="text-ink-500 font-medium">{MOCK_PROFILE.username}</p>
+                  <h1 className="text-3xl font-black text-ink-900 mb-1">{displayProfile.full_name || "User"}</h1>
+                  <p className="text-ink-500 font-medium">@{displayProfile.full_name?.replace(/\s+/g, '').toLowerCase() || "user"}</p>
                 </div>
                 <button className="px-5 py-2.5 border-2 border-border hover:border-primary hover:text-primary rounded-xl font-bold transition-all flex items-center gap-2 text-sm">
                   <Edit2 size={16} />
@@ -76,21 +100,17 @@ export default function ProfilePage() {
               </div>
 
               <p className="text-ink-700 leading-relaxed mb-6 max-w-2xl">
-                {MOCK_PROFILE.bio}
+                Learning never exhausts the mind.
               </p>
 
               <div className="flex flex-wrap gap-6 text-sm text-ink-500 mb-8">
                 <div className="flex items-center gap-2">
                   <MapPin size={16} />
-                  {MOCK_PROFILE.location}
+                  {stats.location}
                 </div>
                 <div className="flex items-center gap-2">
                   <Calendar size={16} />
-                  Joined {MOCK_PROFILE.joined}
-                </div>
-                <div className="flex items-center gap-2">
-                  <Github size={16} />
-                  johndoe
+                  Joined {joinedDate}
                 </div>
               </div>
 
@@ -98,7 +118,7 @@ export default function ProfilePage() {
               <div className="grid grid-cols-3 gap-4">
                 <div className="bg-surface-raised p-4 rounded-2xl text-center border border-border">
                   <div className="text-2xl font-black text-ink-900 mb-1">
-                    {MOCK_PROFILE.xp.toLocaleString()}
+                    {stats.xp.toLocaleString()}
                   </div>
                   <div className="text-xs font-bold text-ink-400 uppercase tracking-wider">
                     Total XP
@@ -106,7 +126,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="bg-surface-raised p-4 rounded-2xl text-center border border-border">
                   <div className="text-2xl font-black text-ink-900 mb-1">
-                    {MOCK_PROFILE.streak}
+                    {stats.streak}
                   </div>
                   <div className="text-xs font-bold text-ink-400 uppercase tracking-wider">
                     Day Streak
@@ -183,17 +203,24 @@ export default function ProfilePage() {
                 <Link href="#" className="text-xs font-bold text-primary hover:underline">View All</Link>
               </div>
               <div className="space-y-4">
-                {MOCK_PROFILE.achievements.map((achievement, i) => (
-                  <div key={i} className="flex items-center gap-4">
-                    <div className={`w-12 h-12 ${achievement.bg} rounded-xl flex items-center justify-center ${achievement.color}`}>
-                      <achievement.icon size={20} />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-ink-900 text-sm">{achievement.title}</h4>
-                      <p className="text-xs text-ink-400">{achievement.date}</p>
-                    </div>
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 bg-power-orange-light rounded-xl flex items-center justify-center text-power-orange`}>
+                    <Zap size={20} />
                   </div>
-                ))}
+                  <div>
+                    <h4 className="font-bold text-ink-900 text-sm">Fast Learner</h4>
+                    <p className="text-xs text-ink-400">2 days ago</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 bg-power-purple-light rounded-xl flex items-center justify-center text-power-purple`}>
+                    <Trophy size={20} />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-ink-900 text-sm">Course Master</h4>
+                    <p className="text-xs text-ink-400">1 week ago</p>
+                  </div>
+                </div>
               </div>
             </Card>
 

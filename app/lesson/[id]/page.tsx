@@ -30,18 +30,9 @@ export default async function LessonPage({ params }: Props) {
     return <div>Lesson not found</div>;
   }
 
-  // 3. Fetch all nodes for this course (for the Sidebar)
-  const { data: courseNodes } = await supabase
-    .from("nodes")
-    .select("id, title, position_index, type")
-    .eq("course_id", node.course_id)
-    .order("position_index", { ascending: true });
-
-  // 4. Fetch User's Progress
-  const { data: userProgress } = await supabase
-    .from("user_progress")
-    .select("node_id, status")
-    .eq("user_id", user.id);
+  if (error || !node) {
+    return <div>Lesson not found</div>;
+  }
 
   return (
     <LessonClient
@@ -52,8 +43,6 @@ export default async function LessonPage({ params }: Props) {
         content: node.content_json,
         course_id: node.course_id,
       }}
-      courseNodes={courseNodes || []}
-      userProgress={userProgress || []}
     />
   );
 }

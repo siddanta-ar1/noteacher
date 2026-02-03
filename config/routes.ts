@@ -34,6 +34,7 @@ export const IMMERSIVE_ROUTES = [
 // Patterns for immersive routes (for matching dynamic routes)
 export const IMMERSIVE_PATTERNS = [
     '/lesson',
+    '/course',
 ] as const;
 
 // Check if a route is immersive

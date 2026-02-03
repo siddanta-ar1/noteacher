@@ -1,10 +1,15 @@
 "use server";
 
+import { cache } from "react";
 import { createServerSupabaseClient, createSupabaseAdmin } from "@/lib/supabase-server";
 import type {
     Course,
     CourseWithNodes,
     CourseWithNodeCount,
+    CourseWithHierarchy,
+    Level,
+    Mission,
+    Node,
     ServiceResult,
 } from "@/types";
 
@@ -128,6 +133,87 @@ export async function getCoursesForDashboard(): Promise<
     } catch (err: unknown) {
         console.error("getCoursesForDashboard error:", JSON.stringify(err, null, 2));
         const msg = err instanceof Error ? err.message : (err as { message?: string })?.message || "Failed to fetch dashboard";
+        return { data: null, error: msg };
+    }
+}
+
+/**
+ * Get a course with its full hierarchy: Levels → Missions → Nodes
+ * This is the primary method for the course explorer sidebar
+ */
+export async function getCourseWithHierarchy(
+    courseId: string
+): Promise<ServiceResult<CourseWithHierarchy>> {
+    try {
+        const supabase = await createServerSupabaseClient();
+
+        // First, get the course
+        const { data: course, error: courseError } = await supabase
+            .from("courses")
+            .select("id, title, description, thumbnail_url, created_at")
+            .eq("id", courseId)
+            .maybeSingle();
+
+        if (courseError) throw courseError;
+        if (!course) return { data: null, error: "Course not found" };
+
+        // Get levels for this course
+        const { data: levels, error: levelsError } = await supabase
+            .from("levels")
+            .select("id, course_id, title, description, position_index")
+            .eq("course_id", courseId)
+            .order("position_index", { ascending: true });
+
+        if (levelsError) throw levelsError;
+
+        // Get all missions for these levels
+        let missions: Mission[] = [];
+        const levelIds = (levels || []).map((l: Level) => l.id);
+
+        if (levelIds.length > 0) {
+            const { data: missionsData, error: missionsError } = await supabase
+                .from("missions")
+                .select("id, level_id, title, description, position_index")
+                .in("level_id", levelIds)
+                .order("position_index", { ascending: true });
+
+            if (missionsError) throw missionsError;
+            missions = missionsData as Mission[] || [];
+        }
+
+        // Get all nodes for these missions
+        let nodes: Node[] = [];
+        const missionIds = missions.map((m: Mission) => m.id);
+
+        if (missionIds.length > 0) {
+            const { data: nodesData, error: nodesError } = await supabase
+                .from("nodes")
+                .select("id, course_id, mission_id, title, type, position_index, is_mandatory, content_json, content")
+                .in("mission_id", missionIds)
+                .order("position_index", { ascending: true });
+
+            if (nodesError) throw nodesError;
+            nodes = nodesData as Node[] || [];
+        }
+
+        // Build the hierarchy
+        const hierarchy: CourseWithHierarchy = {
+            ...course,
+            levels: (levels || []).map((level: Level) => ({
+                ...level,
+                missions: (missions || [])
+                    .filter((m: Mission) => m.level_id === level.id)
+                    .map((mission: Mission) => ({
+                        ...mission,
+                        nodes: (nodes || []).filter((n: Node) => n.mission_id === mission.id),
+                    })),
+            })),
+        };
+
+        return { data: hierarchy, error: null };
+    } catch (err: unknown) {
+        console.error("getCourseWithHierarchy error:", JSON.stringify(err, null, 2));
+        const msg = err instanceof Error ? err.message : (err as { message?: string })?.message || "Failed to fetch course hierarchy";
         return { data: null, error: msg };
     }
 }

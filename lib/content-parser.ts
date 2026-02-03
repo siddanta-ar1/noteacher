@@ -42,6 +42,11 @@ export function parseContentJSON(raw: unknown): CourseContentJSON {
         return migrateLegacyFormat(content);
     }
 
+    // Handle ScrollyPoints format (from seed script)
+    if ("scrollyPoints" in content && Array.isArray(content.scrollyPoints)) {
+        return migrateScrollyFormat(content);
+    }
+
     // Handle blocks array
     if ("blocks" in content && Array.isArray(content.blocks)) {
         const parsedBlocks = content.blocks
@@ -102,6 +107,97 @@ function migrateLegacyFormat(legacy: {
     return {
         version: "1.0",
         metadata: {},
+        blocks,
+    };
+}
+
+/**
+ * Migrate ScrollyPoints format (used in seed script) to new block-based format
+ */
+function migrateScrollyFormat(source: Record<string, any>): CourseContentJSON {
+    const blocks: ContentBlock[] = [];
+    let idCounter = 0;
+
+    // 1. Hook (Heading)
+    if (source.hook) {
+        blocks.push({
+            id: `scrolly-hook`,
+            type: "text",
+            content: source.hook,
+            style: "heading",
+            animation: { type: "fade", direction: "up", duration: 0.8 }
+        });
+    }
+
+    // 2. Animation/Video
+    if (source.animationUrl && source.animationUrl !== "default") {
+        blocks.push({
+            id: `scrolly-anim`,
+            type: "animation",
+            format: "video",
+            url: source.animationUrl,
+            autoplay: true,
+            loop: true,
+            caption: source.animationPrompt
+        });
+    }
+
+    // 3. Scrolly Points (Text)
+    if (source.scrollyPoints && Array.isArray(source.scrollyPoints)) {
+        source.scrollyPoints.forEach((point: string, index: number) => {
+            blocks.push({
+                id: `scrolly-text-${index}`,
+                type: "text",
+                content: point,
+                style: "default",
+                animation: { type: "slide", direction: "up", delay: index * 0.1 }
+            });
+        });
+    }
+
+    // 4. Simulation
+    if (source.simulation) {
+        blocks.push({
+            id: `scrolly-sim`,
+            type: "simulation",
+            simulationId: source.simulation.title.toLowerCase().replace(/\s+/g, '-') || "custom",
+            instructions: source.simulation.interaction,
+            config: {
+                title: source.simulation.title,
+                lesson: source.simulation.lesson
+            }
+        });
+    }
+
+    // 5. MCQ (Quiz)
+    if (source.mcq) {
+        blocks.push({
+            id: `scrolly-quiz`,
+            type: "quiz",
+            question: source.mcq.question,
+            options: source.mcq.options,
+            correctIndex: source.mcq.options.indexOf(source.mcq.correctAnswer),
+            unlocks: true
+        });
+    }
+
+    // 6. Assignment
+    if (source.assignment) {
+        blocks.push({
+            id: `scrolly-assign`,
+            type: "assignment",
+            title: "Lesson Assignment",
+            description: source.assignment.task,
+            submissionTypes: source.assignment.type.toLowerCase().includes("photo") ? ["text", "photo"] : ["text"],
+            isBlocking: true
+        });
+    }
+
+    return {
+        version: "1.0",
+        metadata: {
+            references: source.references || []
+        },
         blocks,
     };
 }

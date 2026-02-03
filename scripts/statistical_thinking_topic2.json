@@ -1,0 +1,162 @@
+[
+    {
+        "id": "node_stats_0_2",
+        "title": "Statistics vs. Intuition",
+        "type": "lesson",
+        "blocks": [
+            {
+                "type": "text",
+                "content": "## Level 0: Statistical Thinking\n\n### Topic 2: Statistics vs. Intuition\n\n**Theme:** Your brain is a \"Pattern Matching Machine\" that evolved for survival, not for math. It loves stories, but it is terrible at probability."
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "text",
+                "content": "### Subtopic 2.1: The Gambler's Mindset (The Trap)\n\n#### The \"Feeling\" of Luck"
+            },
+            {
+                "type": "text",
+                "content": "Statistics replaces gut feelings with evidence. It stops us from being carried away by our emotions.\n\n**The Scenario:** A gambler is playing a coin game. He observes that it was Heads 3 times in a row.\n\nFor the fourth toss, he bets everything on Tails.\n\n**His Intuition:** \"It must be Tails now! Heads is 'tired'. The universe needs to balance it out.\"\n\n**The Reality:** The coin has no memory. The chance is still 50/50.\n\nWhen it lands on Heads again, he loses. He wasn't playing the odds; he was playing his emotions.\n\nStatistics protects us from this mistake. Evidence shows that the best move in a fair coin game is actually not to play, because in the long run, you only break even."
+            },
+            {
+                "type": "simulation",
+                "content": "DiceBettingSim"
+            },
+            {
+                "type": "citation",
+                "content": "Tversky, A., & Kahneman, D. (1971). *Belief in the Law of Small Numbers*. (Papers proving humans falsely believe short sequences will \"balance out\")."
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "text",
+                "content": "### Subtopic 2.2: Intuition Fails When Scale Increases\n\n#### The Room vs. The Stadium"
+            },
+            {
+                "type": "text",
+                "content": "Intuition works great for small situations. Large numbers confuse human judgment.\n\n**The Room:** If you are in a small room with 5 people, you can \"intuit\" the average height just by looking. Your brain handles N=5 easily.\n\n**The Stadium:** Now imagine a stadium with 50,000 people. Can you estimate the average height by \"looking\"? Impossible. Your intuition crashes.\n\nStatistics is the tool that scales. It allows us to get the required info (Average Height, Happiness, Income) even in a stadium of millions."
+            },
+            {
+                "type": "simulation",
+                "content": "CrowdEstimator"
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "text",
+                "content": "### Subtopic 2.3: Guesswork Works Sometimes (By Accident)\n\n#### The Illusion of Skill"
+            },
+            {
+                "type": "text",
+                "content": "In daily life, guesswork might work sometimes. But that doesn't make it reliable.\n\n**The Stock Market:** Reports show that the majority of investors lose money because they invest based on \"Gut Feeling\" or \"Hot Tips.\"\n\nStatistics shows the Fact: Is the company consistent? Is the profit real? Guesswork gives occasional success. Statistics gives a **Consistent Rate of Success**."
+            },
+            {
+                "type": "simulation",
+                "content": "MonkeyInvestor"
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "text",
+                "content": "### Subtopic 2.4: Why Do Statistics Win?\n\n#### Probability vs. Luck"
+            },
+            {
+                "type": "text",
+                "content": "Guesswork relies on \"Luck,\" and luck eventually runs out. Statistics relies on **\"Probability,\"** which is mathematically guaranteed to work over time.\n\nA \"Guesser\" might pick one winning stock by accident.\n\nA \"Statistician\" builds a diverse portfolio that grows steadily, even when some stocks fail.\n\nStatistics doesn't try to be \"perfect\" once; it tries to be \"mostly right\" forever."
+            },
+            {
+                "type": "simulation",
+                "content": "LongRunGraph"
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "What does intuition mainly depend on?",
+                    "options": [
+                        "Data records",
+                        "Logical proof",
+                        "Feelings and experience",
+                        "Random chance"
+                    ],
+                    "correctIndex": 2
+                }
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "Why is guesswork unreliable?",
+                    "options": [
+                        "It takes too much time",
+                        "It depends on luck",
+                        "It needs training",
+                        "It uses too much data"
+                    ],
+                    "correctIndex": 1
+                }
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "Which is an example of guesswork?",
+                    "options": [
+                        "Checking weather history before travel",
+                        "Choosing exam answers without studying",
+                        "Recording daily expenses",
+                        "Comparing prices before buying"
+                    ],
+                    "correctIndex": 1
+                }
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "Why does intuition fail in big situations?",
+                    "options": [
+                        "Intuition is slow",
+                        "Human brain can’t handle large complexity well",
+                        "Intuition needs machines",
+                        "Intuition works only with numbers"
+                    ],
+                    "correctIndex": 1
+                }
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "How does statistics improve decisions?",
+                    "options": [
+                        "By removing uncertainty completely",
+                        "By replacing humans",
+                        "By using evidence instead of feelings",
+                        "By guessing better"
+                    ],
+                    "correctIndex": 2
+                }
+            }
+        ]
+    },
+    {
+        "id": "node_stats_0_2_assignment",
+        "title": "Assignment: Intuition Check",
+        "type": "assignment",
+        "blocks": [
+            {
+                "type": "assignment",
+                "title": "Intuition vs. Reality Check",
+                "description": "Demonstrate the gap between 'Feeling' and 'Fact'.",
+                "instructions": "Pick one situation (e.g., 'How long will my commute take today?').\n\nPart 1 (Before): Write down your gut feeling. ('I feel like it will take 20 mins').\n\nPart 2 (After): Record the actual time. ('It took 35 mins').\n\nPart 3 (Analysis): Why were you wrong? Submit your log below.",
+                "submissionTypes": [
+                    "text"
+                ],
+                "isBlocking": true
+            }
+        ]
+    }
+]

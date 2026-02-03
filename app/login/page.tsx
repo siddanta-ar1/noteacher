@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import {
   Zap,
   Github,
@@ -56,17 +57,12 @@ export default function LoginPage() {
       } else {
         const res = await signup(formData);
         if (res?.error) throw new Error(res.error);
-        if (res?.data?.needsConfirmation) {
-          setMessage({
-            type: "success",
-            text: "Check your email to confirm your account!",
-          });
-          setIsLoading(false);
-          return;
-        }
+        // User is auto-logged in and redirected, no confirmation needed
       }
     } catch (err: unknown) {
       const error = err as Error;
+      // Ignore redirect errors
+      if (error.message === "NEXT_REDIRECT") return;
       setMessage({ type: "error", text: error.message });
       setIsLoading(false);
     }
@@ -80,7 +76,14 @@ export default function LoginPage() {
           href={ROUTES.LANDING}
           className="absolute top-8 left-8 flex items-center gap-2 text-ink-400 hover:text-primary transition-colors group"
         >
-          <Zap size={20} className="group-hover:fill-primary transition-colors" />
+          <div className="relative w-6 h-6">
+            <Image
+              src="/logo.png"
+              alt="NOTEacher"
+              fill
+              className="object-contain rounded-lg"
+            />
+          </div>
           <span className="font-bold text-sm">Back to Home</span>
         </Link>
 
@@ -153,13 +156,22 @@ export default function LoginPage() {
             {/* Email Form */}
             <form action={handleSubmit} className="space-y-5">
               {mode === "signup" && (
-                <Input
-                  name="fullName"
-                  label="Full Name"
-                  placeholder="Ada Lovelace"
-                  icon={<User size={18} />}
-                  required
-                />
+                <>
+                  <Input
+                    name="fullName"
+                    label="Full Name"
+                    placeholder="Ada Lovelace"
+                    icon={<User size={18} />}
+                    required
+                  />
+                  <Input
+                    name="username"
+                    label="Username"
+                    placeholder="ada_lovelace"
+                    icon={<User size={18} />}
+                    required
+                  />
+                </>
               )}
 
               <Input
@@ -237,8 +249,14 @@ export default function LoginPage() {
             transition={{ delay: 0.2, duration: 0.8 }}
             className="bg-white/10 backdrop-blur-xl border border-white/20 p-12 rounded-[3rem] shadow-2xl max-w-md"
           >
-            <div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <Zap className="text-white w-10 h-10 fill-white" />
+            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-6 p-3">
+              <Image
+                src="/logo.png"
+                alt="NOTEacher"
+                width={56}
+                height={56}
+                className="object-contain rounded-xl"
+              />
             </div>
             <h2 className="text-2xl font-black text-white mb-4 leading-snug">
               "The top 1% don't memorize.

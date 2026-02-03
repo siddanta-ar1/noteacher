@@ -24,7 +24,13 @@ export async function getProfile(): Promise<ServiceResult<Profile>> {
             .single();
 
         if (error) throw error;
-        return { data: data as Profile, error: null };
+
+        const profileWithEmail: Profile = {
+            ...data,
+            email: user.email,
+        };
+
+        return { data: profileWithEmail, error: null };
     } catch (err) {
         console.error("getProfile error:", err);
         return { data: null, error: (err as Error).message };

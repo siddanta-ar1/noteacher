@@ -138,3 +138,67 @@ export function ComingSoonModal({ isOpen, onClose, feature = "This feature" }: C
         </Modal>
     );
 }
+
+// Confirmation Modal - for destructive actions
+interface ConfirmModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onConfirm: () => void;
+    title?: string;
+    message?: string;
+    confirmLabel?: string;
+    cancelLabel?: string;
+    variant?: "danger" | "warning" | "default";
+}
+
+export function ConfirmModal({
+    isOpen,
+    onClose,
+    onConfirm,
+    title = "Are you sure?",
+    message = "This action cannot be undone.",
+    confirmLabel = "Confirm",
+    cancelLabel = "Cancel",
+    variant = "default",
+}: ConfirmModalProps) {
+    const variantStyles = {
+        danger: "bg-error hover:bg-error-hover",
+        warning: "bg-warning hover:bg-warning-hover",
+        default: "bg-primary hover:bg-primary-hover",
+    };
+
+    return (
+        <Modal isOpen={isOpen} onClose={onClose} size="sm" showCloseButton={false}>
+            <div className="text-center py-4">
+                <h3 className="text-xl font-black text-ink-900 mb-2">
+                    {title}
+                </h3>
+                <p className="text-ink-500 mb-6">
+                    {message}
+                </p>
+
+                <div className="flex gap-3">
+                    <button
+                        onClick={onClose}
+                        className="flex-1 py-3 bg-surface-raised text-ink-700 rounded-xl font-bold hover:bg-surface-sunken transition-colors"
+                    >
+                        {cancelLabel}
+                    </button>
+                    <button
+                        onClick={() => {
+                            onConfirm();
+                            onClose();
+                        }}
+                        className={cn(
+                            "flex-1 py-3 text-white rounded-xl font-bold transition-colors",
+                            variantStyles[variant]
+                        )}
+                    >
+                        {confirmLabel}
+                    </button>
+                </div>
+            </div>
+        </Modal>
+    );
+}
+

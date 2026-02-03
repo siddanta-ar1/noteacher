@@ -1,0 +1,158 @@
+[
+    {
+        "id": "node_stats_0_3",
+        "title": "Deterministic vs. Uncertain",
+        "type": "lesson",
+        "blocks": [
+            {
+                "type": "text",
+                "content": "## Level 0: Statistical Thinking\n\n### Topic 3: Deterministic vs. Uncertain Worlds\n\n**Theme:** Physics gives us formulas for things that must happen. Statistics gives us tools for things that might happen."
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "text",
+                "content": "### Subtopic 3.1: The Deterministic Worldview\n\n#### The Clockwork Universe"
+            },
+            {
+                "type": "text",
+                "content": "In a deterministic world, the future is completely determined by the present. If you know the current state and the laws of physics, you can predict the outcome with 100% accuracy. There is no randomness.\n\n**Example:** When you enter 2 + 2 into a calculator, the answer is always 4. It will never randomly be 5.\n\n**The Result:** If you repeat an action under the exact same conditions, you get the exact same result every single time."
+            },
+            {
+                "type": "simulation",
+                "content": "DeterministicSystemSim"
+            },
+            {
+                "type": "citation",
+                "content": "Laplace, P. S. (1814). *Essai philosophique sur les probabilités*. (Argument for 'Laplace's Demon' - perfect prediction via infinite knowledge)."
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "text",
+                "content": "### Subtopic 3.2: The Uncertain Worldview\n\n#### The Real World"
+            },
+            {
+                "type": "text",
+                "content": "In an uncertain world, the same inputs can lead to different outputs. Even if you do everything \"right,\" the result is not guaranteed.\n\n**Example:** You plant a seed, water it perfectly, and provide the right sunlight. \n*   Outcome A: It grows into a healthy tree.\n*   Outcome B: It dies due to a random genetic defect.\n\nIn this world, we have **Probability Distributions**. Instead of a fixed number, we have a range of likely values."
+            },
+            {
+                "type": "simulation",
+                "content": "StochasticGrowthSim"
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "text",
+                "content": "### Subtopic 3.3: The Source of Uncertainty\n\n#### Why Can't We Predict Everything?"
+            },
+            {
+                "type": "text",
+                "content": "Why isn't the real world deterministic? Two reasons:\n\n1.  **Lack of Infinite Knowledge:** We lack resources to measure every atom.\n2.  **Lack of Parameter Control:** Hidden variables (genes, DNA, wind speed) affect the outcome.\n\n**Uncertainty** is the gap between what we can measure and what actually exists."
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "text",
+                "content": "### Subtopic 3.4: How Statistics Joins the Game\n\n#### Managing the Chaos"
+            },
+            {
+                "type": "text",
+                "content": "We cannot reach 100% efficiency in an uncertain world. But Statistics gets us closer.\n\n**Farming:** We likely can't guarantee every seed grows. But statistics finds the optimal fertilizer to ensure 95% do.\n**Business:** We can't predict every customer. But statistics predicts inventory needs so we rarely run out.\n\nStatistics stretches our efficiency to the maximum potential allowed by nature."
+            },
+            {
+                "type": "simulation",
+                "content": "EfficiencyTunerSim"
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "What defines a deterministic world?",
+                    "options": [
+                        "Outcomes change randomly",
+                        "Same action gives same result",
+                        "Nothing can be predicted",
+                        "Luck decides everything"
+                    ],
+                    "correctIndex": 1
+                }
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "Which example best fits an uncertain world?",
+                    "options": [
+                        "Dropping a ball",
+                        "Turning on a switch",
+                        "Flipping a coin",
+                        "Pressing calculator buttons"
+                    ],
+                    "correctIndex": 2
+                }
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "Why is real life mostly uncertain?",
+                    "options": [
+                        "Rules don’t exist",
+                        "Too many factors affect outcomes",
+                        "Humans are careless",
+                        "Data is missing"
+                    ],
+                    "correctIndex": 1
+                }
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "What does statistics help us do in an uncertain world?",
+                    "options": [
+                        "Predict exact outcomes",
+                        "Remove randomness",
+                        "Understand patterns and likelihoods",
+                        "Control the future"
+                    ],
+                    "correctIndex": 2
+                }
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "Why can’t we use deterministic thinking everywhere?",
+                    "options": [
+                        "It is outdated",
+                        "Real life doesn’t always repeat exactly",
+                        "It needs machines",
+                        "It uses formulas"
+                    ],
+                    "correctIndex": 1
+                }
+            }
+        ]
+    },
+    {
+        "id": "node_stats_0_3_assignment",
+        "title": "Assignment: Deterministic or Uncertain?",
+        "type": "assignment",
+        "blocks": [
+            {
+                "type": "assignment",
+                "title": "World Classification",
+                "description": "Develop a mental framework for separating 'Fixed' laws from 'Probabilistic' events.",
+                "instructions": "Classify the following situations into: Deterministic, Uncertain, or Needs Statistics.\n\n1. Dropping a stone from a height.\n2. Predicting tomorrow’s temperature.\n3. Flipping a coin.\n4. Estimating daily shop sales.\n5. Turning on a light switch.\n\nSubmit one sentence explaining your reasoning for each.",
+                "submissionTypes": [
+                    "text"
+                ],
+                "isBlocking": true
+            }
+        ]
+    }
+]

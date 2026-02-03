@@ -52,8 +52,7 @@ export function Sidebar() {
 
     return (
         <>
-            <aside className="w-20 lg:w-72 bg-white border-r border-border p-4 lg:p-6 sticky top-0 h-screen z-50 flex flex-col overflow-y-auto">
-                {/* Logo */}
+            <aside className="w-20 lg:w-72 bg-white border-r border-border p-4 lg:p-6 sticky top-0 h-screen z-50 flex flex-col overflow-y-auto custom-scrollbar">
                 {/* Logo */}
                 <Link href={ROUTES.HOME} className="flex items-center gap-3 mb-10 px-2 group">
                     <div className="relative w-10 h-10 transition-all">
@@ -61,11 +60,11 @@ export function Sidebar() {
                             src="/logo.png"
                             alt="NOTEacher Logo"
                             fill
-                            className="object-contain"
+                            className="object-contain rounded-xl"
                             priority
                         />
                     </div>
-                    <span className="text-2xl font-black text-primary hidden lg:block italic tracking-tighter">
+                    <span className="text-2xl font-black text-primary hidden lg:block italic tracking-tight">
                         NOT<span className="text-power-purple">Eacher</span>
                     </span>
                 </Link>
@@ -109,18 +108,26 @@ export function Sidebar() {
                 </nav>
 
                 {/* Pro Upgrade Card */}
-                <div className="hidden lg:block mt-6 p-4 bg-gradient-to-br from-power-purple to-indigo-600 rounded-2xl text-white">
-                    <div className="flex items-center gap-2 mb-2">
-                        <Sparkles size={16} className="fill-white" />
-                        <span className="text-xs font-bold uppercase tracking-wider opacity-80">Pro</span>
+                <div className="hidden lg:block mt-8">
+                    <div className="p-4 bg-ink-900 rounded-2xl text-white shadow-lg relative overflow-hidden group border border-ink-800">
+                        <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/30 transition-colors" />
+
+                        <div className="flex items-center justify-between mb-3 relative z-10">
+                            <span className="text-xs font-black uppercase tracking-widest text-primary-light">Pro</span>
+                            <Sparkles size={14} className="text-primary-light" />
+                        </div>
+
+                        <p className="text-sm font-bold text-white mb-4 relative z-10 leading-snug">
+                            Unlock the full<br />experience.
+                        </p>
+
+                        <button
+                            onClick={() => setShowUpgradeModal(true)}
+                            className="relative z-10 w-full py-2 bg-primary hover:bg-primary-hover text-white rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-2"
+                        >
+                            Upgrade Now
+                        </button>
                     </div>
-                    <p className="text-sm font-bold mb-3">Unlock all courses & AI features</p>
-                    <button
-                        onClick={() => setShowUpgradeModal(true)}
-                        className="w-full py-2 bg-white text-power-purple rounded-xl font-bold text-sm hover:bg-white/90 transition-colors"
-                    >
-                        Upgrade Now
-                    </button>
                 </div>
             </aside>
 

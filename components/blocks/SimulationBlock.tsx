@@ -13,12 +13,42 @@ const WebDevSimulator = lazy(
     () => import("@/components/lesson/visualizers/WebDevSimulator")
 );
 
+// New Statistical Thinking Simulations
+const DataFog = lazy(() => import("@/components/simulations/DataFog"));
+const ScopeSlider = lazy(() => import("@/components/simulations/ScopeSlider"));
+const ReviewRoulette = lazy(() => import("@/components/simulations/ReviewRoulette"));
+
 const SIMULATION_REGISTRY: Record<string, React.LazyExoticComponent<any> | React.ComponentType<any>> = {
     // Registered components
     "logic-gates": Workbench,
     "statistics": StatisticsVisualizer,
-    "web-dev": WebDevSimulator, // Generic entry
-    "network-visualizer": WebDevSimulator, // Specific aliases
+    "web-dev": WebDevSimulator,
+
+    // Statistical Thinking (Level 0)
+    "DataFog": DataFog,
+    "ScopeSlider": ScopeSlider,
+    "ReviewRoulette": ReviewRoulette,
+    "StreakBreaker": lazy(() => import("@/components/simulations/StreakBreaker")),
+
+    // Topic 2
+    "DiceBettingSim": lazy(() => import("@/components/simulations/DiceBettingSim")),
+    "CrowdEstimator": lazy(() => import("@/components/simulations/CrowdEstimator")),
+    "MonkeyInvestor": lazy(() => import("@/components/simulations/MonkeyInvestor")),
+    "LongRunGraph": lazy(() => import("@/components/simulations/LongRunGraph")),
+
+    // Topic 3
+    "DeterministicSystemSim": lazy(() => import("@/components/simulations/DeterministicSystemSim")),
+    "StochasticGrowthSim": lazy(() => import("@/components/simulations/StochasticGrowthSim")),
+    "EfficiencyTunerSim": lazy(() => import("@/components/simulations/EfficiencyTunerSim")),
+
+    // Topic 4
+    "HeadlineVsData": lazy(() => import("@/components/simulations/HeadlineVsData")),
+    "AnchoringSim": lazy(() => import("@/components/simulations/AnchoringSim")),
+    "IntuitionRun": lazy(() => import("@/components/simulations/IntuitionRun")),
+    "PatternDetector": lazy(() => import("@/components/simulations/PatternDetector")),
+
+    // Aliases & Future
+    "network-visualizer": WebDevSimulator,
     "box-model": WebDevSimulator,
     "flexbox": WebDevSimulator,
     "selectors": WebDevSimulator,
@@ -52,6 +82,10 @@ export default function SimulationBlockComponent({
         return <ComingSoonPlaceholder type={simulationId} />;
     }
 
+    // Special styling for "Workbench" style simulations (dark mode, fixed height)
+    // vs Content Simulations (light mode, auto height)
+    const isWorkbench = ["logic-gates", "web-dev", "network-visualizer"].some(k => simulationId.includes(k));
+
     return (
         <div className="space-y-4">
             {/* Instructions */}
@@ -65,7 +99,10 @@ export default function SimulationBlockComponent({
             )}
 
             {/* Simulation container */}
-            <div className="h-[500px] w-full bg-slate-900 rounded-3xl overflow-hidden border-4 border-slate-100 shadow-xl relative">
+            <div className={isWorkbench
+                ? "h-[500px] w-full bg-slate-900 rounded-3xl overflow-hidden border-4 border-slate-100 shadow-xl relative"
+                : "w-full" // Allow component to define its own dimensions
+            }>
                 <Suspense fallback={<LoadingFallback />}>
                     <SimulationComponent {...(config || {})} />
                 </Suspense>

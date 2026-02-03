@@ -1,0 +1,104 @@
+[
+    {
+        "id": "node_stats_0_4",
+        "title": "Everyday Decisions & Hidden Statistics",
+        "type": "lesson",
+        "blocks": [
+            {
+                "type": "text",
+                "content": "## Level 0: Statistical Thinking\n\n### Topic 4: Everyday Decisions & Hidden Statistics\n\n**Theme:** Your brain uses \"mental shortcuts\" (Heuristics) to simulate statistics. Sometimes they save you; sometimes they kill you."
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "text",
+                "content": "### Subtopic 4.1: The Availability Heuristic\n\n#### Why You Are Scared of the Wrong Things"
+            },
+            {
+                "type": "text",
+                "content": "We often estimate probability by how easily we can remember an example.\n\n*   **The Fear:** Plane crashes. (Dramatic, loud, on news > High Recall).\n*   **The Reality:** Car crashes. (Boring, common > Low Recall).\n\nYou are safer in the air. The most dangerous part of a flight is the drive to the airport."
+            },
+            {
+                "type": "simulation",
+                "content": "HeadlineVsData"
+            },
+            {
+                "type": "citation",
+                "content": "Kahneman, D., & Tversky, A. (1974). *Judgment under Uncertainty: Heuristics and Biases*."
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "text",
+                "content": "### Subtopic 4.2: Anchoring\n\n#### The Trap of the First Number"
+            },
+            {
+                "type": "text",
+                "content": "When estimating value, we rely heavily on the first number we hear. This is the **Anchor**.\n\n**Rule of Power:** The person who speaks the first number sets the statistical range for the entire discussion."
+            },
+            {
+                "type": "simulation",
+                "content": "AnchoringSim"
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "text",
+                "content": "### Subtopic 4.3: Hidden Statistics in Daily Choices\n\n#### You Are Already a Statistician"
+            },
+            {
+                "type": "text",
+                "content": "You use \"Informal Data\" every day.\n\n*   **The Commute:** You choose Route B because Route A \"usually has traffic\" (Calculating Mean).\n*   **The Food Stall:** You choose the one with the long line (Social Proof / Sample Size).\n\nYour brain is constantly collecting data. Formal statistics just gives you better tools to analyze it."
+            },
+            {
+                "type": "simulation",
+                "content": "IntuitionRun"
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "Why do people choose crowded food stalls?",
+                    "options": [
+                        "They like noise",
+                        "Food is cheaper",
+                        "Social Proof (They assume others know better)",
+                        "They know the owner"
+                    ],
+                    "correctIndex": 2
+                }
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "What is the Anchoring Effect?",
+                    "options": [
+                        "Relying on the last number heard",
+                        "Relying on the FIRST number heard, even if irrelevant",
+                        "Calculating the average",
+                        "Guessing blindly"
+                    ],
+                    "correctIndex": 1
+                }
+            },
+            {
+                "type": "quiz",
+                "content": {
+                    "question": "Why is the Availability Heuristic dangerous?",
+                    "options": [
+                        "It makes us fear rare, dramatic events more than common dangers",
+                        "It makes us study too much",
+                        "It requires a calculator",
+                        "It is too slow"
+                    ],
+                    "correctIndex": 0
+                }
+            }
+        ]
+    }
+]

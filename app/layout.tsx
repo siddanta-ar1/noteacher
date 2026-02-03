@@ -1,27 +1,51 @@
-// Root Layout with Sidebar Navigation
-"use client";
+// Root Layout - Server Component for proper metadata support
 import "./globals.css";
-import { usePathname } from "next/navigation";
-import { Sidebar } from "@/components/layouts/Sidebar";
-import { isImmersiveRoute } from "@/config/routes";
+import type { Metadata } from "next";
+import { LayoutWrapper } from "@/components/layouts/LayoutWrapper";
+
+export const metadata: Metadata = {
+  title: {
+    default: "NOTEacher - Elite Teaching, Automated",
+    template: "%s | NOTEacher",
+  },
+  description:
+    "Transform static syllabuses into interactive, mystery-driven scrollytelling narratives. Master complex concepts through the eyes of a world-class mentor.",
+  keywords: [
+    "learning",
+    "education",
+    "interactive courses",
+    "scrollytelling",
+    "AI teaching",
+  ],
+  authors: [{ name: "NOTEacher Labs" }],
+  openGraph: {
+    title: "NOTEacher - Elite Teaching, Automated",
+    description:
+      "Join thousands of engineers mastering hardware through interactive scrollytelling.",
+    type: "website",
+    siteName: "NOTEacher",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NOTEacher - Elite Teaching, Automated",
+    description:
+      "Join thousands of engineers mastering hardware through interactive scrollytelling.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isImmersive = isImmersiveRoute(pathname);
-
   return (
     <html lang="en">
       <body className="selection:bg-navy/10 bg-white">
-        <div className="flex min-h-screen">
-          {!isImmersive && <Sidebar />}
-          <main className={`flex-1 ${isImmersive ? "w-full" : "overflow-y-auto"}`}>
-            {children}
-          </main>
-        </div>
+        <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>
   );

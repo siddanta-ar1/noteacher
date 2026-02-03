@@ -77,22 +77,19 @@ export async function completeNode(
             if (nextNode) {
                 nextNodeId = nextNode.id;
 
-                // Check if already has progress
-                const { data: existingProgress } = await supabase
-                    .from("user_progress")
-                    .select("status")
-                    .eq("user_id", user.id)
-                    .eq("node_id", nextNode.id)
-                    .single();
-
-                // Unlock if no progress yet
-                if (!existingProgress) {
-                    await supabase.from("user_progress").insert({
+                // Use upsert with onConflict to atomically handle concurrent requests
+                // This prevents race conditions where duplicate entries could be created
+                await supabase.from("user_progress").upsert(
+                    {
                         user_id: user.id,
                         node_id: nextNode.id,
                         status: "unlocked",
-                    });
-                }
+                    },
+                    {
+                        onConflict: "user_id,node_id",
+                        ignoreDuplicates: true, // Don't update if already exists
+                    }
+                );
             }
         }
 
