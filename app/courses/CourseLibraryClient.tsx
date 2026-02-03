@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Zap, BookOpen, Clock, Users, ArrowRight, Filter, ChevronRight } from "lucide-react";
+import { Search, Zap, BookOpen, Clock, Users, ArrowRight, Filter, ChevronRight, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import type { CourseWithNodeCount } from "@/types";
 import { ROUTES } from "@/config";
@@ -27,7 +27,7 @@ export default function CourseLibraryClient({
   return (
     <div className="min-h-screen bg-surface-raised pb-20">
       {/* Header */}
-      <header className="bg-primary pt-16 pb-32 px-6 rounded-b-[3rem] relative overflow-hidden">
+      <header className="bg-primary pt-12 pb-32 px-6 rounded-b-[3rem] relative overflow-hidden">
         {/* Background decorations */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -mr-20 -mt-20" />
         <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-power-teal/20 rounded-full blur-3xl" />
@@ -37,6 +37,19 @@ export default function CourseLibraryClient({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
+            {/* Navigation */}
+            <div className="mb-8">
+              <Link
+                href={ROUTES.HOME}
+                className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors group font-medium text-sm"
+              >
+                <div className="p-1.5 rounded-lg bg-white/10 group-hover:bg-white/20 transition-colors">
+                  <ArrowLeft size={16} />
+                </div>
+                Back to Dashboard
+              </Link>
+            </div>
+
             <Badge variant="teal" className="mb-6">
               <Zap size={12} className="fill-current" />
               Course Library

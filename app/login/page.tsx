@@ -74,17 +74,12 @@ export default function LoginPage() {
       <div className="flex flex-col justify-center px-8 sm:px-16 py-12 relative z-10">
         <Link
           href={ROUTES.LANDING}
-          className="absolute top-8 left-8 flex items-center gap-2 text-ink-400 hover:text-primary transition-colors group"
+          className="absolute top-8 left-8 flex items-center gap-2 text-gray-400 hover:text-gray-900 transition-colors group font-medium"
         >
-          <div className="relative w-6 h-6">
-            <Image
-              src="/logo.png"
-              alt="NOTEacher"
-              fill
-              className="object-contain rounded-lg"
-            />
+          <div className="p-1 rounded-md group-hover:bg-gray-100 transition-colors">
+            <ArrowRight className="rotate-180 w-4 h-4" />
           </div>
-          <span className="font-bold text-sm">Back to Home</span>
+          <span className="text-sm">Back to Home</span>
         </Link>
 
         <div className="max-w-md mx-auto w-full">
@@ -229,84 +224,68 @@ export default function LoginPage() {
       </div>
 
       {/* RIGHT: Visual Side */}
-      <div className="hidden lg:block bg-primary relative overflow-hidden">
+      <div className="hidden lg:block bg-blue-600 relative overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
-            backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")'
+            backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.8\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")'
           }} />
         </div>
 
         {/* Gradient overlays */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-power-purple/30 rounded-full blur-[100px]" />
-        <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-power-teal/20 rounded-full blur-[80px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/10 rounded-full blur-[100px]" />
 
-        <div className="relative h-full flex flex-col items-center justify-center text-center p-16">
+        <div className="relative h-full flex flex-col items-center justify-center text-center p-16 pb-32">
           {/* Main card */}
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="bg-white/10 backdrop-blur-xl border border-white/20 p-12 rounded-[3rem] shadow-2xl max-w-md"
+            className="bg-white/10 backdrop-blur-md border border-white/20 p-12 rounded-[2rem] shadow-2xl max-w-lg"
           >
-            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-6 p-3">
+            {/* Logo Container - Solid White */}
+            <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg">
               <Image
                 src="/logo.png"
                 alt="NOTEacher"
-                width={56}
-                height={56}
-                className="object-contain rounded-xl"
+                width={40}
+                height={40}
+                className="object-contain"
               />
             </div>
-            <h2 className="text-2xl font-black text-white mb-4 leading-snug">
+
+            <h2 className="text-3xl font-black text-white mb-6 leading-tight">
               "The top 1% don't memorize.
               <br />
               They understand."
             </h2>
-            <p className="text-white/70 font-medium">
-              Join thousands of engineers mastering hardware through interactive
-              scrollytelling.
+            <p className="text-blue-50/90 text-lg font-medium leading-relaxed">
+              Stop listening. Start solving. Master complex systems through interactive scrollytelling.
             </p>
           </motion.div>
 
-          {/* Floating Stats */}
-          <div className="absolute bottom-16 left-16 right-16 flex justify-between">
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="bg-white/10 backdrop-blur-md text-white px-5 py-4 rounded-2xl border border-white/20"
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <BookOpen size={16} />
-                <span className="text-xs font-bold opacity-70">Courses</span>
-              </div>
-              <p className="text-2xl font-black">50+</p>
-            </motion.div>
-
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="bg-white/10 backdrop-blur-md text-white px-5 py-4 rounded-2xl border border-white/20"
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <Trophy size={16} />
-                <span className="text-xs font-bold opacity-70">Completed</span>
-              </div>
-              <p className="text-2xl font-black">128K+</p>
-            </motion.div>
-          </div>
-
-          {/* Floating badge */}
+          {/* Social Proof - Unified Bottom Row */}
           <motion.div
-            animate={{ y: [0, -10, 0] }}
-            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-            className="absolute top-16 right-16 bg-power-teal text-white px-5 py-3 rounded-2xl shadow-lg border border-white/20"
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="absolute bottom-12 left-0 right-0 flex justify-center"
           >
-            <div className="flex items-center gap-2">
-              <Sparkles size={16} className="fill-white" />
-              <span className="font-bold text-sm">AI-Powered</span>
+            <div className="flex items-center divide-x divide-white/20 bg-black/20 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
+              <div className="px-8 py-4 flex items-center gap-3">
+                <BookOpen className="text-white/80" size={20} />
+                <div className="text-left">
+                  <p className="text-2xl font-black text-white leading-none">50+</p>
+                  <p className="text-xs font-bold text-white/60 uppercase tracking-wide">Courses</p>
+                </div>
+              </div>
+              <div className="px-8 py-4 flex items-center gap-3">
+                <Trophy className="text-white/80" size={20} />
+                <div className="text-left">
+                  <p className="text-2xl font-black text-white leading-none">128k+</p>
+                  <p className="text-xs font-bold text-white/60 uppercase tracking-wide">Completed</p>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>

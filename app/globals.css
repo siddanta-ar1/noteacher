@@ -367,6 +367,10 @@
     .animate-glow {
         animation: glow 2s ease-in-out infinite alternate;
     }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -426,6 +430,18 @@
 
     to {
         box-shadow: 0 0 30px rgba(0, 85, 255, 0.4);
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
     }
 }
 

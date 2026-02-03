@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 // New modular block system
 import { BlockRenderer } from "@/components/blocks";
 import { parseContentJSON, extractTextContent } from "@/lib/content-parser";
+import { enrichContent } from "@/lib/content-enricher";
 import type { ContentBlock } from "@/types/content";
 
 // Existing components
@@ -37,7 +38,8 @@ export default function LessonClientV2({
 
     // Parse content using new JSON engine
     const parsedContent = parseContentJSON(node.content);
-    const blocks = parsedContent.blocks;
+    // Enrich content with dynamic simulations
+    const blocks = enrichContent(parsedContent.blocks, node.title);
 
     // Helper to find the next blocking index
     const findNextBlockingIndex = (currentBlocks: ContentBlock[], startIndex: number) => {

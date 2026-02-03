@@ -17,6 +17,7 @@ const WebDevSimulator = lazy(
 const DataFog = lazy(() => import("@/components/simulations/DataFog"));
 const ScopeSlider = lazy(() => import("@/components/simulations/ScopeSlider"));
 const ReviewRoulette = lazy(() => import("@/components/simulations/ReviewRoulette"));
+const CrowdEstimator = lazy(() => import("@/components/simulations/CrowdEstimator"));
 
 const SIMULATION_REGISTRY: Record<string, React.LazyExoticComponent<any> | React.ComponentType<any>> = {
     // Registered components
@@ -32,7 +33,7 @@ const SIMULATION_REGISTRY: Record<string, React.LazyExoticComponent<any> | React
 
     // Topic 2
     "DiceBettingSim": lazy(() => import("@/components/simulations/DiceBettingSim")),
-    "CrowdEstimator": lazy(() => import("@/components/simulations/CrowdEstimator")),
+    "CrowdEstimator": CrowdEstimator,
     "MonkeyInvestor": lazy(() => import("@/components/simulations/MonkeyInvestor")),
     "LongRunGraph": lazy(() => import("@/components/simulations/LongRunGraph")),
 
@@ -57,6 +58,12 @@ const SIMULATION_REGISTRY: Record<string, React.LazyExoticComponent<any> | React
 
     "circuit": () => <ComingSoonPlaceholder type="Circuit Simulator" />,
     "number-line": () => <ComingSoonPlaceholder type="Number Line" />,
+
+    // Wisdom of Crowds (Jar Guess)
+    "the-jar-guess": CrowdEstimator,
+    "jar-guess": CrowdEstimator,
+    "wisdom-of-crowds": CrowdEstimator,
+
     "probability": StatisticsVisualizer,
     "histogram": StatisticsVisualizer,
     "central-tendency": StatisticsVisualizer,

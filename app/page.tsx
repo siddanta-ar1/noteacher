@@ -178,54 +178,73 @@ export default function LandingPage() {
             </motion.div>
           </motion.div>
 
-          {/* Right Column: The Visual Demo */}
+          {/* Right Column: The Visual Demo (Antigravity) */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="relative hidden lg:block"
+            className="relative hidden lg:block perspective-1000 group"
           >
-            {/* Abstract Background Blobs */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] pointer-events-none">
-              <motion.div
-                animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.7, 0.5] }}
-                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-0 bg-gradient-to-tr from-power-purple/20 to-power-teal/20 rounded-full blur-3xl"
-              />
-            </div>
+            {/* Glow Orb - Radiating Energy */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/30 blur-[120px] pointer-events-none rounded-full animate-pulse-soft" />
 
-            {/* The App Interface Card */}
+            {/* The App Interface Card - 3D Tilt & Float */}
             <motion.div
-              whileHover={{ rotate: 0, scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              className="bg-ink-900 rounded-[2.5rem] p-4 shadow-2xl border border-ink-700/50 rotate-[-3deg]"
+              style={{ rotateY: -12, rotateX: 5 }}
+              animate={{ y: [-10, 10, -10] }}
+              transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+              className="bg-ink-900 rounded-[2rem] p-3 shadow-2xl border border-white/10 preserve-3d group-hover:rotate-y-0 transition-transform duration-700 ease-out"
             >
-              <div className="bg-black rounded-[2rem] overflow-hidden border border-white/10 aspect-[4/3] relative">
+              <div className="bg-black rounded-[1.5rem] overflow-hidden border border-white/10 aspect-[4/3] relative flex flex-col shadow-inner">
                 {/* Mock UI Header */}
-                <div className="h-12 border-b border-white/5 flex items-center px-6 gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500/40" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/40" />
-                  <div className="w-3 h-3 rounded-full bg-green-500/40" />
-                  <div className="ml-auto flex gap-2">
-                    <div className="w-20 h-2 bg-white/10 rounded-full" />
+                <div className="h-10 border-b border-white/5 flex items-center px-4 gap-2 bg-white/5 backdrop-blur">
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/50" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/20 border border-green-500/50" />
+                  </div>
+                  <div className="mx-auto flex gap-2 opacity-20">
+                    <Lock size={10} className="text-white" />
+                    <span className="text-[10px] font-mono text-white">noteacher.app</span>
                   </div>
                 </div>
 
                 {/* Mock Content */}
-                <div className="p-8 grid grid-cols-2 gap-8 h-full">
-                  <div className="space-y-4">
-                    <div className="w-12 h-12 bg-power-teal/20 rounded-xl flex items-center justify-center text-power-teal mb-4">
-                      <Cpu size={24} />
+                <div className="flex-1 p-6 grid grid-cols-2 gap-6 relative">
+
+                  {/* Left Panel: Logic */}
+                  <div className="space-y-4 pt-4">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-power-teal/10 border border-power-teal/20 text-power-teal text-xs font-mono">
+                      <Cpu size={12} />
+                      <span>NAND_Gate</span>
                     </div>
-                    {/* Skeleton Text with animated shimmer */}
-                    <div className="h-4 w-3/4 bg-white/10 rounded-full" />
-                    <div className="h-4 w-1/2 bg-white/10 rounded-full" />
-                    <div className="h-3 w-full bg-white/5 rounded-full mt-4" />
-                    <div className="h-3 w-5/6 bg-white/5 rounded-full" />
+                    <div className="space-y-2">
+                      <div className="h-2 w-2/3 bg-white/10 rounded-full" />
+                      <div className="h-2 w-1/2 bg-white/10 rounded-full" />
+                    </div>
+
+                    <div className="p-3 rounded-lg border border-white/5 bg-white/5 space-y-2 mt-8">
+                      <div className="flex justify-between text-[10px] text-gray-500 font-mono">
+                        <span>Input A</span>
+                        <span className="text-white">1</span>
+                      </div>
+                      <div className="flex justify-between text-[10px] text-gray-500 font-mono">
+                        <span>Input B</span>
+                        <span className="text-white">1</span>
+                      </div>
+                      <div className="h-px bg-white/10 my-1" />
+                      <div className="flex justify-between text-[10px] text-power-teal font-mono">
+                        <span>Output Y</span>
+                        <span>0</span>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Animated Code Block */}
-                  <div className="bg-black/50 rounded-xl p-4 border border-white/5 font-mono text-xs text-ink-400 leading-loose overflow-hidden">
+                  {/* Right Panel: Code */}
+                  <div className="bg-black/80 rounded-xl p-4 border border-white/10 font-mono text-[10px] text-gray-400 leading-relaxed overflow-hidden relative shadow-2xl">
+                    <div className="absolute top-0 right-0 p-2 opacity-50">
+                      <div className="w-2 h-2 rounded-full bg-power-purple" />
+                    </div>
                     <p>
                       <span className="text-power-purple">module</span>{" "}
                       NAND_Gate (
@@ -241,8 +260,11 @@ export default function LandingPage() {
                     <p>);</p>
                     <p>
                       &nbsp;&nbsp;
-                      <span className="text-power-teal">assign</span> y = ~(a &amp;
-                      b);
+                      <span className="text-gray-500">// Logic</span>
+                    </p>
+                    <p>
+                      &nbsp;&nbsp;
+                      <span className="text-power-teal">assign</span> y = ~(a &amp; b);
                     </p>
                     <p>
                       <span className="text-power-purple">endmodule</span>
@@ -252,7 +274,7 @@ export default function LandingPage() {
                     <motion.div
                       animate={{ opacity: [1, 0] }}
                       transition={{ repeat: Infinity, duration: 0.8 }}
-                      className="w-2 h-4 bg-power-teal mt-2"
+                      className="w-1.5 h-3 bg-power-teal mt-1 inline-block align-middle"
                     />
                   </div>
                 </div>
@@ -261,29 +283,11 @@ export default function LandingPage() {
                 <motion.div
                   animate={{ y: [0, -4, 0] }}
                   transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                  className="absolute bottom-6 right-6 bg-surface text-ink-900 px-4 py-2 rounded-full text-xs font-black shadow-lg flex items-center gap-2"
+                  className="absolute bottom-6 left-6 right-6 mx-auto w-max bg-white/10 backdrop-blur-md text-white border border-white/20 px-4 py-2 rounded-full text-xs font-bold shadow-2xl flex items-center gap-2"
                 >
-                  <MousePointer2 size={12} className="text-power-purple" />
-                  Interactive Mode
+                  <MousePointer2 size={12} className="text-power-teal" />
+                  Interactive Mode Active
                 </motion.div>
-              </div>
-            </motion.div>
-
-            {/* Floating Stats Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="absolute -bottom-8 -left-8 bg-surface rounded-2xl p-5 shadow-xl border border-border"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-success-light rounded-xl flex items-center justify-center">
-                  <Users className="text-success" size={20} />
-                </div>
-                <div>
-                  <p className="text-2xl font-black text-ink-900">12,400+</p>
-                  <p className="text-xs font-bold text-ink-400">Active Learners</p>
-                </div>
               </div>
             </motion.div>
           </motion.div>
