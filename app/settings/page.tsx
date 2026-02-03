@@ -132,7 +132,7 @@ export default function SettingsPage() {
                         <span>Back to Dashboard</span>
                     </Link>
                     <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 bg-primary-light rounded-2xl flex items-center justify-center">
+                        <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20">
                             <Settings className="text-primary" size={28} />
                         </div>
                         <div>
@@ -149,7 +149,7 @@ export default function SettingsPage() {
                 <Card padding="lg" rounded="3xl">
                     <div className="flex items-center gap-4 mb-6">
                         <div className="relative group">
-                            <div className="w-16 h-16 bg-gradient-to-br from-primary to-power-purple rounded-2xl flex items-center justify-center text-white text-xl font-black overflow-hidden relative">
+                            <div className="w-16 h-16 bg-surface-raised rounded-2xl flex items-center justify-center text-ink-400 text-xl font-black overflow-hidden relative border border-border">
                                 {displayProfile.avatar_url ? (
                                     <img src={displayProfile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                                 ) : (

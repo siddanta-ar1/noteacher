@@ -116,8 +116,8 @@ export default function DashboardClient({
           {activeMission ? (
             <div className="flex flex-col md:flex-row items-center gap-6">
               {/* Icon */}
-              <div className="w-20 h-20 bg-gradient-to-br from-power-teal to-emerald-400 rounded-[1.5rem] flex items-center justify-center shadow-lg shrink-0" style={{ boxShadow: "var(--shadow-teal)" }}>
-                <Sparkles className="w-10 h-10 text-white fill-white" />
+              <div className="w-20 h-20 bg-power-teal/10 rounded-[1.5rem] flex items-center justify-center shrink-0 border border-power-teal/20">
+                <Sparkles className="w-10 h-10 text-power-teal fill-power-teal/20" />
               </div>
 
               {/* Content */}
@@ -201,6 +201,29 @@ export default function DashboardClient({
               const Icon = IconMap[course.iconName] || BookOpen;
               const isCompleted = course.progress >= 100;
 
+              // Map legacy color strings to tailwind text/bg classes if needed, 
+              // or just rely on dynamic classes if they are standard format.
+              // Assuming course.color is like "bg-power-teal". 
+              // We want to transform "bg-power-teal" -> "bg-power-teal/10 text-power-teal"
+              // Only works if course.color is exactly "bg-power-teal" or similar.
+
+              const colorBase = course.color.replace("bg-", ""); // e.g., "power-teal"
+              const iconStyle = {
+                backgroundColor: `var(--${colorBase}-10, rgba(0,0,0,0.05))`, // Fallback/hack
+                color: `var(--${colorBase}, currentColor)`
+              };
+
+              // Actually, since we use tailwind classes, let's just do manual mapping for known colors if possible, 
+              // or use inline styles with opacity.
+              // A safer way without complex parsing: just use opacity utility if we can,
+              // but we need to change text color too.
+
+              // Let's assume standard colors for now and use a simpler approach:
+              // Just use bg-surface-raised and text-ink-500 if generic, or specific logic.
+              // For "professional" look, let's treat them uniformly or use a map.
+
+              const textColorClass = course.color.replace("bg-", "text-"); // e.g. text-power-teal
+
               return (
                 <motion.div
                   key={course.id}
@@ -216,7 +239,14 @@ export default function DashboardClient({
                       {/* Icon & Badge */}
                       <div className="flex justify-between items-start mb-4">
                         <div
-                          className={`w-12 h-12 ${course.color} rounded-xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform`}
+                          className={`w-12 h-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 ${course.color.replace('bg-', 'bg-')}/10 ${course.color.replace('bg-', 'text-')}`}
+                          // Note: Tailwind arbitrary values with dynamic strings might not work JIT. 
+                          // Better to use safe list or style prop. 
+                          // Let's use style for reliability with dynamic colors.
+                          style={{
+                            backgroundColor: `var(--${course.color.replace('bg-', '')})22`, // roughly 13% opacity hex
+                            color: `var(--${course.color.replace('bg-', '')})`
+                          }}
                         >
                           <Icon className="w-6 h-6" />
                         </div>

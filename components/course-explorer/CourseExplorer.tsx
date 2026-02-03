@@ -122,7 +122,7 @@ export function CourseExplorer({ course, userProgress, currentNodeId, onNodeSele
 
     // Handle node selection
     const handleNodeSelect = useCallback((node: Node) => {
-        if (lockedNodeIds.has(node.id)) return; // Prevent navigation if locked
+        // if (lockedNodeIds.has(node.id)) return; // Removed lock check
 
         // setActiveNodeId(node.id); // Removed local state
         router.push(`/lesson/${node.id}`);

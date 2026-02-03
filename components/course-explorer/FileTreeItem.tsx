@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronRight, ChevronDown, Folder, FolderOpen, FileText, Hash, Box } from 'lucide-react';
+import { ChevronRight, ChevronDown, Folder, FolderOpen, FileText, Hash, Box, Lock } from 'lucide-react';
 import type { Node } from '@/types';
 
 // Tree item types for the explorer
@@ -48,7 +48,7 @@ export function FileTreeItem({
     const isActive = isFile && activeNodeId === item.id;
 
     const handleClick = () => {
-        if (isLocked) return; // Prevent interaction
+        // if (isLocked) return; // Removed to make all buttons clickable as requested
 
         if (isFile) {
             // If it's a Node from database
@@ -66,6 +66,10 @@ export function FileTreeItem({
 
     // Get appropriate icon for file type
     const getFileIcon = () => {
+        if (isLocked) {
+            return <Lock className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-ink-400'}`} />;
+        }
+
         if (isNode(item)) {
             const node = item as Node;
             const content = node.content_json || node.content;
@@ -95,6 +99,7 @@ export function FileTreeItem({
                         ? 'bg-primary text-white'
                         : 'hover:bg-surface-sunken text-ink-900'
                     }
+                    ${isLocked && !isActive ? 'opacity-70' : ''} 
                 `}
                 style={{ paddingLeft: `${paddingLeft}px` }}
             >
