@@ -92,7 +92,7 @@ export default function LeaderboardClient({
   const nodesMastered = Math.floor(userXP / 150); // Approx logic
 
   return (
-    <div className="min-h-screen bg-white pb-32">
+    <div className="min-h-screen bg-surface pb-32">
       {/* Header Section */}
       <header className="pt-10 pb-12 px-6 relative">
         <Link
@@ -111,7 +111,7 @@ export default function LeaderboardClient({
             <span className="bg-power-purple/10 text-power-purple px-6 py-2 rounded-full text-xs font-black uppercase tracking-[0.3em]">
               Global Rankings
             </span>
-            <h1 className="text-4xl md:text-6xl font-black text-slate-900 mt-6 tracking-tighter">
+            <h1 className="text-4xl md:text-6xl font-black text-ink-900 mt-6 tracking-tighter">
               Hall of <span className="text-navy italic">Masters</span>
             </h1>
           </motion.div>
@@ -185,7 +185,7 @@ export default function LeaderboardClient({
                     return (
                       <div
                         key={user.id}
-                        className={`flex items-center gap-4 p-4 rounded-3xl border-2 ${user.id === currentUserId ? "border-navy bg-navy/5" : "border-slate-100 bg-white"}`}
+                        className={`flex items-center gap-4 p-4 rounded-3xl border-2 ${user.id === currentUserId ? "border-navy bg-navy/5" : "border-border bg-surface"}`}
                       >
                         <div className="w-12 text-center font-black text-slate-300 italic text-xl">
                           #{user.ranking}
@@ -312,7 +312,7 @@ export default function LeaderboardClient({
                 ))}
               </div>
 
-              <button className="w-full mt-14 py-5 bg-white border-2 border-b-8 border-slate-200 rounded-[2rem] font-black text-navy hover:bg-slate-50 transition-all flex items-center justify-center gap-3">
+              <button className="w-full mt-14 py-5 bg-surface border-2 border-b-8 border-border rounded-[2rem] font-black text-ink-900 hover:bg-surface-raised transition-all flex items-center justify-center gap-3">
                 View Full Library <ChevronRight size={20} />
               </button>
             </section>

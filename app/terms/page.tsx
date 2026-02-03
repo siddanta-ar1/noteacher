@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui";
 export default function TermsPage() {
     return (
         <div className="min-h-screen bg-surface-base">
-            <nav className="border-b border-border bg-white px-6 py-4">
+            <nav className="border-b border-border bg-surface px-6 py-4">
                 <div className="max-w-4xl mx-auto flex items-center gap-4">
                     <Link
                         href="/home"

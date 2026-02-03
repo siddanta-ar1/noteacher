@@ -111,7 +111,7 @@ export default function DashboardClient({
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-white rounded-[2rem] p-6 md:p-8 shadow-xl border border-border"
+          className="bg-surface rounded-[2rem] p-6 md:p-8 shadow-xl border border-border"
         >
           {activeMission ? (
             <div className="flex flex-col md:flex-row items-center gap-6">
@@ -234,7 +234,7 @@ export default function DashboardClient({
                   <Link href={`/course/${course.id}`}>
                     <motion.div
                       whileHover={{ y: -4, boxShadow: "0 20px 40px -15px rgba(0,0,0,0.1)" }}
-                      className="bg-white border-2 border-border p-6 rounded-[1.5rem] hover:border-primary transition-all cursor-pointer h-full flex flex-col group"
+                      className="bg-surface border-2 border-border p-6 rounded-[1.5rem] hover:border-primary transition-all cursor-pointer h-full flex flex-col group"
                     >
                       {/* Icon & Badge */}
                       <div className="flex justify-between items-start mb-4">
@@ -287,7 +287,7 @@ export default function DashboardClient({
             })}
           </div>
         ) : (
-          <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-border">
+          <div className="text-center py-20 bg-surface rounded-3xl border-2 border-dashed border-border">
             <div className="w-16 h-16 bg-surface-sunken rounded-full flex items-center justify-center mx-auto mb-4">
               <BookOpen className="text-ink-400 w-8 h-8" />
             </div>

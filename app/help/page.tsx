@@ -69,7 +69,7 @@ export default function HelpPage() {
                     </div>
 
                     {/* Search */}
-                    <div className="bg-white p-2 rounded-2xl shadow-xl flex items-center max-w-xl">
+                    <div className="bg-surface p-2 rounded-2xl shadow-xl flex items-center max-w-xl">
                         <div className="w-12 h-12 flex items-center justify-center text-ink-400">
                             <Search size={22} />
                         </div>
@@ -93,7 +93,7 @@ export default function HelpPage() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.1 }}
-                            className="bg-white p-5 rounded-2xl border border-border hover:border-primary hover:shadow-lg transition-all group flex items-center gap-4"
+                            className="bg-surface p-5 rounded-2xl border border-border hover:border-primary hover:shadow-lg transition-all group flex items-center gap-4"
                         >
                             <div className="w-12 h-12 bg-primary-light rounded-xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                                 <resource.icon size={22} />
@@ -134,15 +134,17 @@ export default function HelpPage() {
                 {/* Contact Section */}
                 <Card padding="lg" rounded="3xl" className="bg-gradient-to-br from-power-teal/10 to-power-purple/10 border-0">
                     <div className="text-center">
-                        <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <div className="w-16 h-16 bg-surface rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                             <Heart className="text-power-purple" size={28} />
                         </div>
                         <h3 className="text-xl font-black text-ink-900 mb-2">Still need help?</h3>
                         <p className="text-ink-500 mb-6">Our team typically responds within 24 hours</p>
-                        <button className="px-6 py-3 bg-primary text-white rounded-xl font-bold flex items-center gap-2 mx-auto hover:shadow-lg transition-shadow" style={{ boxShadow: "var(--shadow-primary)" }}>
-                            <MessageCircle size={18} />
-                            Contact Support
-                        </button>
+                        <Link href="mailto:help@noteacher.com" className="inline-block">
+                            <button className="px-6 py-3 bg-primary text-white rounded-xl font-bold flex items-center gap-2 mx-auto hover:shadow-lg transition-shadow" style={{ boxShadow: "var(--shadow-primary)" }}>
+                                <MessageCircle size={18} />
+                                Contact Support
+                            </button>
+                        </Link>
                     </div>
                 </Card>
             </main>

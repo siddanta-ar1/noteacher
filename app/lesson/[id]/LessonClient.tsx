@@ -154,10 +154,10 @@ export default function LessonClient({
   };
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden">
+    <div className="flex h-screen bg-surface overflow-hidden">
       {/* SIDEBAR */}
-      <aside className="hidden lg:flex w-80 bg-slate-50 border-r border-slate-200 flex-col h-full z-20">
-        <div className="p-6 border-b border-slate-200 bg-white">
+      <aside className="hidden lg:flex w-80 bg-surface-raised border-r border-border flex-col h-full z-20">
+        <div className="p-6 border-b border-border bg-surface">
           <Link
             href="/home"
             className="flex items-center gap-2 text-slate-400 hover:text-navy text-sm font-bold"
@@ -177,7 +177,7 @@ export default function LessonClient({
             return (
               <div
                 key={n.id}
-                className={`p-3 rounded-xl text-sm font-bold border-l-4 ${isCurrent ? "bg-white border-navy shadow-sm" : "border-transparent opacity-60"}`}
+                className={`p-3 rounded-xl text-sm font-bold border-l-4 ${isCurrent ? "bg-surface border-navy shadow-sm" : "border-transparent opacity-60"}`}
               >
                 {n.title} {isDone && "✓"}
               </div>
@@ -189,7 +189,7 @@ export default function LessonClient({
       {/* MAIN CONTENT AREA */}
       <main
         ref={containerRef}
-        className="flex-1 relative overflow-y-auto scroll-smooth bg-white"
+        className="flex-1 relative overflow-y-auto scroll-smooth bg-surface"
       >
         <motion.div
           className="fixed top-0 left-0 lg:left-80 right-0 h-1.5 bg-power-teal origin-left z-50"
@@ -201,7 +201,7 @@ export default function LessonClient({
             <span className="bg-power-teal/10 text-power-teal px-3 py-1 rounded-full text-xs font-black uppercase">
               {node.type}
             </span>
-            <h1 className="text-4xl md:text-5xl font-black text-slate-900 mt-4">
+            <h1 className="text-4xl md:text-5xl font-black text-ink-900 mt-4">
               {node.title}
             </h1>
           </header>

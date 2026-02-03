@@ -116,7 +116,7 @@ export default function PathMap({ levels, onNodeClick }: PathMapProps) {
         return (
           <div
             key={`bg-${lIndex}`}
-            className={`absolute inset-x-[-50vw] -z-20 border-b border-border/50 ${isAdvanced ? 'bg-slate-900' : 'bg-slate-50'}`}
+            className={`absolute inset-x-[-50vw] -z-20 border-b border-border/50 ${isAdvanced ? 'bg-slate-900' : 'bg-surface'}`}
             style={{ top: startY, height: height, paddingTop: LEVEL_HEADER_HEIGHT }}
           >
             {/* Environment Decorations */}
@@ -142,11 +142,11 @@ export default function PathMap({ levels, onNodeClick }: PathMapProps) {
             ) : (
               <div className="absolute inset-0 opacity-50"
                 style={{
-                  backgroundImage: 'linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px)',
+                  backgroundImage: 'linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px)',
                   backgroundSize: '40px 40px'
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white/50" />
+                <div className="absolute inset-0 bg-gradient-to-b from-surface via-transparent to-surface/50" />
               </div>
             )}
           </div>
@@ -210,7 +210,7 @@ export default function PathMap({ levels, onNodeClick }: PathMapProps) {
                     backdrop-blur-md px-8 py-3 rounded-2xl shadow-xl border
                     ${isAdvanced
                     ? 'bg-slate-800/80 border-slate-700 text-white'
-                    : 'bg-white/90 border-primary/20 text-primary'
+                    : 'bg-surface/90 border-primary/20 text-primary'
                   }
                 `}
               >

@@ -2,6 +2,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { LayoutWrapper } from "@/components/layouts/LayoutWrapper";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 export const metadata: Metadata = {
   title: {
@@ -47,8 +48,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="selection:bg-navy/10 bg-white">
-        <LayoutWrapper>{children}</LayoutWrapper>
-        <Toaster />
+        <ThemeProvider>
+          <LayoutWrapper>{children}</LayoutWrapper>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

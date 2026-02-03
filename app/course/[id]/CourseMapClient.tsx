@@ -110,7 +110,7 @@ export default function CourseMapClient({
             <motion.header
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
-                className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-border/50 shadow-sm"
+                className="sticky top-0 z-40 bg-surface/80 backdrop-blur-xl border-b border-border/50 shadow-sm"
             >
                 <div className="max-w-5xl mx-auto px-6 h-24 flex items-center justify-center relative">
                     {/* Back Button (Absolute Left) */}
@@ -174,7 +174,7 @@ export default function CourseMapClient({
                         </div>
                         <h3 className="text-xl font-bold text-ink-900 mb-2">No Content Yet</h3>
                         <p className="text-ink-500 mb-6">This course is currently being developed. Check back later!</p>
-                        <Link href="/home" className="inline-block px-6 py-3 bg-white border border-border rounded-xl font-bold text-ink-700 hover:bg-surface-sunken transition-colors">
+                        <Link href="/home" className="inline-block px-6 py-3 bg-surface border border-border rounded-xl font-bold text-ink-700 hover:bg-surface-sunken transition-colors">
                             Return Home
                         </Link>
                     </div>

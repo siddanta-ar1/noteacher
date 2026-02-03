@@ -69,7 +69,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen grid lg:grid-cols-2 bg-white overflow-hidden">
+    <div className="min-h-screen grid lg:grid-cols-2 bg-surface overflow-hidden">
       {/* LEFT: Form Section */}
       <div className="flex flex-col justify-center px-8 sm:px-16 py-12 relative z-10">
         <Link
@@ -148,7 +148,7 @@ export default function LoginPage() {
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-border" />
               </div>
-              <span className="relative bg-white px-4 text-sm font-medium text-ink-400">
+              <span className="relative bg-surface px-4 text-sm font-medium text-ink-400">
                 or continue with email
               </span>
             </div>

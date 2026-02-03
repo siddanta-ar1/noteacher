@@ -28,7 +28,7 @@ function Skeleton({
     return (
         <div
             className={cn(
-                "bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 bg-[length:200%_100%]",
+                "bg-gradient-to-r from-surface-raised via-surface-sunken to-surface-raised bg-[length:200%_100%]",
                 shimmer && "animate-shimmer",
                 variants[variant],
                 className
@@ -46,7 +46,7 @@ function Skeleton({
 
 function SkeletonCard() {
     return (
-        <div className="bg-white p-6 rounded-2xl border-2 border-slate-100 space-y-4">
+        <div className="bg-surface p-6 rounded-2xl border-2 border-border space-y-4">
             <Skeleton className="w-12 h-12 rounded-xl" />
             <Skeleton className="w-3/4 h-6" />
             <Skeleton className="w-full h-4" />
@@ -108,7 +108,7 @@ function SkeletonDashboard() {
                 {[...Array(4)].map((_, i) => (
                     <div
                         key={i}
-                        className="bg-white rounded-2xl border border-border p-5"
+                        className="bg-surface rounded-2xl border border-border p-5"
                         style={{ animationDelay: `${i * 50}ms` }}
                     >
                         <Skeleton className="h-4 w-16 mb-3" />
@@ -124,7 +124,7 @@ function SkeletonDashboard() {
                     {[...Array(3)].map((_, i) => (
                         <div
                             key={i}
-                            className="bg-white rounded-3xl border border-border p-6 space-y-4"
+                            className="bg-surface rounded-3xl border border-border p-6 space-y-4"
                             style={{ animationDelay: `${i * 100}ms` }}
                         >
                             <div className="flex items-center gap-4">
@@ -148,7 +148,7 @@ function SkeletonLesson() {
     return (
         <div className="min-h-screen bg-surface-raised">
             {/* Header */}
-            <div className="h-16 bg-white border-b border-border px-6 flex items-center gap-4">
+            <div className="h-16 bg-surface border-b border-border px-6 flex items-center gap-4">
                 <Skeleton className="w-10 h-10 rounded-xl" />
                 <Skeleton className="h-6 w-48" />
                 <div className="ml-auto">
@@ -171,7 +171,7 @@ function SkeletonLesson() {
                     {[...Array(3)].map((_, i) => (
                         <div
                             key={i}
-                            className="bg-white rounded-3xl border border-border p-8"
+                            className="bg-surface rounded-3xl border border-border p-8"
                             style={{ animationDelay: `${i * 150}ms` }}
                         >
                             <Skeleton className="h-6 w-56 mb-5" />
@@ -198,7 +198,7 @@ function SkeletonCourseMap() {
     return (
         <div className="min-h-screen bg-surface-raised">
             {/* Sticky Header Skeleton */}
-            <div className="bg-white/80 backdrop-blur-xl border-b border-border/50 h-24 flex items-center justify-center relative px-6">
+            <div className="bg-surface/80 backdrop-blur-xl border-b border-border/50 h-24 flex items-center justify-center relative px-6">
                 <Skeleton className="absolute left-6 w-10 h-10 rounded-xl" />
                 <div className="w-full max-w-lg flex items-center gap-4">
                     <Skeleton className="w-10 h-10 rounded-xl" />
@@ -249,7 +249,7 @@ function SkeletonCourseLibrary() {
                 {[...Array(6)].map((_, i) => (
                     <div
                         key={i}
-                        className="bg-white rounded-3xl border border-border overflow-hidden"
+                        className="bg-surface rounded-3xl border border-border overflow-hidden"
                         style={{ animationDelay: `${i * 80}ms` }}
                     >
                         {/* Thumbnail */}
@@ -308,7 +308,7 @@ function SkeletonLeaderboard() {
                 {[...Array(7)].map((_, i) => (
                     <div
                         key={i}
-                        className="bg-white rounded-2xl border border-border p-4 flex items-center gap-4"
+                        className="bg-surface rounded-2xl border border-border p-4 flex items-center gap-4"
                         style={{ animationDelay: `${i * 60}ms` }}
                     >
                         <Skeleton className="w-8 h-8 rounded-lg" />

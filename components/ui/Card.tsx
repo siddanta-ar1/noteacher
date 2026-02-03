@@ -25,13 +25,13 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         },
         ref
     ) => {
-        const baseStyles = "bg-white transition-all duration-300";
+        const baseStyles = "bg-surface transition-all duration-300";
 
         const variants = {
             default: "border-2 border-border shadow-sm",
             elevated: "shadow-lg border border-border/50",
             outline: "border-2 border-border-hover bg-transparent",
-            glass: "bg-white/80 backdrop-blur-xl border border-white/20 shadow-lg",
+            glass: "bg-surface/80 backdrop-blur-xl border border-white/20 shadow-lg",
         };
 
         const paddings = {

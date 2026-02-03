@@ -41,7 +41,7 @@ const itemVariants: Variants = {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen bg-surface overflow-x-hidden">
       {/* Animated Background Gradient */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-power-purple/5 via-transparent to-transparent rounded-full blur-3xl" />
@@ -52,7 +52,7 @@ export default function LandingPage() {
       <motion.nav
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-border/50"
+        className="sticky top-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border/50"
       >
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
           <Link href="/" className="flex items-center gap-2.5 group">
@@ -143,7 +143,7 @@ export default function LandingPage() {
                 </button>
               </Link>
               <Link href="/courses">
-                <button className="w-full sm:w-auto px-8 py-4 bg-white text-primary border-2 border-border rounded-2xl font-bold text-lg hover:border-primary hover:bg-primary-light transition-all flex items-center justify-center gap-2">
+                <button className="w-full sm:w-auto px-8 py-4 bg-surface text-primary border-2 border-border rounded-2xl font-bold text-lg hover:border-primary hover:bg-primary-light transition-all flex items-center justify-center gap-2">
                   View Courses
                 </button>
               </Link>
@@ -261,7 +261,7 @@ export default function LandingPage() {
                 <motion.div
                   animate={{ y: [0, -4, 0] }}
                   transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                  className="absolute bottom-6 right-6 bg-white text-ink-900 px-4 py-2 rounded-full text-xs font-black shadow-lg flex items-center gap-2"
+                  className="absolute bottom-6 right-6 bg-surface text-ink-900 px-4 py-2 rounded-full text-xs font-black shadow-lg flex items-center gap-2"
                 >
                   <MousePointer2 size={12} className="text-power-purple" />
                   Interactive Mode
@@ -274,7 +274,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="absolute -bottom-8 -left-8 bg-white rounded-2xl p-5 shadow-xl border border-border"
+              className="absolute -bottom-8 -left-8 bg-surface rounded-2xl p-5 shadow-xl border border-border"
             >
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-success-light rounded-xl flex items-center justify-center">
@@ -396,7 +396,7 @@ function FeatureCard({ icon: Icon, title, desc, color, bg, glowColor }: {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       whileHover={{ y: -8 }}
-      className={`bg-white p-8 rounded-3xl border border-border shadow-sm hover:shadow-xl transition-all duration-300 group ${glowColor}`}
+      className={`bg-surface p-8 rounded-3xl border border-border shadow-sm hover:shadow-xl transition-all duration-300 group ${glowColor}`}
       style={{
         ['--shadow-purple' as string]: '0 20px 60px -15px rgba(168, 85, 247, 0.25)',
         ['--shadow-teal' as string]: '0 20px 60px -15px rgba(20, 184, 166, 0.25)',

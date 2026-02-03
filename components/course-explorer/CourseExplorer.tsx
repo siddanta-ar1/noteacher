@@ -133,7 +133,7 @@ export function CourseExplorer({ course, userProgress, currentNodeId, onNodeSele
         <div
             className={`
                 flex flex-col h-full
-                bg-white
+                bg-surface
                 border-r border-border
                 ${className}
             `}

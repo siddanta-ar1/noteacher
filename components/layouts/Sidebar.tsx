@@ -53,7 +53,7 @@ export function Sidebar() {
 
     return (
         <>
-            <aside className="w-20 lg:w-72 bg-white border-r border-border p-4 lg:p-6 sticky top-0 h-screen z-50 flex flex-col overflow-y-auto custom-scrollbar">
+            <aside className="w-20 lg:w-72 bg-surface border-r border-border p-4 lg:p-6 sticky top-0 h-screen z-50 flex flex-col overflow-y-auto custom-scrollbar">
                 {/* Logo */}
                 <Link href={ROUTES.HOME} className="flex items-center gap-3 mb-10 px-2 group">
                     <div className="relative w-10 h-10 transition-all">
@@ -125,7 +125,7 @@ export function Sidebar() {
 
                 {/* Pro Upgrade Card */}
                 <div className="hidden lg:block mt-8">
-                    <div className="p-4 bg-ink-900 rounded-2xl text-white shadow-lg relative overflow-hidden group border border-ink-800">
+                    <div className="p-4 bg-slate-900 rounded-2xl text-white shadow-lg relative overflow-hidden group border border-ink-800">
                         <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/30 transition-colors" />
 
                         <div className="flex items-center justify-between mb-3 relative z-10">

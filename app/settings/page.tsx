@@ -20,6 +20,7 @@ import {
 import Link from "next/link";
 import { Badge, Card } from "@/components/ui";
 import { getProfile } from "@/services/profile.service";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 interface SettingItemProps {
     icon: React.ElementType;
@@ -71,11 +72,16 @@ export default function SettingsPage() {
     const [settings, setSettings] = React.useState({
         emailParams: true,
         pushParams: false,
-        darkMode: false,
         sound: true
     });
 
-    const handleToggle = async (key: keyof typeof settings) => {
+    const { theme, toggleTheme } = useTheme();
+
+    const handleToggle = async (key: keyof typeof settings | 'darkMode') => {
+        if (key === 'darkMode') {
+            toggleTheme();
+            return;
+        }
         setSettings(prev => ({ ...prev, [key]: !prev[key] }));
         const { toast } = await import("sonner");
         toast.success("Preference updated");
@@ -122,7 +128,7 @@ export default function SettingsPage() {
     return (
         <div className="min-h-screen bg-surface-raised pb-20">
             {/* Header */}
-            <header className="bg-white border-b border-border px-6 py-6">
+            <header className="bg-surface border-b border-border px-6 py-6">
                 <div className="max-w-3xl mx-auto">
                     <Link
                         href="/home"
@@ -288,7 +294,7 @@ export default function SettingsPage() {
                         icon={Moon}
                         title="Dark Mode"
                         description="Switch between light and dark themes"
-                        action={<Toggle enabled={settings.darkMode} onClick={() => handleToggle('darkMode')} />}
+                        action={<Toggle enabled={theme === 'dark'} onClick={() => handleToggle('darkMode')} />}
                     />
                     <SettingItem
                         icon={Volume2}

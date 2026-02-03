@@ -50,7 +50,7 @@ export default function CourseLibraryClient({
             </p>
 
             {/* Search Bar */}
-            <div className="bg-white p-2 rounded-2xl shadow-xl flex items-center max-w-2xl">
+            <div className="bg-surface p-2 rounded-2xl shadow-xl flex items-center max-w-2xl">
               <div className="w-12 h-12 flex items-center justify-center text-ink-400">
                 <Search size={22} />
               </div>
@@ -89,7 +89,7 @@ export default function CourseLibraryClient({
                 transition={{ delay: i * 0.05 }}
               >
                 <Link href={ROUTES.course(course.id)} className="block group h-full">
-                  <div className="bg-white p-6 rounded-[1.5rem] shadow-sm border border-border hover:border-primary hover:shadow-xl transition-all h-full flex flex-col">
+                  <div className="bg-surface p-6 rounded-[1.5rem] shadow-sm border border-border hover:border-primary hover:shadow-xl transition-all h-full flex flex-col">
                     {/* Header */}
                     <div className="flex justify-between items-start mb-5">
                       <div className="w-14 h-14 bg-primary-light rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -130,7 +130,7 @@ export default function CourseLibraryClient({
               </motion.div>
             ))
           ) : (
-            <div className="col-span-full py-20 text-center bg-white rounded-3xl border-2 border-dashed border-border">
+            <div className="col-span-full py-20 text-center bg-surface rounded-3xl border-2 border-dashed border-border">
               <div className="w-16 h-16 bg-surface-sunken rounded-full flex items-center justify-center mx-auto mb-4">
                 <Search className="text-ink-400" size={24} />
               </div>

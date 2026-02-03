@@ -76,7 +76,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                     initial={{ scale: 0.95, opacity: 0, y: -20 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
                     exit={{ scale: 0.95, opacity: 0, y: -20 }}
-                    className="w-full max-w-xl bg-white rounded-2xl shadow-2xl overflow-hidden relative z-10 flex flex-col max-h-[60vh]"
+                    className="w-full max-w-xl bg-surface rounded-2xl shadow-2xl overflow-hidden relative z-10 flex flex-col max-h-[60vh]"
                 >
                     <div className="flex items-center px-4 py-4 border-b border-border gap-3">
                         <Search className="text-ink-400" size={20} />

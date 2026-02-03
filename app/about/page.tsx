@@ -15,7 +15,7 @@ export default function AboutPage() {
 
     return (
         <div className="min-h-screen bg-surface-base pb-20">
-            <nav className="border-b border-border bg-white px-6 py-4 sticky top-0 z-50">
+            <nav className="border-b border-border bg-surface px-6 py-4 sticky top-0 z-50">
                 <div className="max-w-4xl mx-auto flex items-center gap-4">
                     <Link
                         href="/home"
@@ -88,7 +88,7 @@ export default function AboutPage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3 + i * 0.1 }}
-                                className="bg-white p-6 rounded-[2rem] border border-border hover:border-primary/50 transition-colors shadow-lg"
+                                className="bg-surface p-6 rounded-[2rem] border border-border hover:border-primary/50 transition-colors shadow-lg"
                             >
                                 <div className={`w-12 h-12 ${member.color} rounded-2xl flex items-center justify-center text-white mb-4 shadow-md`}>
                                     <Award size={20} />

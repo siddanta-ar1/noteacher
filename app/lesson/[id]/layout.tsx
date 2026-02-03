@@ -45,7 +45,7 @@ export default async function LessonLayout({ children, params }: Props) {
     return (
         <div className="flex h-screen bg-surface-base">
             {/* Sidebar */}
-            <aside className="w-72 flex-shrink-0 border-r border-border bg-white hidden md:block">
+            <aside className="w-72 flex-shrink-0 border-r border-border bg-surface hidden md:block">
                 <CourseExplorer
                     course={course}
                     userProgress={userProgress || []}

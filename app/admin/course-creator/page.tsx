@@ -122,7 +122,7 @@ export default function CourseCreatorPage() {
                         <p className="text-ink-500">Create or Edit courses using JSON definitions.</p>
                     </div>
                     {/* Load Existing */}
-                    <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-border">
+                    <div className="flex items-center gap-2 bg-surface p-2 rounded-xl border border-border">
                         <input
                             type="text"
                             placeholder="Course ID to Load..."
@@ -155,7 +155,7 @@ export default function CourseCreatorPage() {
                         <textarea
                             value={jsonInput}
                             onChange={(e) => setJsonInput(e.target.value)}
-                            className="flex-1 w-full bg-white border border-border rounded-xl p-4 font-mono text-sm text-ink-900 focus:ring-2 focus:ring-primary outline-none resize-none shadow-inner leading-relaxed"
+                            className="flex-1 w-full bg-surface border border-border rounded-xl p-4 font-mono text-sm text-ink-900 focus:ring-2 focus:ring-primary outline-none resize-none shadow-inner leading-relaxed"
                             spellCheck={false}
                         />
                     </div>
