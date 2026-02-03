@@ -99,6 +99,7 @@ export default async function HomePage() {
         name: profile?.full_name || "Cadet",
         xp: calculatedXP,
         streak: streakCount,
+        avatar_url: profile?.avatar_url,
       }}
       activeMission={activeMission}
       courses={processedCourses}

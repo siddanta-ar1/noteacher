@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import { Zap, LayoutDashboard, BookOpen, Trophy, Settings, HelpCircle, Sparkles, Wrench } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { ROUTES } from "@/config/routes";
-import { ComingSoonModal } from "@/components/ui";
+import { ComingSoonModal, SearchModal } from "@/components/ui";
 
 interface NavTabProps {
     href: string;
@@ -43,6 +43,7 @@ function NavTab({ href, icon: Icon, label, active }: NavTabProps) {
 export function Sidebar() {
     const pathname = usePathname();
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+    const [showSearch, setShowSearch] = useState(false);
 
     const navItems = [
         { href: ROUTES.HOME, icon: LayoutDashboard, label: "Dashboard" },
@@ -71,6 +72,21 @@ export function Sidebar() {
 
                 {/* Main Navigation */}
                 <nav className="flex-1 space-y-2">
+                    <button
+                        onClick={() => setShowSearch(true)}
+                        className="flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all font-bold text-ink-500 hover:bg-surface-sunken hover:text-primary w-full text-left group"
+                    >
+                        <LayoutDashboard size={20} className="hidden" /> {/* Spacer hack if needed, or just Search icon */}
+                        <div className="w-5 h-5 flex items-center justify-center">
+                            {/* Using a distinct Search icon here */}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search group-hover:scale-110 transition-transform"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+                        </div>
+                        <span className="hidden lg:block">Search</span>
+                        <div className="hidden lg:flex ml-auto text-xs font-mono bg-surface-raised px-2 py-0.5 rounded text-ink-400 border border-border">
+                            ⌘K
+                        </div>
+                    </button>
+
                     {navItems.map((item) => (
                         <NavTab
                             key={item.href}
@@ -136,6 +152,12 @@ export function Sidebar() {
                 isOpen={showUpgradeModal}
                 onClose={() => setShowUpgradeModal(false)}
                 feature="Pro subscription"
+            />
+
+            {/* Search Modal */}
+            <SearchModal
+                isOpen={showSearch}
+                onClose={() => setShowSearch(false)}
             />
         </>
     );

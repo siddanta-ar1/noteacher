@@ -18,7 +18,7 @@ import Link from "next/link";
 import { ProgressBar, Avatar } from "@/components/ui";
 
 type DashboardProps = {
-  profile: { xp: number; name: string; streak: number };
+  profile: { xp: number; name: string; streak: number; avatar_url?: string | null };
   activeMission: {
     title: string;
     chapter: string;
@@ -64,10 +64,11 @@ export default function DashboardClient({
 
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex justify-between items-start">
-            <Link href="/profile" className="group">
+            <Link href="/settings" className="group">
               <div className="flex items-center gap-4">
                 <Avatar
                   name={profile.name}
+                  src={profile.avatar_url || undefined}
                   size="lg"
                 />
                 <div>

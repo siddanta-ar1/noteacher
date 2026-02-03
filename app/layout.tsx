@@ -37,6 +37,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { Toaster } from "@/components/ui";
+
 export default function RootLayout({
   children,
 }: {
@@ -46,6 +48,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="selection:bg-navy/10 bg-white">
         <LayoutWrapper>{children}</LayoutWrapper>
+        <Toaster />
       </body>
     </html>
   );
