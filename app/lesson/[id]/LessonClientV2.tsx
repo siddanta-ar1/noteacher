@@ -185,6 +185,18 @@ export default function LessonClientV2({
             >
                 <article className="max-w-3xl mx-auto py-24 px-6 md:px-12 pb-48">
                     {/* Header */}
+                    <div className="mb-8">
+                        <button
+                            onClick={() => router.push(node.course_id ? `/course/${node.course_id}` : '/home')}
+                            className="inline-flex items-center gap-2 text-sm font-bold text-ink-400 hover:text-primary transition-colors mb-4 group"
+                        >
+                            <div className="w-8 h-8 rounded-full bg-surface-raised border border-border flex items-center justify-center group-hover:border-primary/30 group-hover:bg-primary/5 transition-all">
+                                <span className="group-hover:-translate-x-0.5 transition-transform">←</span>
+                            </div>
+                            Back to Course
+                        </button>
+                    </div>
+
                     <header className="mb-16 text-center md:text-left">
                         <div className="inline-flex items-center gap-2 mb-6">
                             <Badge variant="teal">
@@ -224,6 +236,35 @@ export default function LessonClientV2({
                     ) : (
                         <div className="py-12 text-center border-2 border-dashed border-border rounded-xl bg-surface-sunken">
                             <p className="text-ink-500 font-medium">This lesson has no content yet.</p>
+                        </div>
+                    )}
+
+                    {/* References Section */}
+                    {parsedContent.metadata?.references && parsedContent.metadata.references.length > 0 && (
+                        <div className="mt-16 pt-8 border-t border-border">
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-ink-400 mb-4">
+                                References & Further Reading
+                            </h3>
+                            <ul className="space-y-3">
+                                {parsedContent.metadata.references.map((ref, i) => {
+                                    const isUrl = ref.startsWith("http");
+                                    const href = isUrl ? ref : `https://scholar.google.com/scholar?q=${encodeURIComponent(ref)}`;
+
+                                    return (
+                                        <li key={i} className="text-sm text-ink-600 flex gap-3 items-start group">
+                                            <span className="text-ink-300 font-mono text-xs mt-0.5 select-none">[{i + 1}]</span>
+                                            <a
+                                                href={href}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="italic hover:text-primary transition-colors border-b border-transparent hover:border-primary/30 pb-0.5"
+                                            >
+                                                {ref}
+                                            </a>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
                         </div>
                     )}
 

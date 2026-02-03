@@ -215,6 +215,7 @@ function renderBlock(
                 <AssignmentBlockComponent
                     block={block as AssignmentBlockType}
                     onComplete={() => onUnlock(index)}
+                    isEnforcementEnabled={true}
                 />
             );
 

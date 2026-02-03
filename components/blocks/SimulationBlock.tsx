@@ -26,26 +26,25 @@ const SIMULATION_REGISTRY: Record<string, React.LazyExoticComponent<any> | React
     "web-dev": WebDevSimulator,
 
     // Statistical Thinking (Level 0)
+    "the-5-second-count": lazy(() => import("@/components/simulations/FiveSecondCount")),
+    "the-zoom-slider": ScopeSlider,
+    "the-review-roulette": ReviewRoulette,
+    "the-streak-breaker": lazy(() => import("@/components/simulations/StreakBreaker")),
+    "the-convergence": lazy(() => import("@/components/simulations/LongRunGraph")), // Node 0.2.4
+    "the-perfect-cannon": lazy(() => import("@/components/simulations/DeterministicSystemSim")), // Node 0.3.1
+    "the-windy-cannon": lazy(() => import("@/components/simulations/StochasticGrowthSim")), // Node 0.3.2 (using stochastic growth as proxy for windy cannon/uncertainty)
+    "the-probability-bet": lazy(() => import("@/components/simulations/DiceBettingSim")), // Node 0.3.4 (Probability Bet)
+    "the-headline-game": lazy(() => import("@/components/simulations/HeadlineVsData")), // Node 0.4.1
+    "the-discount-trap": lazy(() => import("@/components/simulations/AnchoringSim")), // Node 0.4.2
+    "the-pattern-slider": lazy(() => import("@/components/simulations/PatternDetector")), // Node 0.5.1
+    "the-ban-button": lazy(() => import("@/components/simulations/TheBanButton")), // Node 0.5.2 (New)
+
     "DataFog": DataFog,
     "ScopeSlider": ScopeSlider,
     "ReviewRoulette": ReviewRoulette,
     "StreakBreaker": lazy(() => import("@/components/simulations/StreakBreaker")),
-
-    // Topic 2
-    "DiceBettingSim": lazy(() => import("@/components/simulations/DiceBettingSim")),
-    "CrowdEstimator": CrowdEstimator,
-    "MonkeyInvestor": lazy(() => import("@/components/simulations/MonkeyInvestor")),
-    "LongRunGraph": lazy(() => import("@/components/simulations/LongRunGraph")),
-
-    // Topic 3
-    "DeterministicSystemSim": lazy(() => import("@/components/simulations/DeterministicSystemSim")),
-    "StochasticGrowthSim": lazy(() => import("@/components/simulations/StochasticGrowthSim")),
-    "EfficiencyTunerSim": lazy(() => import("@/components/simulations/EfficiencyTunerSim")),
-
-    // Topic 4
     "HeadlineVsData": lazy(() => import("@/components/simulations/HeadlineVsData")),
     "AnchoringSim": lazy(() => import("@/components/simulations/AnchoringSim")),
-    "IntuitionRun": lazy(() => import("@/components/simulations/IntuitionRun")),
     "PatternDetector": lazy(() => import("@/components/simulations/PatternDetector")),
 
     // Aliases & Future

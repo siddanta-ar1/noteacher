@@ -80,10 +80,8 @@ export default function AssignmentBlockComponent({
             await new Promise((resolve) => setTimeout(resolve, 1500));
             setIsSubmitted(true);
 
-            // If blocking and enforcement is enabled, unlock next section
-            if (isBlocking && isEnforcementEnabled) {
-                setTimeout(onComplete, 500);
-            }
+            // Trigger completion callback
+            setTimeout(onComplete, 1000);
         } catch (err) {
             setError("Submission failed. Please try again.");
         } finally {
@@ -124,9 +122,15 @@ export default function AssignmentBlockComponent({
                         </p>
                     </div>
                 </div>
-                <p className="text-green-600 text-sm mt-4">
+                <p className="text-green-600 text-sm mt-2 mb-6">
                     AI feedback will be available after review.
                 </p>
+                <button
+                    onClick={onComplete}
+                    className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-colors w-full md:w-auto"
+                >
+                    Continue
+                </button>
             </motion.div>
         );
     }

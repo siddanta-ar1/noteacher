@@ -186,7 +186,7 @@ function migrateScrollyFormat(source: Record<string, any>): CourseContentJSON {
         blocks.push({
             id: `scrolly-assign`,
             type: "assignment",
-            title: "Lesson Assignment",
+            title: source.assignment.title || "Lesson Assignment",
             description: source.assignment.task,
             submissionTypes: source.assignment.type.toLowerCase().includes("photo") ? ["text", "photo"] : ["text"],
             isBlocking: true
@@ -196,7 +196,8 @@ function migrateScrollyFormat(source: Record<string, any>): CourseContentJSON {
     return {
         version: "1.0",
         metadata: {
-            references: source.references || []
+            references: source.references || [],
+            aiSummary: source.aiSummary || undefined,
         },
         blocks,
     };
@@ -322,7 +323,13 @@ function parseQuizBlock(
         options: Array.isArray(b.options)
             ? b.options.map((o) => String(o))
             : ["Option A", "Option B"],
-        correctIndex: typeof b.correctIndex === "number" ? b.correctIndex : 0,
+        correctIndex: (() => {
+            const answer = String(b.correctAnswer || "").trim().toLowerCase();
+            const idx = Array.isArray(b.options)
+                ? b.options.findIndex((o) => String(o).trim().toLowerCase() === answer)
+                : -1;
+            return idx !== -1 ? idx : 0; // Fallback to 0 to prevent lock if mismatch
+        })(),
         explanation: b.explanation ? String(b.explanation) : undefined,
         unlocks: b.unlocks === true,
     };
