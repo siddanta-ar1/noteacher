@@ -38,7 +38,10 @@ export async function completeNode(nodeId: string) {
       .from("nodes")
       .select("id")
       .eq("course_id", currentNode.course_id)
-      .eq("position_index", currentNode.position_index + 1)
+      .eq("course_id", currentNode.course_id)
+      .gt("position_index", currentNode.position_index)
+      .order("position_index", { ascending: true })
+      .limit(1)
       .single();
 
     if (nextNode) {

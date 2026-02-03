@@ -196,30 +196,39 @@ function SkeletonLesson() {
 // Course map skeleton
 function SkeletonCourseMap() {
     return (
-        <div className="min-h-screen bg-surface-raised p-6 lg:p-10">
-            {/* Header */}
-            <div className="max-w-4xl mx-auto mb-10">
-                <Skeleton className="h-8 w-64 mb-3" />
-                <Skeleton className="h-4 w-96" />
+        <div className="min-h-screen bg-surface-raised">
+            {/* Sticky Header Skeleton */}
+            <div className="bg-white/80 backdrop-blur-xl border-b border-border/50 h-24 flex items-center justify-center relative px-6">
+                <Skeleton className="absolute left-6 w-10 h-10 rounded-xl" />
+                <div className="w-full max-w-lg flex items-center gap-4">
+                    <Skeleton className="w-10 h-10 rounded-xl" />
+                    <Skeleton className="flex-1 h-4 rounded-full" />
+                    <Skeleton className="w-8 h-4" />
+                </div>
             </div>
 
-            {/* Map Nodes */}
-            <div className="max-w-md mx-auto space-y-8">
-                {[...Array(5)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="flex items-center gap-4"
-                        style={{
-                            marginLeft: i % 2 === 0 ? '0' : '60px',
-                            animationDelay: `${i * 100}ms`
-                        }}
-                    >
-                        <Skeleton className="w-20 h-20 rounded-full" />
-                        <div className="flex-1">
-                            <Skeleton className="h-4 w-32" />
+            <div className=" max-w-xl mx-auto p-6 lg:p-10 text-center">
+                {/* Title */}
+                <div className="mb-12 flex flex-col items-center">
+                    <Skeleton className="h-10 w-64 mb-4" />
+                    <Skeleton className="h-5 w-96" />
+                </div>
+
+                {/* Map Nodes - Centered Column */}
+                <div className="relative space-y-24 py-10">
+                    {/* Vertical Line */}
+                    <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-1 bg-slate-200" />
+
+                    {[...Array(5)].map((_, i) => (
+                        <div
+                            key={i}
+                            className="relative flex justify-center"
+                            style={{ animationDelay: `${i * 100}ms` }}
+                        >
+                            <Skeleton className="w-20 h-20 rounded-[2rem] z-10 border-[6px] border-white shadow-lg" />
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </div>
     );

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, BookOpen } from "lucide-react";
+import { ChevronLeft, BookOpen, BadgePercent } from "lucide-react";
 import PathMap, { MapNode, MapLevel } from "@/components/map/PathMap";
 import type { CourseWithHierarchy, UserProgress } from "@/types";
 import { Badge } from "@/components/ui";
@@ -110,44 +110,60 @@ export default function CourseMapClient({
             <motion.header
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
-                className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-border/50 shadow-sm"
+                className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-border/50 shadow-sm"
             >
-                <div className="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between gap-8">
+                <div className="max-w-5xl mx-auto px-6 h-24 flex items-center justify-center relative">
+                    {/* Back Button (Absolute Left) */}
                     <Link
                         href="/home"
-                        className="flex items-center gap-2 text-ink-500 hover:text-primary transition-colors font-bold text-sm shrink-0 group"
+                        className="absolute left-6 w-10 h-10 rounded-xl bg-surface-raised flex items-center justify-center text-ink-500 hover:bg-primary-light hover:text-primary transition-colors z-10"
                     >
-                        <div className="w-8 h-8 rounded-full bg-surface-raised flex items-center justify-center group-hover:bg-primary-light group-hover:text-primary transition-colors">
-                            <ChevronLeft size={18} />
-                        </div>
-                        <span className="hidden sm:inline group-hover:text-primary">Dashboard</span>
+                        <ChevronLeft size={20} />
                     </Link>
 
-                    <div className="flex-1 max-w-xl flex items-center gap-4">
-                        <div className="flex-1 h-3 bg-surface-sunken rounded-full overflow-hidden">
-                            <motion.div
-                                className="h-full bg-primary"
-                                initial={{ width: 0 }}
-                                animate={{ width: `${progressPercent}%` }}
-                            />
+                    {/* Gamified Progress Bar (Centered) */}
+                    <div className="w-full max-w-lg">
+                        <div className="flex items-center gap-4 mb-1">
+                            {/* Icon Box */}
+                            <div className="w-10 h-10 rounded-xl bg-power-purple/10 flex items-center justify-center text-power-purple shrink-0">
+                                <BadgePercent size={20} />
+                            </div>
+
+                            {/* Bar */}
+                            <div className="flex-1 relative h-4 bg-surface-sunken rounded-full">
+                                <motion.div
+                                    className="absolute inset-y-0 left-0 bg-power-purple rounded-full"
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${progressPercent}%` }}
+                                >
+                                    {/* Glow/Indicator at the tip */}
+                                    <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-8 h-8 flex items-center justify-center">
+                                        <div className="w-6 h-6 bg-white rounded-full shadow-lg flex items-center justify-center">
+                                            <div className="w-2 h-2 bg-power-purple rounded-full animate-pulse" />
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            </div>
+
+                            {/* Label */}
+                            <span className="text-sm font-bold text-ink-500 whitespace-nowrap min-w-[3ch] text-right">
+                                {progressPercent}%
+                            </span>
                         </div>
-                        <span className="text-sm font-black text-primary whitespace-nowrap">{progressPercent}% Complete</span>
                     </div>
                 </div>
             </motion.header>
 
-            {/* Content Container */}
-            <div className="py-12 px-6 max-w-xl mx-auto text-center">
+            {/* Content Container - Expanded for 3D World */}
+            <div className="relative w-full">
+                {/* Header Info - Clean & Minimal */}
                 <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="mb-12"
+                    className="max-w-xl mx-auto px-6 pt-12 pb-6 text-center"
                 >
-                    <div className="w-24 h-24 mx-auto bg-gradient-to-br from-primary to-power-purple rounded-3xl flex items-center justify-center text-white shadow-2xl mb-6 rotate-3">
-                        <BookOpen size={40} />
-                    </div>
-                    <h1 className="text-4xl font-black text-ink-900 mb-4">{course.title}</h1>
-                    <p className="text-lg text-ink-500">{course.description}</p>
+                    <h1 className="text-4xl font-black text-ink-900 mb-2">{course.title}</h1>
+                    <p className="text-lg text-ink-500 font-medium">{course.description}</p>
                 </motion.div>
 
                 {/* THE MAP (Showing Levels) */}
@@ -163,8 +179,7 @@ export default function CourseMapClient({
                         </Link>
                     </div>
                 ) : (
-                    <div className="relative">
-                        <div className="absolute left-8 top-0 bottom-0 w-1 bg-border/50 -z-10 hidden" /> {/* Optional vertical line */}
+                    <div className="relative min-h-[500px]">
                         <PathMap
                             levels={mapLevels}
                             onNodeClick={(node) => {

@@ -4,7 +4,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Star, Lock, Play } from "lucide-react";
+import { Star, Lock, Play, Zap } from "lucide-react";
 import type { ProgressStatus } from "@/types/database";
 
 // --- Types ---
@@ -27,29 +27,28 @@ type PathMapProps = {
 
 // --- Config ---
 const NODE_SIZE = 80; // Size of the node circle
-const Y_GAP = 120; // Vertical distance between nodes
-const LEVEL_HEADER_HEIGHT = 100; // Height of level header space
-const X_AMPLITUDE = 100; // Horizontal sway magnitude
+const Y_GAP = 140; // Vertical distance between nodes (Increased for 3D feel)
+const LEVEL_HEADER_HEIGHT = 120; // Height of level header space
+const X_AMPLITUDE = 120; // Horizontal sway magnitude
 const CONTAINER_WIDTH = 400; // Map container width
 
 /**
- * PathMap - Saga Style (Top-to-Bottom Flow) with Levels
+ * PathMap - 3D World Style
  */
 export default function PathMap({ levels, onNodeClick }: PathMapProps) {
-  // Flatten nodes for global index calculation to maintain path continuity pattern
+  // Flatten nodes for global index calculation
   const allNodesFlat = levels.flatMap(l => l.nodes);
 
-  // Helper to calculate Y Start position for a given Level based on previous levels
+  // Helper to calculate Y Start position for a given Level
   const getLevelStartY = (levelIndex: number) => {
     let y = 0;
     for (let i = 0; i < levelIndex; i++) {
-      // Height of previous level = (nodes * Y_GAP) + Header
       y += (levels[i].nodes.length * Y_GAP) + LEVEL_HEADER_HEIGHT;
     }
-    return y; // Start of this level's container
+    return y;
   };
 
-  // Calculate container height synchronously
+  // Calculate container height
   const lastLevelIndex = levels.length - 1;
   let containerHeight = 0;
   if (lastLevelIndex >= 0) {
@@ -59,18 +58,11 @@ export default function PathMap({ levels, onNodeClick }: PathMapProps) {
   }
 
   // Calculate global Y for a node
-  // We need to account for headers of current and previous levels
   const getNodeGlobalPosition = (levelIndex: number, nodeIndexInLevel: number) => {
-    const levelStartY = getLevelStartY(levelIndex) + LEVEL_HEADER_HEIGHT; // Start after header
+    const levelStartY = getLevelStartY(levelIndex) + LEVEL_HEADER_HEIGHT;
     const yInLevel = nodeIndexInLevel * Y_GAP + Y_GAP / 2;
 
-    // We want the X pattern to be continuous across levels??
-    // Or reset per level? Let's make it continuous based on global index?
-    // No, reset per level is safer for aesthetics, or maybe continuous.
-    // Let's use nodeIndexInLevel for X to keep it simple and consistent per level.
-    // Actually, if we use a global index for X, it flows better.
-
-    // Let's count how many nodes were before this one globally
+    // Continuous X pattern
     let globalNodeIndex = 0;
     for (let i = 0; i < levelIndex; i++) globalNodeIndex += levels[i].nodes.length;
     globalNodeIndex += nodeIndexInLevel;
@@ -81,17 +73,11 @@ export default function PathMap({ levels, onNodeClick }: PathMapProps) {
     return { x: xOffset, y: levelStartY + yInLevel };
   };
 
-
-
   // Find Owl Position
-  // We need to find the node that is 'current'
   let owlPos = { x: 0, y: 0 };
   let owlMessage = "Start Here!";
-
-  // Flatten status checking
   let activeFound = false;
 
-  // Find global active node
   for (let l = 0; l < levels.length; l++) {
     for (let n = 0; n < levels[l].nodes.length; n++) {
       const node = levels[l].nodes[n];
@@ -105,42 +91,86 @@ export default function PathMap({ levels, onNodeClick }: PathMapProps) {
   }
 
   if (!activeFound && allNodesFlat.length > 0) {
-    // If all complete, put at the end? Or if none started, put at start.
     const allComplete = allNodesFlat.every(n => n.status === 'completed');
     if (allComplete) {
       owlMessage = "All Complete! 🎉";
-      // Position at last node
       const lastL = levels.length - 1;
       const lastN = levels[lastL].nodes.length - 1;
       owlPos = getNodeGlobalPosition(lastL, lastN);
     } else {
-      // Default start
       owlPos = getNodeGlobalPosition(0, 0);
     }
   }
 
-
   return (
-    <div className="relative w-full max-w-[400px] mx-auto" style={{ height: containerHeight }}>
+    <div className="relative w-full max-w-[500px] mx-auto perspective-[1000px]" style={{ height: containerHeight }}>
 
-      {/* 1. Draw SVG Paths (Per Level or Connected?) 
-          Let's connect last node of L0 to first of L1? 
-          For now, let's keep paths disjoint between levels or connect them?
-          Technically there is a "Level Header" gap. Drawing a line through the header might correspond to "advancing".
-          Let's draw lines WITHIN levels first.
-      */}
+      {/* 0. Background Layers (The "World") */}
+      {levels.map((level, lIndex) => {
+        const startY = getLevelStartY(lIndex);
+        const height = (level.nodes.length * Y_GAP) + LEVEL_HEADER_HEIGHT;
+
+        // Dynamic Environment based on Level
+        const isAdvanced = level.level > 0;
+
+        return (
+          <div
+            key={`bg-${lIndex}`}
+            className={`absolute inset-x-[-50vw] -z-20 border-b border-border/50 ${isAdvanced ? 'bg-slate-900' : 'bg-slate-50'}`}
+            style={{ top: startY, height: height, paddingTop: LEVEL_HEADER_HEIGHT }}
+          >
+            {/* Environment Decorations */}
+            {isAdvanced ? (
+              <div className="absolute inset-0 overflow-hidden opacity-20">
+                {/* Floating Math Symbols for Advanced Levels */}
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute text-white font-serif italic text-4xl animate-float"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                      animationDuration: `${10 + Math.random() * 20}s`,
+                      animationDelay: `-${Math.random() * 20}s`
+                    }}
+                  >
+                    {['∑', '∫', 'µ', 'σ', 'π', '∆'][Math.floor(Math.random() * 6)]}
+                  </div>
+                ))}
+                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-900 to-transparent" />
+              </div>
+            ) : (
+              <div className="absolute inset-0 opacity-50"
+                style={{
+                  backgroundImage: 'linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px)',
+                  backgroundSize: '40px 40px'
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white/50" />
+              </div>
+            )}
+          </div>
+        )
+      })}
+
+
+      {/* 1. Draw SVG Paths (Electricity) */}
       <svg
-        className="absolute inset-0 pointer-events-none overflow-visible"
+        className="absolute inset-0 pointer-events-none overflow-visible z-0"
         width="100%"
         height="100%"
       >
+        <defs>
+          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+        </defs>
+
         {levels.map((level, lIndex) => (
           level.nodes.map((_, nIndex) => {
             if (nIndex === level.nodes.length - 1) {
-              // This is the last node of the level.
-              // Should we connect to the next level?
               if (lIndex < levels.length - 1) {
-                // Connect to first node of next level
                 const start = getNodeGlobalPosition(lIndex, nIndex);
                 const end = getNodeGlobalPosition(lIndex + 1, 0);
                 return <PathSegment key={`conn-${lIndex}`} start={start} end={end} isCompleted={levels[lIndex].nodes[nIndex].status === 'completed'} />
@@ -163,35 +193,41 @@ export default function PathMap({ levels, onNodeClick }: PathMapProps) {
         ))}
       </svg>
 
-      {/* 2. Render Levels */}
+      {/* 2. Render Levels Headers */}
       {levels.map((level, lIndex) => {
         const startY = getLevelStartY(lIndex);
+        const isAdvanced = level.level > 0;
 
         return (
-          <div key={lIndex} className="absolute w-full" style={{ top: startY }}>
+          <div key={lIndex} className="absolute w-full z-10" style={{ top: startY }}>
             {/* Level Header */}
-            <div className="h-[100px] flex items-center justify-center">
-              <div className="bg-white/80 backdrop-blur-sm border border-border px-6 py-2 rounded-full shadow-sm">
-                <span className="text-sm font-black text-ink-500 tracking-widest uppercase">
-                  {level.title}
-                </span>
-              </div>
+            <div className="h-[120px] flex items-center justify-center pointer-events-none sticky top-20">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className={`
+                    backdrop-blur-md px-8 py-3 rounded-2xl shadow-xl border
+                    ${isAdvanced
+                    ? 'bg-slate-800/80 border-slate-700 text-white'
+                    : 'bg-white/90 border-primary/20 text-primary'
+                  }
+                `}
+              >
+                <div className="flex items-center gap-3">
+                  <span className={`text-xs font-black uppercase tracking-widest opacity-70`}>Level {level.level}</span>
+                  <div className={`w-1 h-4 ${isAdvanced ? 'bg-white/30' : 'bg-primary/30'} rounded-full`} />
+                  <span className="text-lg font-black tracking-tight uppercase">
+                    {level.title}
+                  </span>
+                </div>
+              </motion.div>
             </div>
-
-            {/* Nodes */}
-            {level.nodes.map((node, nIndex) => {
-              // We need to calculate local position relative to this level DIV? 
-              // No, we are using absolute positioning globally or we can use relative here.
-              // But getNodeGlobalPosition returns global Y.
-              // Let's use the global rendering loop below instead of nesting here to avoid offset confusion.
-              // Actually, nesting is cleaner for DOM structure but positioning is absolute.
-              return null;
-            })}
           </div>
         );
       })}
 
-      {/* 3. Render Nodes (Absolute Global Positioning) */}
+      {/* 3. Render Nodes (3D Floating Buttons) */}
       {levels.map((level, lIndex) => (
         level.nodes.map((node, nIndex) => {
           const pos = getNodeGlobalPosition(lIndex, nIndex);
@@ -199,13 +235,13 @@ export default function PathMap({ levels, onNodeClick }: PathMapProps) {
           return (
             <div
               key={node.id}
-              className="absolute"
+              className="absolute z-20"
               style={{
                 top: `${top}px`,
                 left: `calc(50% + ${pos.x}px - ${NODE_SIZE / 2}px)`
               }}
             >
-              <SagaNode node={node} index={nIndex} onClick={onNodeClick} />
+              <SagaNode node={node} index={nIndex} onClick={onNodeClick} isAdvanced={level.level > 0} />
             </div>
           );
         })
@@ -217,7 +253,7 @@ export default function PathMap({ levels, onNodeClick }: PathMapProps) {
         className="absolute z-50 pointer-events-none"
         initial={false}
         animate={{
-          top: owlPos.y - NODE_SIZE / 2 - 55,
+          top: owlPos.y - NODE_SIZE / 2 - 60,
           left: `calc(50% + ${owlPos.x}px - 25px)`,
         }}
         transition={{ type: "spring", stiffness: 120, damping: 14 }}
@@ -240,86 +276,98 @@ function PathSegment({ start, end, isCompleted }: { start: { x: number, y: numbe
   const cp1 = { x: startX, y: midY };
   const cp2 = { x: endX, y: midY };
 
+  // Path definition
+  const d = `M ${startX} ${startY} C ${cp1.x} ${cp1.y}, ${cp2.x} ${cp2.y}, ${endX} ${endY}`;
+
   return (
     <g>
+      {/* Base Path (Track) */}
       <path
-        d={`M ${startX} ${startY} C ${cp1.x} ${cp1.y}, ${cp2.x} ${cp2.y}, ${endX} ${endY}`}
+        d={d}
         fill="none"
-        stroke="#e2e8f0"
-        strokeWidth="12"
+        stroke={isCompleted ? "#0f766e" : "#cbd5e1"}
+        strokeWidth="16"
         strokeLinecap="round"
-        strokeDasharray="20 10"
+        className="opacity-20"
       />
+
+      {/* Dashed Guide */}
+      <path
+        d={d}
+        fill="none"
+        stroke={isCompleted ? "#14b8a6" : "#94a3b8"}
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeDasharray="10 20"
+        className="opacity-50"
+      />
+
+      {/* Electricity Effect (When Completed) */}
       {isCompleted && (
         <motion.path
-          d={`M ${startX} ${startY} C ${cp1.x} ${cp1.y}, ${cp2.x} ${cp2.y}, ${endX} ${endY}`}
+          d={d}
           fill="none"
-          stroke="#14b8a6"
-          strokeWidth="12"
+          stroke="#5eead4" // Bright Electric Teal
+          strokeWidth="4"
           strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1 }}
+          strokeDasharray="10 40"
+          initial={{ strokeDashoffset: 0 }}
+          animate={{ strokeDashoffset: -500 }}
+          transition={{ duration: 10, ease: "linear", repeat: Infinity }}
+          filter="url(#glow)"
+          className="opacity-80"
         />
       )}
     </g>
   );
 }
 
-// Reuse existing OwlCharacter and SagaNode (Identical to previous)
 function OwlCharacter({ message }: { message: string }) {
   return (
     <motion.div
-      animate={{ y: [0, -8, 0] }}
-      transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-      className="w-[50px] h-[50px] drop-shadow-2xl"
+      animate={{ y: [0, -12, 0] }}
+      transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+      className="w-[60px] h-[60px] drop-shadow-[0_20px_20px_rgba(0,0,0,0.3)]"
     >
-      <svg viewBox="0 0 100 100" className="w-full h-full text-blue-600">
-        <circle cx="50" cy="50" r="45" fill="currentColor" stroke="white" strokeWidth="4" />
-        <ellipse cx="50" cy="65" rx="30" ry="25" fill="#60a5fa" />
-        <circle cx="35" cy="40" r="14" fill="white" />
-        <circle cx="65" cy="40" r="14" fill="white" />
-        <circle cx="35" cy="40" r="6" fill="black">
-          <animate attributeName="cy" values="40;42;40" dur="4s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="65" cy="40" r="6" fill="black">
-          <animate attributeName="cy" values="40;42;40" dur="4s" repeatCount="indefinite" />
-        </circle>
-        <polygon points="50,50 42,60 58,60" fill="#f59e0b" />
-        <path d="M5,50 Q-5,20 20,40" fill="#1e40af" />
-        <path d="M95,50 Q105,20 80,40" fill="#1e40af" />
-        <path d="M35,92 L30,98 M35,92 L35,98 M35,92 L40,98" stroke="#f59e0b" strokeWidth="4" strokeLinecap="round" />
-        <path d="M65,92 L60,98 M65,92 L65,98 M65,92 L70,98" stroke="#f59e0b" strokeWidth="4" strokeLinecap="round" />
-      </svg>
+      <div className="relative w-full h-full">
+        {/* Simple CSS Owl Placeholder for visual clarity without huge SVG */}
+        <div className="w-full h-full bg-white rounded-2xl rotate-45 border-4 border-primary shadow-inner flex items-center justify-center overflow-hidden">
+          <div className="w-full h-full bg-primary/10 -rotate-45 flex items-center justify-center">
+            <span className="text-2xl">🦉</span>
+          </div>
+        </div>
+      </div>
+
       <motion.div
         initial={{ opacity: 0, scale: 0, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ delay: 0.5, type: "spring" }}
-        className="absolute -top-10 -right-12 bg-white px-3 py-1.5 rounded-2xl text-[10px] font-black text-ink-900 shadow-xl whitespace-nowrap z-50 border-2 border-primary/10"
+        className="absolute -top-12 -right-16 bg-white px-4 py-2 rounded-2xl text-[12px] font-black text-ink-900 shadow-[0_10px_20px_-5px_rgba(0,0,0,0.2)] whitespace-nowrap z-50 border-2 border-primary/10"
       >
         {message}
-        <div className="absolute bottom-[-6px] left-0 translate-x-3 w-3 h-3 bg-white rotate-45 border-b-2 border-r-2 border-primary/10 border-t-0 border-l-0" />
+        <div className="absolute bottom-[-6px] left-0 translate-x-4 w-4 h-4 bg-white rotate-45 border-b-2 border-r-2 border-primary/10 border-t-0 border-l-0" />
       </motion.div>
     </motion.div>
   );
 }
 
-function SagaNode({ node, index, onClick }: { node: MapNode; index: number; onClick?: (node: MapNode) => void }) {
+function SagaNode({ node, index, onClick, isAdvanced }: { node: MapNode; index: number; onClick?: (node: MapNode) => void; isAdvanced: boolean }) {
   const isCompleted = node.status === "completed";
   const isCurrent = node.status === "current" || node.status === "unlocked";
   const isLocked = node.status === "locked";
 
   return (
-    <div className="relative group">
+    <div className="relative group perspective-[500px]">
+      {/* Tooltip */}
       <div className={`
-          absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1.5 
-          bg-white/90 backdrop-blur border border-white/20 shadow-lg rounded-xl
-          text-xs font-bold text-ink-700
-          transition-all duration-300 transform scale-90 opacity-0 group-hover:opacity-100 group-hover:scale-100 group-hover:-translate-y-1
-          z-20 pointer-events-none
+          absolute -top-14 left-1/2 -translate-x-1/2 whitespace-nowrap px-4 py-2
+          bg-white/95 backdrop-blur-md border border-white/20 shadow-[0_10px_30px_rgba(0,0,0,0.15)] rounded-2xl
+          text-sm font-bold text-ink-800
+          transition-all duration-300 transform scale-90 opacity-0 group-hover:opacity-100 group-hover:scale-100 group-hover:-translate-y-2
+          z-30 pointer-events-none
         `}>
         {node.title}
-        <div className="absolute top-full left-1/2 -translate-x-1/2 border-[5px] border-transparent border-t-white/90" />
+        <div className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-white/95" />
       </div>
 
       <Link
@@ -332,42 +380,61 @@ function SagaNode({ node, index, onClick }: { node: MapNode; index: number; onCl
           }
         }}
       >
+        {/* Active Ring */}
         {isCurrent && (
-          <div className="absolute inset-[-12px] rounded-full border-2 border-primary/30 animate-[spin_10s_linear_infinite]" />
+          <div className="absolute inset-[-16px] rounded-full border-[3px] border-primary/40 animate-[spin_8s_linear_infinite]"
+            style={{ borderRadius: '40%' }} // Squircle for interest
+          />
         )}
+
+        {/* Main Button */}
         <motion.div
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          whileHover={!isLocked ? { scale: 1.1, rotate: 5 } : {}}
-          whileTap={!isLocked ? { scale: 0.9 } : {}}
+          initial={{ scale: 0, rotateX: 20 }}
+          whileInView={{ scale: 1, rotateX: 0 }}
+          viewport={{ once: true }}
+          whileHover={!isLocked ? {
+            y: -10,
+            rotateX: 10,
+            boxShadow: "0 25px 35px -10px rgba(0,0,0,0.4)"
+          } : {}}
+          whileTap={!isLocked ? { scale: 0.95, y: 0 } : {}}
           className={`
-             w-20 h-20 rounded-full flex items-center justify-center
-             shadow-[0_15px_30px_-5px_rgba(0,0,0,0.4)]
-             border-[6px] border-white
-             relative z-10
-             transition-colors duration-300
-             ${isCompleted
-              ? "bg-gradient-to-br from-emerald-400 to-emerald-600"
+                w-20 h-20 rounded-[2rem] flex items-center justify-center
+                relative z-20
+                transition-all duration-300
+                border-b-[6px] active:border-b-0 active:translate-y-[6px]
+                ${isCompleted
+              ? "bg-emerald-500 border-emerald-700 shadow-[0_15px_30px_-5px_rgba(16,185,129,0.4)]"
               : isCurrent
-                ? "bg-gradient-to-br from-blue-500 to-indigo-600"
-                : "bg-slate-200"
+                ? "bg-primary border-primary-hover shadow-[0_15px_30px_-5px_rgba(37,99,235,0.4)]"
+                : isAdvanced
+                  ? "bg-slate-700 border-slate-900 shadow-[0_15px_20px_-5px_rgba(0,0,0,0.5)]"
+                  : "bg-slate-200 border-slate-300 shadow-[0_10px_20px_-5px_rgba(0,0,0,0.1)]"
             }
-           `}
+            `}
         >
-          {isCompleted ? (
-            <div className="relative">
-              <Star className="w-8 h-8 text-white fill-white drop-shadow-md" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-white/60 blur-[2px] rounded-full" />
-            </div>
-          ) : isCurrent ? (
-            <div className="relative">
+          {/* Inner Content */}
+          <div className="relative z-10">
+            {isCompleted ? (
+              <Star className="w-8 h-8 text-white fill-white drop-shadow-md animate-pulse" />
+            ) : isCurrent ? (
               <Play className="w-8 h-8 text-white fill-white ml-1 drop-shadow-md" />
-            </div>
-          ) : (
-            <Lock className="w-6 h-6 text-slate-400 drop-shadow-sm" />
-          )}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/50 via-transparent to-black/20 pointer-events-none" />
+            ) : (
+              <Lock className={`w-6 h-6 ${isAdvanced ? 'text-slate-500' : 'text-slate-400'} drop-shadow-sm`} />
+            )}
+          </div>
+
+          {/* Shine effect */}
+          <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
         </motion.div>
+
+        {/* Floor Shadow */}
+        <div className={`
+            absolute -bottom-6 inset-x-2 h-4 bg-black/20 blur-md rounded-[100%]
+            transition-all duration-300 group-hover:scale-75 group-hover:opacity-60
+            ${isAdvanced ? 'bg-black/50' : 'bg-black/10'}
+        `} />
+
       </Link>
     </div>
   );
