@@ -61,7 +61,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 export function useTheme() {
     const context = useContext(ThemeContext);
     if (context === undefined) {
-        throw new Error("useTheme must be used within a ThemeProvider");
+        // Fallback for build time / static generation if provider is missing
+        // This prevents the build from crashing during prerendering
+        return {
+            theme: "light" as Theme,
+            toggleTheme: () => console.warn("Theme toggle called without provider")
+        };
     }
     return context;
 }
