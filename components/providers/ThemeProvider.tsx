@@ -43,12 +43,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    if (!mounted) {
-        return <>{children}</>;
-    }
+    // Prevent hydration mismatch by only rendering after mount, 
+    // BUT we must keep the Provider to avoid useTheme errors.
+    // Ideally we return null until mounted, or we provide a default.
+    // For now, removing the early return is the safest fix for the build error.
 
     return (
         <ThemeContext.Provider value={{ theme, toggleTheme }}>
+            {/* To avoid hydration mismatch, we might want to only render children when mounted 
+                if they heavily depend on theme, but that blocks SEO. 
+                Common pattern is just to render. */}
             {children}
         </ThemeContext.Provider>
     );
