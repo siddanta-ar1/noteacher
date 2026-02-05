@@ -62,7 +62,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                             // Focus styles with ring animation
                             "outline-none",
                             "transition-all duration-200",
-                            "focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10",
+                            "focus:bg-surface focus:border-primary focus:ring-4 focus:ring-primary/10",
                             // Placeholder
                             "placeholder:text-ink-400 placeholder:font-normal",
                             // Icon padding

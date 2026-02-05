@@ -16,19 +16,23 @@ interface NavTabProps {
     icon: React.ElementType;
     label: string;
     active?: boolean;
+    disabled?: boolean;
 }
 
-function NavTab({ href, icon: Icon, label, active }: NavTabProps) {
+function NavTab({ href, icon: Icon, label, active, disabled }: NavTabProps) {
     return (
         <Link
             href={href}
+            aria-disabled={disabled}
             className={cn(
                 "flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all font-bold relative group",
                 active
                     ? "bg-primary text-white shadow-lg"
-                    : "text-ink-500 hover:bg-surface-sunken hover:text-primary"
+                    : "text-ink-500 hover:bg-surface-sunken hover:text-primary",
+                disabled && "opacity-50 pointer-events-none cursor-not-allowed"
             )}
             style={active ? { boxShadow: "var(--shadow-primary)" } : {}}
+            tabIndex={disabled ? -1 : undefined}
         >
             {/* Active indicator bar */}
             {active && (
@@ -120,6 +124,7 @@ export function Sidebar() {
                         icon={Wrench}
                         label="Admin Engine"
                         active={pathname === "/admin/course-creator"}
+                        disabled={true}
                     />
                 </nav>
 

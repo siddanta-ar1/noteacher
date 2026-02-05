@@ -76,11 +76,11 @@ export default function ScopeSlider() {
     }, [view, virusActive]); // Re-render when view or virus state changes
 
     return (
-        <div className="bg-white rounded-3xl border border-border overflow-hidden shadow-lg my-8">
+        <div className="bg-surface rounded-3xl border border-border overflow-hidden shadow-lg my-8">
             {/* Header */}
-            <div className="bg-slate-50 border-b border-border p-4 flex items-center justify-between">
+            <div className="bg-surface-raised border-b border-border p-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300">
                         <Globe2 size={18} />
                     </div>
                     <span className="font-bold text-ink-900 text-sm uppercase tracking-wider">
@@ -95,7 +95,7 @@ export default function ScopeSlider() {
                             "px-3 py-1 rounded-full text-xs font-black uppercase transition-all flex items-center gap-1",
                             virusActive
                                 ? "bg-red-500 text-white shadow-md hover:bg-red-600"
-                                : "bg-slate-200 text-slate-500 hover:bg-slate-300"
+                                : "bg-surface-raised text-ink-500 hover:bg-surface-raised/80 border border-border"
                         )}
                     >
                         <Activity size={12} />
@@ -105,7 +105,7 @@ export default function ScopeSlider() {
             </div>
 
             {/* Main Viewport */}
-            <div className="relative h-[400px] bg-slate-50 flex flex-col items-center justify-center overflow-hidden">
+            <div className="relative h-[400px] bg-surface-sunken flex flex-col items-center justify-center overflow-hidden">
 
                 {/* View: Individual */}
                 {view === "individual" && (
@@ -193,7 +193,7 @@ export default function ScopeSlider() {
             </div>
 
             {/* Slider Controls */}
-            <div className="bg-white p-6 border-t border-border">
+            <div className="bg-surface p-6 border-t border-border">
                 <div className="relative h-12 flex items-center">
                     {/* Track */}
                     <div className="absolute inset-x-0 h-2 bg-slate-100 rounded-full overflow-hidden">

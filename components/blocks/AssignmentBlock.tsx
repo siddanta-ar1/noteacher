@@ -136,7 +136,7 @@ export default function AssignmentBlockComponent({
     }
 
     return (
-        <div className="bg-gradient-to-br from-slate-50 to-white rounded-[2rem] border-2 border-slate-100 p-8 md:p-10 shadow-lg">
+        <div className="bg-gradient-to-br from-surface to-surface-raised rounded-[2rem] border-2 border-border p-8 md:p-10 shadow-lg">
             {/* Header */}
             <div className="flex items-start gap-4 mb-6">
                 <div className="w-14 h-14 bg-power-orange/10 rounded-2xl flex items-center justify-center shrink-0">
@@ -153,18 +153,18 @@ export default function AssignmentBlockComponent({
                             </span>
                         )}
                     </div>
-                    <h3 className="text-xl md:text-2xl font-black text-slate-900 leading-tight">
+                    <h3 className="text-xl md:text-2xl font-black text-ink-900 leading-tight">
                         {title}
                     </h3>
                     {description && (
-                        <p className="text-slate-500 mt-2">{description}</p>
+                        <p className="text-ink-500 mt-2">{description}</p>
                     )}
                 </div>
             </div>
 
             {/* Instructions */}
             {instructions && (
-                <div className="bg-slate-100 rounded-xl p-4 mb-6 text-sm text-slate-600">
+                <div className="bg-surface-raised rounded-xl p-4 mb-6 text-sm text-ink-500">
                     {instructions}
                 </div>
             )}
@@ -172,7 +172,7 @@ export default function AssignmentBlockComponent({
             {/* Submission type selection */}
             {!activeType && (
                 <div className="space-y-3">
-                    <p className="text-sm font-bold text-slate-400 uppercase tracking-wider">
+                    <p className="text-sm font-bold text-ink-400 uppercase tracking-wider">
                         Choose submission type
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -182,12 +182,12 @@ export default function AssignmentBlockComponent({
                                 onClick={() => setActiveType(type)}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="p-5 rounded-2xl border-2 border-slate-200 hover:border-navy hover:bg-navy/5 transition-all flex flex-col items-center gap-3"
+                                className="p-5 rounded-2xl border-2 border-border hover:border-navy hover:bg-navy/5 transition-all flex flex-col items-center gap-3"
                             >
-                                <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500">
+                                <div className="w-12 h-12 bg-surface-raised rounded-xl flex items-center justify-center text-ink-500">
                                     {typeIcons[type]}
                                 </div>
-                                <span className="font-bold text-slate-700">
+                                <span className="font-bold text-ink-700">
                                     {typeLabels[type]}
                                 </span>
                             </motion.button>
@@ -207,7 +207,7 @@ export default function AssignmentBlockComponent({
                         {/* Back button */}
                         <button
                             onClick={clearSelection}
-                            className="flex items-center gap-2 text-slate-400 hover:text-slate-600 text-sm font-bold mb-4"
+                            className="flex items-center gap-2 text-ink-400 hover:text-ink-700 text-sm font-bold mb-4"
                         >
                             <X className="w-4 h-4" />
                             Choose different type
@@ -220,9 +220,9 @@ export default function AssignmentBlockComponent({
                                     placeholder="Write your response here..."
                                     value={textContent}
                                     onChange={(e) => setTextContent(e.target.value)}
-                                    className="w-full h-48 p-4 rounded-2xl border-2 border-slate-200 focus:border-navy focus:outline-none resize-none text-slate-700"
+                                    className="w-full h-48 p-4 rounded-2xl border-2 border-border bg-surface text-ink-900 focus:border-navy focus:outline-none resize-none placeholder:text-ink-400"
                                 />
-                                <p className="text-xs text-slate-400">
+                                <p className="text-xs text-ink-400">
                                     {textContent.length} characters
                                 </p>
                             </div>
@@ -233,12 +233,12 @@ export default function AssignmentBlockComponent({
                             <div className="space-y-4">
                                 {!selectedFile ? (
                                     <label className="block cursor-pointer">
-                                        <div className="border-2 border-dashed border-slate-200 hover:border-navy rounded-2xl p-12 text-center transition-colors">
-                                            <Camera className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                                            <p className="font-bold text-slate-600 mb-2">
+                                        <div className="border-2 border-dashed border-border hover:border-navy rounded-2xl p-12 text-center transition-colors">
+                                            <Camera className="w-12 h-12 text-ink-300 mx-auto mb-4" />
+                                            <p className="font-bold text-ink-500 mb-2">
                                                 Click to upload photo
                                             </p>
-                                            <p className="text-sm text-slate-400">
+                                            <p className="text-sm text-ink-400">
                                                 PNG, JPG up to {maxFileSize}MB
                                             </p>
                                         </div>
@@ -272,12 +272,12 @@ export default function AssignmentBlockComponent({
                             <div className="space-y-4">
                                 {!selectedFile ? (
                                     <label className="block cursor-pointer">
-                                        <div className="border-2 border-dashed border-slate-200 hover:border-navy rounded-2xl p-12 text-center transition-colors">
-                                            <Mic className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                                            <p className="font-bold text-slate-600 mb-2">
+                                        <div className="border-2 border-dashed border-border hover:border-navy rounded-2xl p-12 text-center transition-colors">
+                                            <Mic className="w-12 h-12 text-ink-300 mx-auto mb-4" />
+                                            <p className="font-bold text-ink-500 mb-2">
                                                 Upload audio file
                                             </p>
-                                            <p className="text-sm text-slate-400">
+                                            <p className="text-sm text-ink-400">
                                                 MP3, WAV up to {maxFileSize}MB
                                             </p>
                                         </div>
@@ -289,23 +289,23 @@ export default function AssignmentBlockComponent({
                                         />
                                     </label>
                                 ) : (
-                                    <div className="bg-slate-100 rounded-2xl p-4 flex items-center gap-4">
+                                    <div className="bg-surface-raised rounded-2xl p-4 flex items-center gap-4">
                                         <div className="w-12 h-12 bg-navy rounded-xl flex items-center justify-center">
                                             <Mic className="w-6 h-6 text-white" />
                                         </div>
                                         <div className="flex-1">
-                                            <p className="font-bold text-slate-700 truncate">
+                                            <p className="font-bold text-ink-700 truncate">
                                                 {selectedFile.name}
                                             </p>
-                                            <p className="text-sm text-slate-400">
+                                            <p className="text-sm text-ink-400">
                                                 {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                                             </p>
                                         </div>
                                         <button
                                             onClick={() => setSelectedFile(null)}
-                                            className="p-2 hover:bg-slate-200 rounded-lg"
+                                            className="p-2 hover:bg-surface-sunken rounded-lg"
                                         >
-                                            <X className="w-4 h-4 text-slate-500" />
+                                            <X className="w-4 h-4 text-ink-500" />
                                         </button>
                                     </div>
                                 )}
@@ -347,7 +347,7 @@ export default function AssignmentBlockComponent({
                             {(!isBlocking || !isEnforcementEnabled) && (
                                 <button
                                     onClick={handleSkip}
-                                    className="text-slate-400 hover:text-slate-600 text-sm font-bold"
+                                    className="text-ink-400 hover:text-ink-600 text-sm font-bold"
                                 >
                                     Skip for now →
                                 </button>
@@ -362,7 +362,7 @@ export default function AssignmentBlockComponent({
                 <div className="mt-6 text-center">
                     <button
                         onClick={handleSkip}
-                        className="text-slate-400 hover:text-slate-600 text-sm font-bold"
+                        className="text-ink-400 hover:text-ink-600 text-sm font-bold"
                     >
                         Skip and continue →
                     </button>
