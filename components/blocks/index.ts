@@ -9,3 +9,5 @@ export { default as SimulationBlock } from "./SimulationBlock";
 export { default as AssignmentBlock } from "./AssignmentBlock";
 export { default as DividerBlock } from "./DividerBlock";
 export { default as AISummaryBlock } from "./AISummaryBlock";
+export { default as AnimationBlock } from "./AnimationBlock";
+

@@ -47,18 +47,19 @@ export default function AnimationBlockComponent({ block }: AnimationBlockProps) 
     }
 
     return (
-        <figure className="w-full my-8 group" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-black/5 aspect-video border border-border/50">
+        <figure className="w-full my-8 group flex flex-col items-center" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-black/5 border border-border/50 max-w-full w-fit">
                 <video
                     ref={videoRef}
                     src={block.url}
-                    className="w-full h-full object-cover"
+                    className="block max-w-full max-h-[70vh] w-auto h-auto"
                     loop={block.loop}
                     muted={isMuted} // Default to muted for autoplay to work
                     autoPlay={block.autoplay}
                     playsInline
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
+                    style={block.height ? { height: block.height } : undefined}
                 />
 
                 {/* Custom Controls Overlay */}
