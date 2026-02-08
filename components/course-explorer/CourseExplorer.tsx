@@ -70,6 +70,7 @@ export function CourseExplorer({ course, userProgress, currentNodeId, onNodeSele
 
     // Course section expanded state
     const [courseExpanded, setCourseExpanded] = useState(true);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // Toggle expand/collapse
     const handleToggle = useCallback((id: string) => {
@@ -139,14 +140,65 @@ export function CourseExplorer({ course, userProgress, currentNodeId, onNodeSele
             `}
         >
             {/* Explorer Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-surface-raised">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-surface-raised relative z-20">
                 <div className="flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-primary" />
                     <span className="text-sm font-semibold text-ink-900">Course Explorer</span>
                 </div>
-                <button className="p-1 hover:bg-surface-sunken rounded transition-colors">
-                    <MoreHorizontal className="w-4 h-4 text-ink-500" />
-                </button>
+
+                <div className="relative">
+                    <button
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className="p-1 hover:bg-surface-sunken rounded transition-colors relative z-10"
+                    >
+                        <MoreHorizontal className="w-4 h-4 text-ink-500" />
+                    </button>
+
+                    {isMenuOpen && (
+                        <>
+                            <div
+                                className="fixed inset-0 z-0"
+                                onClick={() => setIsMenuOpen(false)}
+                            />
+                            <div className="absolute right-0 top-full mt-1 w-48 bg-surface border border-border rounded-xl shadow-xl py-1 z-20 overflow-hidden">
+                                <button
+                                    onClick={() => {
+                                        setCourseExpanded(true);
+                                        const allIds = new Set<string>();
+                                        course.levels.forEach(l => {
+                                            allIds.add(l.id);
+                                            l.missions.forEach(m => allIds.add(m.id));
+                                        });
+                                        setExpandedIds(allIds);
+                                        setIsMenuOpen(false);
+                                    }}
+                                    className="w-full text-left px-4 py-2 text-sm text-ink-900 hover:bg-surface-sunken transition-colors flex items-center gap-2"
+                                >
+                                    <ChevronDown className="w-3 h-3" />
+                                    Expand All
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setExpandedIds(new Set());
+                                        setIsMenuOpen(false);
+                                    }}
+                                    className="w-full text-left px-4 py-2 text-sm text-ink-900 hover:bg-surface-sunken transition-colors flex items-center gap-2"
+                                >
+                                    <ChevronRight className="w-3 h-3" />
+                                    Collapse All
+                                </button>
+                                <div className="h-px bg-border my-1" />
+                                <button
+                                    onClick={() => router.push('/home')}
+                                    className="w-full text-left px-4 py-2 text-sm text-primary hover:bg-surface-sunken transition-colors flex items-center gap-2 font-medium"
+                                >
+                                    <BookOpen className="w-3 h-3" />
+                                    Go to Dashboard
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
 
             {/* Course Title Header - Collapsible */}

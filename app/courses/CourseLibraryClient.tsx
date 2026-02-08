@@ -7,7 +7,7 @@ import Link from "next/link";
 import type { CourseWithNodeCount } from "@/types";
 import { ROUTES } from "@/config";
 import { Badge, ProgressBar } from "@/components/ui";
-import { CourseCard } from "@/components/CourseCard";
+import { CourseCard } from "../../components/CourseCard";
 
 interface CourseLibraryClientProps {
   initialCourses: CourseWithNodeCount[];

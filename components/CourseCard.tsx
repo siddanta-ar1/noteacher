@@ -60,7 +60,7 @@ export function CourseCard({ course, className, showProgress = true }: CourseCar
 
                     {/* Badges Overlay */}
                     <div className="absolute top-4 left-4 z-20 flex gap-2">
-                        <Badge variant="surface" size="sm" className="backdrop-blur-md bg-white/90 text-ink-900 border-none shadow-sm font-bold">
+                        <Badge variant="default" size="sm" className="backdrop-blur-md bg-white/90 text-ink-900 border-none shadow-sm font-bold">
                             {course.lessonsCount ? `${course.lessonsCount} Levels` : "Course"}
                         </Badge>
                     </div>

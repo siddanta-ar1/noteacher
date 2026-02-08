@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { ProgressBar, Avatar } from "@/components/ui";
-import { CourseCard } from "@/components/CourseCard";
+import { CourseCard } from "../../components/CourseCard";
 
 type DashboardProps = {
   profile: { xp: number; name: string; streak: number; avatar_url?: string | null };
