@@ -128,7 +128,7 @@ export default function LoginPage() {
             <button
               onClick={handleOAuth}
               disabled={isLoading}
-              className="w-full py-4 bg-ink-900 text-white rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-ink-700 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50"
+              className="w-full py-4 bg-ink-900 text-surface rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-ink-700 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50"
             >
               {isLoading ? (
                 <Loader2 className="animate-spin" />
