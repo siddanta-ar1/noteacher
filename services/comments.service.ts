@@ -49,6 +49,7 @@ export async function createComment(data: {
     nodeId: string;
     content: string;
     type: 'question' | 'solution' | 'general';
+    parentId?: string;
 }): Promise<ServiceResult<Comment>> {
     try {
         const supabase = await createServerSupabaseClient();
@@ -65,6 +66,7 @@ export async function createComment(data: {
                 user_id: userId,
                 content: data.content,
                 type: data.type,
+                parent_id: data.parentId || null,
             })
             .select()
             .single();
@@ -97,6 +99,43 @@ export async function deleteComment(commentId: string): Promise<ServiceResult<bo
     } catch (err: unknown) {
         console.error("deleteComment error:", JSON.stringify(err, null, 2));
         const msg = err instanceof Error ? err.message : "Failed to delete comment";
+        return { data: null, error: msg };
+    }
+}
+
+/**
+ * Update a comment
+ */
+export async function updateComment(data: {
+    commentId: string;
+    content: string;
+    type?: 'question' | 'solution' | 'general';
+}): Promise<ServiceResult<Comment>> {
+    try {
+        const supabase = await createServerSupabaseClient();
+
+        const updates: any = {
+            content: data.content,
+            updated_at: new Date().toISOString(),
+        };
+
+        if (data.type) {
+            updates.type = data.type;
+        }
+
+        const { data: updatedComment, error } = await supabase
+            .from("comments")
+            .update(updates)
+            .eq("id", data.commentId)
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        return { data: updatedComment as Comment, error: null };
+    } catch (err: unknown) {
+        console.error("updateComment error:", JSON.stringify(err, null, 2));
+        const msg = err instanceof Error ? err.message : "Failed to update comment";
         return { data: null, error: msg };
     }
 }

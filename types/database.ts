@@ -69,6 +69,8 @@ export interface Comment {
     created_at: string;
     updated_at: string;
     user?: Profile; // Joined data
+    parent_id?: string | null;
+    replies?: Comment[]; // For UI nesting
 }
 
 export interface UserProgress {

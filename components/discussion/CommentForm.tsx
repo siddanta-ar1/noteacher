@@ -5,11 +5,14 @@ import { Send, HelpCircle, CheckCircle2 } from "lucide-react";
 
 interface CommentFormProps {
     onSubmit: (content: string, type: 'question' | 'solution' | 'general') => void;
+    autoFocus?: boolean;
+    initialContent?: string;
+    initialType?: 'question' | 'solution' | 'general';
 }
 
-export function CommentForm({ onSubmit }: CommentFormProps) {
-    const [content, setContent] = useState("");
-    const [type, setType] = useState("general");
+export function CommentForm({ onSubmit, autoFocus, initialContent = "", initialType = "general" }: CommentFormProps) {
+    const [content, setContent] = useState(initialContent);
+    const [type, setType] = useState(initialType);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -29,6 +32,7 @@ export function CommentForm({ onSubmit }: CommentFormProps) {
     return (
         <form onSubmit={handleSubmit} className="border border-border rounded-xl bg-surface-raised/50 p-4 space-y-4 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 transition-all">
             <textarea
+                autoFocus={autoFocus}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Share a confusion or a solution..."
@@ -41,8 +45,8 @@ export function CommentForm({ onSubmit }: CommentFormProps) {
                         type="button"
                         onClick={() => setType("question")}
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 ${type === "question"
-                                ? "bg-amber-100 text-amber-700 border border-amber-200"
-                                : "bg-surface hover:bg-surface-raised text-ink-500 border border-border"
+                            ? "bg-amber-100 text-amber-700 border border-amber-200"
+                            : "bg-surface hover:bg-surface-raised text-ink-500 border border-border"
                             }`}
                     >
                         <HelpCircle size={14} />
@@ -52,8 +56,8 @@ export function CommentForm({ onSubmit }: CommentFormProps) {
                         type="button"
                         onClick={() => setType("solution")}
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 ${type === "solution"
-                                ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
-                                : "bg-surface hover:bg-surface-raised text-ink-500 border border-border"
+                            ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                            : "bg-surface hover:bg-surface-raised text-ink-500 border border-border"
                             }`}
                     >
                         <CheckCircle2 size={14} />

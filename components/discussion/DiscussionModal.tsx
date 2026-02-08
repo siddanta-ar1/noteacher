@@ -4,8 +4,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X, MessageCircle, AlertCircle } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { createBrowserClient } from "@supabase/ssr";
+import { useUser } from "@/hooks/useUser";
 import { Comment } from "@/types";
-import { getCommentsByNodeId, createComment } from "@/services";
+import { getCommentsByNodeId, createComment, deleteComment, updateComment } from "@/services";
 import { CommentItem } from "./CommentItem";
 import { CommentForm } from "./CommentForm";
 
@@ -22,6 +23,7 @@ export function DiscussionModal({
     nodeId,
     title = "Class Discussion"
 }: DiscussionModalProps) {
+    const { user } = useUser();
     const [comments, setComments] = useState<Comment[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -33,11 +35,28 @@ export function DiscussionModal({
         if (result.error) {
             setError(result.error);
         } else {
-            setComments(result.data || []);
-            // Scroll to bottom on initial load? Maybe not for discussions, usually top-down. 
-            // But if it's chat-like, bottom is newest. 
-            // comments.service returns ascending order (oldest first). 
-            // So rendering in order means newest at bottom.
+            const flatComments = result.data || [];
+
+            // Build tree
+            const commentMap = new Map<string, Comment>();
+            const roots: Comment[] = [];
+
+            // 1. Initialize map and replies array
+            flatComments.forEach(c => {
+                commentMap.set(c.id, { ...c, replies: [] });
+            });
+
+            // 2. Build hierarchy
+            flatComments.forEach(c => {
+                const comment = commentMap.get(c.id)!;
+                if (c.parent_id && commentMap.has(c.parent_id)) {
+                    commentMap.get(c.parent_id)!.replies!.push(comment);
+                } else {
+                    roots.push(comment);
+                }
+            });
+
+            setComments(roots);
         }
         setIsLoading(false);
     };
@@ -56,7 +75,7 @@ export function DiscussionModal({
                 .on(
                     'postgres_changes',
                     {
-                        event: 'INSERT',
+                        event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
                         schema: 'public',
                         table: 'comments',
                         filter: `node_id=eq.${nodeId}`
@@ -82,14 +101,34 @@ export function DiscussionModal({
         }
     }, [comments.length, isOpen, isLoading]);
 
-    const handleCommentSubmit = async (content: string, type: 'question' | 'solution' | 'general') => {
-        const result = await createComment({ nodeId, content, type });
+    const handleCommentSubmit = async (content: string, type: 'question' | 'solution' | 'general', parentId?: string) => {
+        const result = await createComment({ nodeId, content, type, parentId });
         if (result.error) {
             alert("Failed to post comment: " + result.error);
         } else {
             fetchComments();
         }
     };
+
+    const handleDelete = async (commentId: string) => {
+        if (!confirm("Are you sure you want to delete this comment?")) return;
+        const result = await deleteComment(commentId);
+        if (result.error) {
+            alert("Failed to delete comment: " + result.error);
+        } else {
+            fetchComments();
+        }
+    }
+
+    const handleEdit = async (commentId: string, content: string, type?: 'question' | 'solution' | 'general') => {
+        const result = await updateComment({ commentId, content, type });
+        if (result.error) {
+            alert("Failed to update comment: " + result.error);
+        } else {
+            fetchComments();
+        }
+    }
+
 
     return (
         <AnimatePresence>
@@ -153,7 +192,14 @@ export function DiscussionModal({
                             ) : comments.length > 0 ? (
                                 <>
                                     {comments.map((comment) => (
-                                        <CommentItem key={comment.id} comment={comment} />
+                                        <CommentItem
+                                            key={comment.id}
+                                            comment={comment}
+                                            onReply={(parentId, content, type) => handleCommentSubmit(content, type, parentId)}
+                                            currentUserId={user?.id}
+                                            onDelete={handleDelete}
+                                            onEdit={handleEdit}
+                                        />
                                     ))}
                                     <div ref={bottomRef} />
                                 </>
