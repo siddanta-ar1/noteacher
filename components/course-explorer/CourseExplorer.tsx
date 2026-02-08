@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, ChevronRight, MoreHorizontal, BookOpen, Lock } from 'lucide-react';
+import { ChevronDown, ChevronRight, MoreHorizontal, BookOpen, Lock, PanelLeftClose } from 'lucide-react';
 import { FileTreeItem } from './FileTreeItem';
 import type { CourseWithHierarchy, Node, UserProgress } from '@/types';
 
@@ -11,10 +11,11 @@ interface CourseExplorerProps {
     userProgress: UserProgress[];
     currentNodeId?: string; // Active node ID for highlighting
     onNodeSelect?: (node: Node) => void;
+    onCloseSidebar?: () => void;
     className?: string;
 }
 
-export function CourseExplorer({ course, userProgress, currentNodeId, onNodeSelect, className = '' }: CourseExplorerProps) {
+export function CourseExplorer({ course, userProgress, currentNodeId, onNodeSelect, onCloseSidebar, className = '' }: CourseExplorerProps) {
     const router = useRouter(); // For navigation
 
     // Track active (selected) node - Sync with prop
@@ -195,6 +196,21 @@ export function CourseExplorer({ course, userProgress, currentNodeId, onNodeSele
                                     <BookOpen className="w-3 h-3" />
                                     Go to Dashboard
                                 </button>
+                                {onCloseSidebar && (
+                                    <>
+                                        <div className="h-px bg-border my-1" />
+                                        <button
+                                            onClick={() => {
+                                                onCloseSidebar();
+                                                setIsMenuOpen(false);
+                                            }}
+                                            className="w-full text-left px-4 py-2 text-sm text-ink-500 hover:bg-surface-sunken transition-colors flex items-center gap-2"
+                                        >
+                                            <PanelLeftClose className="w-3 h-3" />
+                                            Hide Sidebar
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         </>
                     )}

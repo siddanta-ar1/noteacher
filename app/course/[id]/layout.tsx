@@ -2,6 +2,7 @@ import { getCourseWithHierarchy } from "@/services";
 import { CourseExplorer } from "@/components/course-explorer";
 import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
+import CourseLayoutClient from "./CourseLayoutClient";
 
 type Props = {
     children: React.ReactNode;
@@ -29,20 +30,11 @@ export default async function CourseLayout({ children, params }: Props) {
     const { data: userProgress } = await getUserProgress(user.id);
 
     return (
-        <div className="flex h-screen bg-surface-base">
-            {/* Sidebar */}
-            <aside className="w-72 flex-shrink-0 border-r border-border bg-surface hidden md:block">
-                <CourseExplorer
-                    course={course}
-                    userProgress={userProgress || []}
-                    className="h-full"
-                />
-            </aside>
-
-            {/* Main Content */}
-            <main className="flex-1 overflow-auto bg-surface-raised relative">
-                {children}
-            </main>
-        </div>
+        <CourseLayoutClient
+            course={course}
+            userProgress={userProgress || []}
+        >
+            {children}
+        </CourseLayoutClient>
     );
 }
