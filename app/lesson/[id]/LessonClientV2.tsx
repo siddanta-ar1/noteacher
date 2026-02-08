@@ -12,7 +12,7 @@ import { enrichContent } from "@/lib/content-enricher";
 import type { ContentBlock } from "@/types/content";
 
 // Existing components
-import LessonControlBar from "@/components/lesson/LessonControlBar";
+import VerticalLessonControls from "@/components/lesson/VerticalLessonControls";
 import AIChatModal from "@/components/lesson/AIChatModal";
 import AISummaryButton from "@/components/lesson/AISummaryButton";
 import { completeNode } from "@/app/lesson/actions";
@@ -67,6 +67,7 @@ export default function LessonClientV2({
     const [isScrolling, setIsScrolling] = useState(false);
     const [scrollSpeed, setScrollSpeed] = useState(1);
     const [isReading, setIsReading] = useState(false);
+    const [playbackRate, setPlaybackRate] = useState(1);
 
     // Keyboard navigation
     useEffect(() => {
@@ -162,7 +163,7 @@ export default function LessonClientV2({
             // Speak this block
             const utterance = new SpeechSynthesisUtterance(textToRead);
             utteranceRef.current = utterance;
-            utterance.rate = 1;
+            utterance.rate = playbackRate;
             utterance.pitch = 1;
 
             // Update Active Block ID for highlighting
@@ -185,6 +186,10 @@ export default function LessonClientV2({
             };
 
             utterance.onerror = (e) => {
+                // Ignore interruption errors (common when switching blocks or stopping)
+                if (e.error === 'interrupted' || e.error === 'canceled') {
+                    return;
+                }
                 console.error("TTS Error:", e);
                 setIsReading(false);
                 setActiveBlockId(null);
@@ -198,7 +203,7 @@ export default function LessonClientV2({
             setActiveBlockCharIndex(null);
             setCurrentBlockIndex(-1);
         }
-    }, [isReading, currentBlockIndex, blocks]);
+    }, [isReading, currentBlockIndex, blocks, playbackRate]);
 
     const toggleReader = useCallback(() => {
         if (isReading) {
@@ -364,13 +369,11 @@ export default function LessonClientV2({
             </main>
 
             {/* FLOATING CONTROL BAR */}
-            <LessonControlBar
-                isScrolling={isScrolling}
-                onToggleScroll={() => setIsScrolling(!isScrolling)}
-                scrollSpeed={scrollSpeed}
-                onSpeedChange={setScrollSpeed}
+            <VerticalLessonControls
                 isReading={isReading}
                 onToggleRead={toggleReader}
+                playbackRate={playbackRate}
+                onRateChange={setPlaybackRate}
                 onOpenAI={() => setIsChatOpen(true)}
             />
 
