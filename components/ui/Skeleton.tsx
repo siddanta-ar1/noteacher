@@ -144,26 +144,28 @@ function SkeletonDashboard() {
 }
 
 // Lesson skeleton
+// Lesson skeleton matching LessonClientV2
 function SkeletonLesson() {
     return (
         <div className="min-h-screen bg-surface-raised">
-            {/* Header */}
-            <div className="h-16 bg-surface border-b border-border px-6 flex items-center gap-4">
-                <Skeleton className="w-10 h-10 rounded-xl" />
-                <Skeleton className="h-6 w-48" />
-                <div className="ml-auto">
-                    <Skeleton className="h-3 w-32 rounded-full" />
+            <div className="max-w-3xl mx-auto py-24 px-6 md:px-12 pb-48">
+                {/* Back Button */}
+                <div className="mb-8">
+                    <Skeleton className="h-6 w-32 rounded-lg" />
                 </div>
-            </div>
 
-            {/* Content Area */}
-            <div className="max-w-4xl mx-auto p-6 lg:p-10">
-                {/* Title Section */}
-                <div className="mb-10">
-                    <Skeleton className="h-4 w-28 mb-4" />
-                    <Skeleton className="h-12 w-3/4 mb-4" />
-                    <Skeleton className="h-5 w-full" />
-                    <Skeleton className="h-5 w-5/6 mt-2" />
+                {/* Header Section */}
+                <div className="mb-16 text-center md:text-left">
+                    <Skeleton className="h-6 w-20 rounded-full mb-6" variant="rectangular" /> {/* Badge */}
+                    <Skeleton className="h-12 w-3/4 mb-8" /> {/* Title */}
+
+                    {/* Objectives Box */}
+                    <div className="bg-surface-raised border border-border rounded-2xl p-6 space-y-4">
+                        <Skeleton className="h-4 w-40 mb-2" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-5/6" />
+                        <Skeleton className="h-4 w-4/5" />
+                    </div>
                 </div>
 
                 {/* Content Blocks */}
@@ -184,9 +186,9 @@ function SkeletonLesson() {
                     ))}
                 </div>
 
-                {/* Action Button */}
-                <div className="mt-10 flex justify-center">
-                    <Skeleton className="h-14 w-48 rounded-2xl" />
+                {/* Complete Button */}
+                <div className="pt-24 pb-32 flex justify-center">
+                    <Skeleton className="h-16 w-48 rounded-2xl shadow-xl" />
                 </div>
             </div>
         </div>

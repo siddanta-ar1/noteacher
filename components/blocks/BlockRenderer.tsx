@@ -30,6 +30,8 @@ interface BlockRendererProps {
     onUnlock: (index: number) => void;
     onUpdateContext?: (text: string) => void;
     nodeId?: string;
+    activeBlockId?: string | null;
+    activeBlockCharIndex?: number | null;
 }
 
 /**
@@ -42,6 +44,8 @@ export default function BlockRenderer({
     onUnlock,
     onUpdateContext,
     nodeId,
+    activeBlockId,
+    activeBlockCharIndex,
 }: BlockRendererProps) {
     return (
         <div className="space-y-12 max-w-3xl mx-auto pb-24">
@@ -50,14 +54,17 @@ export default function BlockRenderer({
                 const isLocked = index > unlockedIndex;
                 if (isLocked) return null;
 
+                const isActive = activeBlockId === block.id;
+
                 return (
                     <BlockWrapper
                         key={block.id || index}
                         block={block}
                         index={index}
                         onUpdateContext={onUpdateContext}
+                        isActive={isActive}
                     >
-                        {renderBlock(block, index, onUnlock, nodeId)}
+                        {renderBlock(block, index, onUnlock, nodeId, isActive ? activeBlockCharIndex : null)}
                     </BlockWrapper>
                 );
             })}
@@ -78,11 +85,13 @@ function BlockWrapper({
     index,
     children,
     onUpdateContext,
+    isActive,
 }: {
     block: ContentBlock;
     index: number;
     children: React.ReactNode;
     onUpdateContext?: (text: string) => void;
+    isActive?: boolean;
 }) {
     const ref = useRef<HTMLDivElement>(null);
     const isInView = useInView(ref, { once: true, margin: "-10%" });
@@ -176,7 +185,7 @@ function BlockWrapper({
             animate={isInView ? "visible" : "hidden"}
             variants={getAnimationVariants()}
             onViewportEnter={handleViewportEnter}
-            className="relative"
+            className={`relative transition-all duration-500 rounded-3xl ${isActive ? "ring-2 ring-primary/50 bg-primary/5 shadow-lg scale-[1.02] -mx-4 px-4 py-2" : ""}`}
         >
             {children}
         </motion.div>
@@ -190,11 +199,12 @@ function renderBlock(
     block: ContentBlock,
     index: number,
     onUnlock: (index: number) => void,
-    nodeId?: string
+    nodeId?: string,
+    highlightCharIndex?: number | null
 ): React.ReactNode {
     switch (block.type) {
         case "text":
-            return <TextBlockComponent block={block as TextBlockType} />;
+            return <TextBlockComponent block={block as TextBlockType} highlightCharIndex={highlightCharIndex} />;
 
         case "image":
             return <ImageBlockComponent block={block as ImageBlockType} />;

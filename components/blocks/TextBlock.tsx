@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { TextBlock, Citation } from "@/types/content";
 import { AnimatePresence, motion } from "framer-motion";
 import { Info } from "lucide-react";
@@ -9,31 +9,102 @@ interface TextBlockProps {
     block: TextBlock;
 }
 
-/**
- * TextBlock - Premium typography text blocks with multiple styles
- * Supports Markdown-like bold syntax (**text**) and Citations ([[1]])
- */
-export default function TextBlockComponent({ block }: TextBlockProps) {
+// TextBlock - Premium typography text blocks with multiple styles
+// Supports Markdown-like bold syntax (**text**) and Citations ([[1]])
+
+interface TextBlockProps {
+    block: TextBlock;
+    highlightCharIndex?: number | null;
+}
+
+export default function TextBlockComponent({ block, highlightCharIndex }: TextBlockProps) {
     const { content, style = "default", citations = [] } = block;
     const [activeCitation, setActiveCitation] = useState<string | null>(null);
+    const highlightRef = useRef<HTMLSpanElement>(null);
 
-    // Parse content with bold and citation markers
+    // Debug logging
+    useEffect(() => {
+        if (highlightCharIndex !== null && highlightCharIndex !== undefined) {
+            console.log("TextBlock received highlight index:", highlightCharIndex);
+        }
+    }, [highlightCharIndex]);
+
+    // Scroll highlighted word into view - Optimized for smooth reading
+    useEffect(() => {
+        if (highlightRef.current) {
+            highlightRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest", // Changing from 'center' to 'nearest' prevents jumpiness
+                inline: "nearest"
+            });
+        }
+    }, [highlightCharIndex]);
+
+    // Parse content with bold and citation markers, AND word-level highlighting
     const renderContent = (text: string) => {
-        // Defines the splitting pattern:
-        // 1. Bold: **text**
-        // 2. Citation: [[id]]
+        // Splits by bold/citation markers
         const parts = text.split(/(\*\*.*?\*\*|\[\[.*?\]\])/g);
+        let charCursor = 0;
 
         return parts.map((part, i) => {
+            // Bold
             if (part.startsWith("**") && part.endsWith("**")) {
+                const innerText = part.slice(2, -2);
+                const start = charCursor;
+                charCursor += part.length; // Advance by full raw length including **
+
+                // Render inner words for highlighting too? 
+                // Creating a complex nested structure might break layout or be overkill.
+                // For simplicity, highlight the whole bold chunk if index hits it.
+                // Or better: split inner text. 
+                // BUT: raw index includes '**'. 
+                // Let's treat the bold block as a single unit or split it.
+                // Splitting inner text is best for UX.
+
+                // Effective cursor logic:
+                // Global index tracks RAW text. 
+                // Inner text starts at `start + 2`.
+
+                const words = innerText.split(/(\s+)/);
+                let localCursor = start + 2;
+
                 return (
                     <span key={i} className="font-black text-navy/90">
-                        {part.slice(2, -2)}
+                        {words.map((word, wArgs) => {
+                            const isHighlight = highlightCharIndex !== null &&
+                                highlightCharIndex !== undefined &&
+                                highlightCharIndex >= localCursor &&
+                                highlightCharIndex < (localCursor + word.length);
+
+                            const el = (
+                                <span
+                                    key={wArgs}
+                                    ref={isHighlight ? highlightRef : null}
+                                    className={isHighlight ? "bg-primary/20 border-b-2 border-primary text-black px-0.5 rounded-t transition-colors duration-75 relative" : ""}
+                                >
+                                    {isHighlight && (
+                                        <motion.span
+                                            layoutId="highlight-cursor"
+                                            className="absolute -bottom-[2px] left-0 right-0 h-[2px] bg-primary"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                        />
+                                    )}
+                                    {word}
+                                </span>
+                            );
+                            localCursor += word.length;
+                            return el;
+                        })}
                     </span>
                 );
-            } else if (part.startsWith("[[") && part.endsWith("]]")) {
+            }
+            // Citation
+            else if (part.startsWith("[[") && part.endsWith("]]")) {
                 const id = part.slice(2, -2);
                 const citation = citations.find((c) => c.id === id);
+                charCursor += part.length;
 
                 if (citation) {
                     return (
@@ -91,10 +162,38 @@ export default function TextBlockComponent({ block }: TextBlockProps) {
                         </span>
                     );
                 }
-                // If citation not found, just return original text or hidden
                 return null;
             }
-            return <span key={i}>{part}</span>;
+
+            // Standard Text
+            const words = part.split(/(\s+)/); // Keep spaces as tokens
+            const fragmentStart = charCursor;
+            charCursor += part.length;
+
+            let localCursor = fragmentStart;
+
+            return (
+                <span key={i}>
+                    {words.map((word, wIdx) => {
+                        const isHighlight = highlightCharIndex !== null &&
+                            highlightCharIndex !== undefined &&
+                            highlightCharIndex >= localCursor &&
+                            highlightCharIndex < (localCursor + word.length);
+
+                        const el = (
+                            <span
+                                key={wIdx}
+                                ref={isHighlight ? highlightRef : null}
+                                className={isHighlight ? "bg-yellow-200 text-black px-0.5 rounded transition-colors duration-200" : ""}
+                            >
+                                {word}
+                            </span>
+                        );
+                        localCursor += word.length;
+                        return el;
+                    })}
+                </span>
+            );
         });
     };
 

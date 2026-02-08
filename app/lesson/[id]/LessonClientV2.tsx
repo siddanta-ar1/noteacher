@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { CheckCircle2, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 // New modular block system
 import { BlockRenderer } from "@/components/blocks";
-import { parseContentJSON, extractTextContent } from "@/lib/content-parser";
+import { parseContentJSON } from "@/lib/content-parser";
 import { enrichContent } from "@/lib/content-enricher";
 import type { ContentBlock } from "@/types/content";
 
@@ -37,9 +37,9 @@ export default function LessonClientV2({
     const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
     // Parse content using new JSON engine
-    const parsedContent = parseContentJSON(node.content);
+    const parsedContent = useMemo(() => parseContentJSON(node.content), [node.content]);
     // Enrich content with dynamic simulations
-    const blocks = enrichContent(parsedContent.blocks, node.title);
+    const blocks = useMemo(() => enrichContent(parsedContent.blocks, node.title), [parsedContent.blocks, node.title]);
 
     // Helper to find the next blocking index
     const findNextBlockingIndex = (currentBlocks: ContentBlock[], startIndex: number) => {
@@ -100,7 +100,8 @@ export default function LessonClientV2({
 
         const scroll = () => {
             if (containerRef.current && isScrolling) {
-                containerRef.current.scrollTop += 0.5 * scrollSpeed;
+                // Increased base multiplier for more noticeable speed
+                containerRef.current.scrollTop += 1.0 * scrollSpeed;
 
                 if (
                     containerRef.current.scrollTop + containerRef.current.clientHeight >=
@@ -120,27 +121,101 @@ export default function LessonClientV2({
         return () => cancelAnimationFrame(animationFrameId);
     }, [isScrolling, scrollSpeed]);
 
-    // Text-to-speech engine
+    // Unified TTS Controller (Sequential Reading)
+    const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+    // Current reading state
+    const [currentBlockIndex, setCurrentBlockIndex] = useState<number>(-1);
+    const [activeBlockId, setActiveBlockId] = useState<string | null>(null);
+    const [activeBlockCharIndex, setActiveBlockCharIndex] = useState<number | null>(null);
+
     useEffect(() => {
         return () => {
             window.speechSynthesis.cancel();
         };
     }, []);
 
-    const toggleReader = useCallback(() => {
-        if (isReading) {
-            window.speechSynthesis.cancel();
-            setIsReading(false);
-        } else {
-            const fullText = extractTextContent(blocks);
-            const utterance = new SpeechSynthesisUtterance(fullText);
+    // Effect to trigger next block reading
+    useEffect(() => {
+        if (isReading && currentBlockIndex >= 0 && currentBlockIndex < blocks.length) {
+            const block = blocks[currentBlockIndex];
+
+            // Skip non-text blocks (or give them brief pauses/descriptions)
+            let textToRead = "";
+            if (block.type === "text") {
+                textToRead = (block as any).content;
+            }
+
+            if (!textToRead) {
+                // Smart Skip: Find the next readable block to avoid render loops
+                let nextIndex = currentBlockIndex + 1;
+                while (nextIndex < blocks.length) {
+                    if (blocks[nextIndex].type === "text") {
+                        break;
+                    }
+                    nextIndex++;
+                }
+                setCurrentBlockIndex(nextIndex);
+                return;
+            }
+
+            // Speak this block
+            const utterance = new SpeechSynthesisUtterance(textToRead);
+            utteranceRef.current = utterance;
             utterance.rate = 1;
             utterance.pitch = 1;
-            utterance.onend = () => setIsReading(false);
+
+            // Update Active Block ID for highlighting
+            setActiveBlockId(block.id);
+            setActiveBlockCharIndex(0); // Reset char index
+
+            // Detailed Boundary Event for Word Highlighting
+            utterance.onboundary = (event) => {
+                if (event.name === 'word') {
+                    // Since we read ONE block at a time, charIndex is RELATIVE to this block!
+                    // Perfect alignment with TextBlock component.
+                    setActiveBlockCharIndex(event.charIndex);
+                }
+            };
+
+            utterance.onend = () => {
+                // Move to next block
+                setActiveBlockCharIndex(null);
+                setCurrentBlockIndex(prev => prev + 1);
+            };
+
+            utterance.onerror = (e) => {
+                console.error("TTS Error:", e);
+                setIsReading(false);
+                setActiveBlockId(null);
+            };
+
             window.speechSynthesis.speak(utterance);
-            setIsReading(true);
+        } else if (isReading && currentBlockIndex >= blocks.length) {
+            // Finished all blocks
+            setIsReading(false);
+            setActiveBlockId(null);
+            setActiveBlockCharIndex(null);
+            setCurrentBlockIndex(-1);
         }
-    }, [isReading, blocks]);
+    }, [isReading, currentBlockIndex, blocks]);
+
+    const toggleReader = useCallback(() => {
+        if (isReading) {
+            // STOP
+            window.speechSynthesis.cancel();
+            setIsReading(false);
+            setActiveBlockId(null);
+            setActiveBlockCharIndex(null);
+            setCurrentBlockIndex(-1);
+        } else {
+            // START
+            // Start from 0 (or unlockedIndex if preferred, for now 0)
+            setCurrentBlockIndex(0);
+            setIsReading(true);
+            setIsScrolling(false); // Disable auto-scroll to prevent conflict
+        }
+    }, [isReading]);
 
     // Unlock handler for progressive content
     const handleUnlock = useCallback((index: number) => {
@@ -232,6 +307,8 @@ export default function LessonClientV2({
                             onUnlock={handleUnlock}
                             onUpdateContext={setCurrentContext}
                             nodeId={node.id}
+                            activeBlockId={activeBlockId}
+                            activeBlockCharIndex={activeBlockCharIndex}
                         />
                     ) : (
                         <div className="py-12 text-center border-2 border-dashed border-border rounded-xl bg-surface-sunken">

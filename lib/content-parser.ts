@@ -464,6 +464,31 @@ export function extractTextContent(blocks: ContentBlock[]): string {
 }
 
 /**
+ * Extract text and map for TTS highlighting
+ */
+export function extractTextAndMap(blocks: ContentBlock[]) {
+    let fullText = "";
+    const map: { id: string; start: number; end: number }[] = [];
+
+    blocks.forEach((block) => {
+        // Only include blocks that have meaningful text content
+        if (block.type === "text") {
+            const content = block.content;
+            const start = fullText.length;
+            fullText += content + "\n\n"; // Separator
+            map.push({ id: block.id, start, end: start + content.length });
+        } else if (block.type === "ai-insight" && block.context) {
+            const content = block.context;
+            const start = fullText.length;
+            fullText += content + "\n\n";
+            map.push({ id: block.id, start, end: start + content.length });
+        }
+    });
+
+    return { fullText, map };
+}
+
+/**
  * Get blocks up to a specific section for progressive rendering
  */
 export function getBlocksUpToIndex(
