@@ -9,7 +9,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-const KEEP_COURSE_ID = "cc4d3395-f4a9-46aa-b015-27dc59890408";
+const KEEP_COURSE_ID = "dd3fabc5-786b-474f-a1dd-75cb0715a20b";
 
 async function cleanupOldCourses() {
     console.log(`🧹 Cleaning up courses (keeping ONLY: ${KEEP_COURSE_ID})...`);
