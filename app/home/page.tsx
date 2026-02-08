@@ -59,7 +59,7 @@ export default async function HomePage() {
       title: course.title,
       description: course.description,
       progress: progressPercent,
-      lessonsCount: totalNodes,
+      lessonsCount: course.levels?.[0]?.count || totalNodes, // Use levels count if available
       color: progressPercent === 100 ? "bg-power-green" : "bg-power-teal",
       iconName,
       startNodeId,

@@ -51,12 +51,23 @@ export function CourseCard({ course, className, showProgress = true }: CourseCar
                 <div className="relative h-48 w-full overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
 
-                    {/* Image */}
-                    <motion.img
-                        src={imageUrl}
-                        alt={course.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
+                    {/* Media */}
+                    {imageUrl.endsWith(".mp4") ? (
+                        <video
+                            src={imageUrl}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                    ) : (
+                        <motion.img
+                            src={imageUrl}
+                            alt={course.title}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                    )}
 
                     {/* Badges Overlay */}
                     <div className="absolute top-4 left-4 z-20 flex gap-2">

@@ -34,6 +34,7 @@ type DashboardProps = {
     color: string;
     iconName: string;
     startNodeId?: string;
+    lessonsCount?: number;
   }>;
 };
 

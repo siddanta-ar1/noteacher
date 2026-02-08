@@ -125,7 +125,8 @@ export async function getCoursesForDashboard(): Promise<
           id,
           title,
           position_index
-        )
+        ),
+        levels ( count )
       `);
 
         if (error) throw error;
