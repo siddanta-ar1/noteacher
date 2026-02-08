@@ -10,6 +10,7 @@ import { BlockRenderer } from "@/components/blocks";
 import { parseContentJSON } from "@/lib/content-parser";
 import { enrichContent } from "@/lib/content-enricher";
 import type { ContentBlock } from "@/types/content";
+import { DiscussionModal } from "@/components/discussion/DiscussionModal";
 
 // Existing components
 import VerticalLessonControls from "@/components/lesson/VerticalLessonControls";
@@ -56,6 +57,7 @@ export default function LessonClientV2({
 
     // State
     const [isChatOpen, setIsChatOpen] = useState(false);
+    const [isDiscussionOpen, setIsDiscussionOpen] = useState(false);
     const [currentContext, setCurrentContext] = useState("");
 
     // Initialize unlockedIndex to the first blocking block or end
@@ -350,8 +352,8 @@ export default function LessonClientV2({
                         </div>
                     )}
 
-                    {/* Complete button */}
-                    <div className="pt-24 pb-32 flex justify-center">
+                    {/* Navigation Footer */}
+                    <div className="mt-12 flex justify-between items-center pb-20">
                         <motion.button
                             onClick={handleComplete}
                             whileHover={{ scale: 1.03, y: -4 }}
@@ -375,6 +377,7 @@ export default function LessonClientV2({
                 playbackRate={playbackRate}
                 onRateChange={setPlaybackRate}
                 onOpenAI={() => setIsChatOpen(true)}
+                onToggleDiscussion={() => setIsDiscussionOpen(true)}
             />
 
             {/* AI CHAT MODAL */}
@@ -382,6 +385,14 @@ export default function LessonClientV2({
                 isOpen={isChatOpen}
                 onClose={() => setIsChatOpen(false)}
                 context={`Currently viewing: ${currentContext}\n\nLesson: ${node.title}`}
+            />
+
+            {/* DISCUSSION MODAL */}
+            <DiscussionModal
+                isOpen={isDiscussionOpen}
+                onClose={() => setIsDiscussionOpen(false)}
+                nodeId={node.id}
+                title={node.title}
             />
 
             {/* AI SUMMARY BUTTON */}

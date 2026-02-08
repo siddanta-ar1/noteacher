@@ -59,6 +59,18 @@ export interface Profile {
     email?: string;
 }
 
+export interface Comment {
+    id: string;
+    node_id: string;
+    user_id: string;
+    content: string;
+    type: 'question' | 'solution' | 'general';
+    is_resolved: boolean;
+    created_at: string;
+    updated_at: string;
+    user?: Profile; // Joined data
+}
+
 export interface UserProgress {
     user_id: string;
     node_id: string;

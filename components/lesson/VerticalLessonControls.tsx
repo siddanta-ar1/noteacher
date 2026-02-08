@@ -10,7 +10,8 @@ import {
     Sparkles,
     Gauge,
     MoreVertical,
-    X
+    X,
+    MessageCircle
 } from "lucide-react";
 
 type VerticalLessonControlsProps = {
@@ -19,6 +20,7 @@ type VerticalLessonControlsProps = {
     playbackRate: number;
     onRateChange: (rate: number) => void;
     onOpenAI: () => void;
+    onToggleDiscussion: () => void;
 };
 
 export default function VerticalLessonControls({
@@ -27,6 +29,7 @@ export default function VerticalLessonControls({
     playbackRate,
     onRateChange,
     onOpenAI,
+    onToggleDiscussion,
 }: VerticalLessonControlsProps) {
     const [showSpeed, setShowSpeed] = useState(false);
 
@@ -131,6 +134,21 @@ export default function VerticalLessonControls({
                     </div>
                     <span className="absolute right-full mr-3 bg-navy text-white text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                         Ask AI
+                    </span>
+                </button>
+            </motion.div>
+            {/* 3. DISCUSSION BUTTON */}
+            <motion.div variants={itemVariants}>
+                <button
+                    onClick={onToggleDiscussion}
+                    className="group relative flex items-center justify-center p-2"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full blur opacity-40 group-hover:opacity-75 transition-opacity duration-500" />
+                    <div className="relative w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg text-white group-hover:scale-105 transition-transform duration-300">
+                        <MessageCircle size={24} />
+                    </div>
+                    <span className="absolute right-full mr-3 bg-navy text-white text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                        Discussion
                     </span>
                 </button>
             </motion.div>
