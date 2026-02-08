@@ -11,15 +11,22 @@ interface AnimationBlockProps {
 
 export default function AnimationBlockComponent({ block }: AnimationBlockProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [isPlaying, setIsPlaying] = useState(block.autoplay || false);
-    const [isMuted, setIsMuted] = useState(true);
+    const [isPlaying, setIsPlaying] = useState(false); // Start paused
+    const [isMuted, setIsMuted] = useState(false); // Start unmuted (though effective only when playing)
     const [isHovering, setIsHovering] = useState(false);
+    const [hasStarted, setHasStarted] = useState(false);
 
     const togglePlay = () => {
         if (videoRef.current) {
             if (isPlaying) {
                 videoRef.current.pause();
             } else {
+                // Unmute on first play if needed, or ensure sound is on
+                if (!hasStarted) {
+                    videoRef.current.muted = false;
+                    setIsMuted(false);
+                    setHasStarted(true);
+                }
                 videoRef.current.play();
             }
             setIsPlaying(!isPlaying);
@@ -55,8 +62,9 @@ export default function AnimationBlockComponent({ block }: AnimationBlockProps) 
                     className="block max-w-full max-h-[70vh] w-auto h-auto"
                     loop={block.loop}
                     muted={isMuted} // Default to muted for autoplay to work
-                    autoPlay={block.autoplay}
+                    autoPlay={false} // Disable autoplay to ensure it starts paused
                     playsInline
+                    onClick={togglePlay} // Allow clicking video to toggle play
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
                     style={block.height ? { height: block.height } : undefined}
@@ -70,7 +78,10 @@ export default function AnimationBlockComponent({ block }: AnimationBlockProps) 
                     className="absolute inset-0 bg-black/20 backdrop-blur-[2px] flex items-center justify-center transition-opacity"
                 >
                     <button
-                        onClick={togglePlay}
+                        onClick={(e) => {
+                            e.stopPropagation(); // Prevent double toggling if container has click handler
+                            togglePlay();
+                        }}
                         className="w-16 h-16 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all transform hover:scale-105"
                     >
                         {isPlaying ? <Pause size={32} fill="currentColor" /> : <Play size={32} fill="currentColor" className="ml-1" />}

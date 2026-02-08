@@ -51,12 +51,12 @@ export const COURSE_DATA: CourseLevel[] = [
         children: [
             {
                 id: "mission-0.1",
-                title: "Mission 0.1: Why statistics exists",
+                title: "Topic 0.1: Why statistics exists",
                 type: "folder",
                 children: [
                     {
                         id: "node-0.1.1",
-                        title: "Node 0.1.1: Conclusion of data cluster",
+                        title: "Sub-topic 0.1.1: Conclusion of data cluster",
                         type: "file",
                         content: {
                             hook: "Can you spot the failing student in this list?",
@@ -78,7 +78,7 @@ export const COURSE_DATA: CourseLevel[] = [
                     },
                     {
                         id: "node-0.1.2",
-                        title: "Node 0.1.2: Understanding collective phenomena",
+                        title: "Sub-topic 0.1.2: Understanding collective phenomena",
                         type: "file",
                         content: {
                             hook: "Does your neighbor know what the whole country is doing?",
@@ -99,7 +99,7 @@ export const COURSE_DATA: CourseLevel[] = [
                     },
                     {
                         id: "node-0.1.3",
-                        title: "Node 0.1.3: The “Small Sample” Trap",
+                        title: "Sub-topic 0.1.3: The “Small Sample” Trap",
                         type: "file",
                         content: {
                             hook: "My grandpa smoked and lived to 90. So smoking is safe, right?",
@@ -121,7 +121,7 @@ export const COURSE_DATA: CourseLevel[] = [
                     },
                     {
                         id: "node-0.1.4",
-                        title: "Node 0.1.4: Individual Cases Can Mislead Us",
+                        title: "Sub-topic 0.1.4: Individual Cases Can Mislead Us",
                         type: "file",
                         content: {
                             hook: "Is the player bad, or just having a bad day?",
@@ -149,12 +149,12 @@ export const COURSE_DATA: CourseLevel[] = [
             },
             {
                 id: "mission-0.2",
-                title: "Mission 0.2: Statistics vs intuition",
+                title: "Topic 0.2: Statistics vs intuition",
                 type: "folder",
                 children: [
                     {
                         id: "node-0.2.1",
-                        title: "Node 0.2.1: The Gambler’s Mindset",
+                        title: "Sub-topic 0.2.1: The Gambler’s Mindset",
                         type: "file",
                         content: {
                             hook: "If a coin flips Heads 5 times in a row, is Tails 'due' next?",
@@ -176,7 +176,7 @@ export const COURSE_DATA: CourseLevel[] = [
                     },
                     {
                         id: "node-0.2.2",
-                        title: "Node 0.2.2: Intuition Fails When Scale Increases",
+                        title: "Sub-topic 0.2.2: Intuition Fails When Scale Increases",
                         type: "file",
                         content: {
                             hook: "Guess the average height of 5 people. Easy. Now guess for 50,000.",
@@ -198,7 +198,7 @@ export const COURSE_DATA: CourseLevel[] = [
                     },
                     {
                         id: "node-0.2.3",
-                        title: "Node 0.2.3: Guesswork Works Sometimes",
+                        title: "Sub-topic 0.2.3: Guesswork Works Sometimes",
                         type: "file",
                         content: {
                             hook: "Was it skill, or just dumb luck?",
@@ -220,7 +220,7 @@ export const COURSE_DATA: CourseLevel[] = [
                     },
                     {
                         id: "node-0.2.4",
-                        title: "Node 0.2.4: Why do statistics win",
+                        title: "Sub-topic 0.2.4: Why do statistics win",
                         type: "file",
                         content: {
                             hook: "Why do casinos never go bankrupt?",
@@ -247,12 +247,12 @@ export const COURSE_DATA: CourseLevel[] = [
             },
             {
                 id: "mission-0.3",
-                title: "Mission 0.3: Deterministic vs uncertain",
+                title: "Topic 0.3: Deterministic vs uncertain",
                 type: "folder",
                 children: [
                     {
                         id: "node-0.3.1",
-                        title: "Node 0.3.1: The Deterministic Worldview",
+                        title: "Sub-topic 0.3.1: The Deterministic Worldview",
                         type: "file",
                         content: {
                             hook: "If you kick a ball the exact same way twice, will it land in the exact same spot?",
@@ -275,7 +275,7 @@ export const COURSE_DATA: CourseLevel[] = [
                     },
                     {
                         id: "node-0.3.2",
-                        title: "Node 0.3.2: The Uncertain Worldview",
+                        title: "Sub-topic 0.3.2: The Uncertain Worldview",
                         type: "file",
                         content: {
                             hook: "If you plant two identical seeds, why don't they grow to the exact same height?",
@@ -297,7 +297,7 @@ export const COURSE_DATA: CourseLevel[] = [
                     },
                     {
                         id: "node-0.3.3",
-                        title: "Node 0.3.3: The source of Uncertainty",
+                        title: "Sub-topic 0.3.3: The source of Uncertainty",
                         type: "file",
                         content: {
                             hook: "Why can't we predict the weather perfectly yet?",
@@ -320,7 +320,7 @@ export const COURSE_DATA: CourseLevel[] = [
                     },
                     {
                         id: "node-0.3.4",
-                        title: "Node 0.3.4: How statistics joins the game",
+                        title: "Sub-topic 0.3.4: How statistics joins the game",
                         type: "file",
                         content: {
                             hook: "How do we win a game we can't predict?",
@@ -347,12 +347,12 @@ export const COURSE_DATA: CourseLevel[] = [
             },
             {
                 id: "mission-0.4",
-                title: "Mission 0.4: Everyday decisions",
+                title: "Topic 0.4: Everyday decisions",
                 type: "folder",
                 children: [
                     {
                         id: "node-0.4.1",
-                        title: "Node 0.4.1: The Availability Heuristic",
+                        title: "Sub-topic 0.4.1: The Availability Heuristic",
                         type: "file",
                         content: {
                             hook: "Are you more afraid of Sharks or Cows?",
@@ -374,7 +374,7 @@ export const COURSE_DATA: CourseLevel[] = [
                     },
                     {
                         id: "node-0.4.2",
-                        title: "Node 0.4.2: Anchoring",
+                        title: "Sub-topic 0.4.2: Anchoring",
                         type: "file",
                         content: {
                             hook: "How do you know if a T-shirt is a good price?",
@@ -397,7 +397,7 @@ export const COURSE_DATA: CourseLevel[] = [
                     },
                     {
                         id: "node-0.4.3",
-                        title: "Node 0.4.3: Hidden Statistics",
+                        title: "Sub-topic 0.4.3: Hidden Statistics",
                         type: "file",
                         content: {
                             hook: "How did you know to bring an umbrella today?",
@@ -425,12 +425,12 @@ export const COURSE_DATA: CourseLevel[] = [
             },
             {
                 id: "mission-0.5",
-                title: "Mission 0.5: Correlation vs causation",
+                title: "Topic 0.5: Correlation vs causation",
                 type: "folder",
                 children: [
                     {
                         id: "node-0.5.1",
-                        title: "Node 0.5.1: What Correlation Really Means",
+                        title: "Sub-topic 0.5.1: What Correlation Really Means",
                         type: "file",
                         content: {
                             hook: "What does it mean when two things move together?",
@@ -452,7 +452,7 @@ export const COURSE_DATA: CourseLevel[] = [
                     },
                     {
                         id: "node-0.5.2",
-                        title: "Node 0.5.2: Why correlation is not causation",
+                        title: "Sub-topic 0.5.2: Why correlation is not causation",
                         type: "file",
                         content: {
                             hook: "Does eating ice cream cause shark attacks?",
@@ -475,7 +475,7 @@ export const COURSE_DATA: CourseLevel[] = [
                     },
                     {
                         id: "node-0.5.3",
-                        title: "Node 0.5.3: The Hidden Variable",
+                        title: "Sub-topic 0.5.3: The Hidden Variable",
                         type: "file",
                         content: {
                             hook: "So, who is pulling the strings?",

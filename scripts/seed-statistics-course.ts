@@ -82,10 +82,10 @@ const LEVELS: LevelData[] = [
         title: "Level 0: Statistical Thinking (Foundation)",
         missions: [
             {
-                title: "Mission 0.1: Why statistics exists",
+                title: "Topic 0.1: Why statistics exists",
                 nodes: [
                     {
-                        title: "Node 0.1.1: Conclusion of data cluster",
+                        title: "Sub-topic 0.1.1: Conclusion of data cluster",
                         content: {
                             hook: "Can you spot the failing student in this list?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/Conclusion%20of%20data%20cluster.mp4",
@@ -105,7 +105,7 @@ const LEVELS: LevelData[] = [
                         }
                     },
                     {
-                        title: "Node 0.1.2: Understanding collective phenomena",
+                        title: "Sub-topic 0.1.2: Understanding collective phenomena",
                         content: {
                             hook: "Does your neighbor know what the whole country is doing?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/Understanding%20collective%20phenomena.mp4",
@@ -124,7 +124,7 @@ const LEVELS: LevelData[] = [
                         }
                     },
                     {
-                        title: "Node 0.1.3: The 'Small Sample' Trap",
+                        title: "Sub-topic 0.1.3: The 'Small Sample' Trap",
                         content: {
                             hook: "My grandpa smoked and lived to 90. So smoking is safe, right?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/The%20Small%20Sample%20Trap.mp4",
@@ -143,7 +143,7 @@ const LEVELS: LevelData[] = [
                         }
                     },
                     {
-                        title: "Node 0.1.4: Individual Cases Can Mislead Us",
+                        title: "Sub-topic 0.1.4: Individual Cases Can Mislead Us",
                         content: {
                             hook: "Is the player bad, or just having a bad day?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/Individual%20Cases%20Can%20Mislead%20Us.mp4",
@@ -167,10 +167,10 @@ const LEVELS: LevelData[] = [
                 ]
             },
             {
-                title: "Mission 0.2: Statistics vs intuition",
+                title: "Topic 0.2: Statistics vs intuition",
                 nodes: [
                     {
-                        title: "Node 0.2.1: The Gambler's Mindset",
+                        title: "Sub-topic 0.2.1: The Gambler's Mindset",
                         content: {
                             hook: "If a coin flips Heads 5 times in a row, is Tails 'due' next?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/The%20Gamblers%20Mindset.mp4",
@@ -189,7 +189,7 @@ const LEVELS: LevelData[] = [
                         }
                     },
                     {
-                        title: "Node 0.2.2: Intuition Fails When Scale Increases",
+                        title: "Sub-topic 0.2.2: Intuition Fails When Scale Increases",
                         content: {
                             hook: "Guess the average height of 5 people. Easy. Now guess for 50,000.",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/Intuition%20Fails%20When%20Scale%20Increases.mp4",
@@ -208,7 +208,7 @@ const LEVELS: LevelData[] = [
                         }
                     },
                     {
-                        title: "Node 0.2.3: Guesswork Works Sometimes",
+                        title: "Sub-topic 0.2.3: Guesswork Works Sometimes",
                         content: {
                             hook: "Was it skill, or just dumb luck?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/Guesswork%20Works%20Sometimes-By%20Accident.mp4",
@@ -226,7 +226,7 @@ const LEVELS: LevelData[] = [
                         }
                     },
                     {
-                        title: "Node 0.2.4: Why do statistics win",
+                        title: "Sub-topic 0.2.4: Why do statistics win",
                         content: {
                             hook: "Why do casinos never go bankrupt?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/Why%20do%20statistics%20win.mp4",
@@ -251,10 +251,10 @@ const LEVELS: LevelData[] = [
                 ]
             },
             {
-                title: "Mission 0.3: Deterministic vs uncertain",
+                title: "Topic 0.3: Deterministic vs uncertain",
                 nodes: [
                     {
-                        title: "Node 0.3.1: The Deterministic Worldview",
+                        title: "Sub-topic 0.3.1: The Deterministic Worldview",
                         content: {
                             hook: "If you kick a ball the exact same way twice, will it land in the exact same spot?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/The%20Deterministic%20Worldview_.mp4",
@@ -272,7 +272,7 @@ const LEVELS: LevelData[] = [
                         }
                     },
                     {
-                        title: "Node 0.3.2: The Uncertain Worldview",
+                        title: "Sub-topic 0.3.2: The Uncertain Worldview",
                         content: {
                             hook: "If you plant two identical seeds, why don't they grow to the exact same height?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/The%20Uncertain%20Worldview_.mp4",
@@ -290,7 +290,7 @@ const LEVELS: LevelData[] = [
                         }
                     },
                     {
-                        title: "Node 0.3.3: The source of Uncertainty",
+                        title: "Sub-topic 0.3.3: The source of Uncertainty",
                         content: {
                             hook: "Why can't we predict the weather perfectly yet?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/The%20source%20of%20Uncertainty_.mp4",
@@ -308,7 +308,7 @@ const LEVELS: LevelData[] = [
                         }
                     },
                     {
-                        title: "Node 0.3.4: How statistics joins the game",
+                        title: "Sub-topic 0.3.4: How statistics joins the game",
                         content: {
                             hook: "How do we win a game we can't predict?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/How%20statistics%20joins%20the%20game.mp4",
@@ -331,10 +331,10 @@ const LEVELS: LevelData[] = [
                 ]
             },
             {
-                title: "Mission 0.4: Everyday decisions",
+                title: "Topic 0.4: Everyday decisions",
                 nodes: [
                     {
-                        title: "Node 0.4.1: The Availability Heuristic",
+                        title: "Sub-topic 0.4.1: The Availability Heuristic",
                         content: {
                             hook: "Are you more afraid of Sharks or Cows?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/The%20Availability%20Heuristic.mp4",
@@ -351,7 +351,7 @@ const LEVELS: LevelData[] = [
                         }
                     },
                     {
-                        title: "Node 0.4.2: Anchoring",
+                        title: "Sub-topic 0.4.2: Anchoring",
                         content: {
                             hook: "How do you know if a T-shirt is a good price?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/Anchoring%20(The%20Trap%20of%20the%20First%20Number)_.mp4",
@@ -369,7 +369,7 @@ const LEVELS: LevelData[] = [
                         }
                     },
                     {
-                        title: "Node 0.4.3: Hidden Statistics",
+                        title: "Sub-topic 0.4.3: Hidden Statistics",
                         content: {
                             hook: "How did you know to bring an umbrella today?",
                             animationUrl: "https://xjfooxkawqvbkcburvxm.supabase.co/storage/v1/object/public/animations/Statistics%20Hidden%20in%20Daily%20Choices.mp4",
@@ -392,10 +392,10 @@ const LEVELS: LevelData[] = [
                 ]
             },
             {
-                title: "Mission 0.5: Correlation vs causation",
+                title: "Topic 0.5: Correlation vs causation",
                 nodes: [
                     {
-                        title: "Node 0.5.1: What Correlation Really Means",
+                        title: "Sub-topic 0.5.1: What Correlation Really Means",
                         content: {
                             hook: "What does it mean when two things move together?",
                             animationUrl: "default",
@@ -414,7 +414,7 @@ const LEVELS: LevelData[] = [
                         }
                     },
                     {
-                        title: "Node 0.5.2: Why correlation is not causation",
+                        title: "Sub-topic 0.5.2: Why correlation is not causation",
                         content: {
                             hook: "Does eating ice cream cause shark attacks?",
                             animationUrl: "default",
@@ -432,7 +432,7 @@ const LEVELS: LevelData[] = [
                         }
                     },
                     {
-                        title: "Node 0.5.3: The Hidden Variable",
+                        title: "Sub-topic 0.5.3: The Hidden Variable",
                         content: {
                             hook: "So, who is pulling the strings?",
                             animationUrl: "default",
