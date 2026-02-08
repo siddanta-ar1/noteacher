@@ -57,7 +57,9 @@ export default async function HomePage() {
     return {
       id: course.id,
       title: course.title,
+      description: course.description,
       progress: progressPercent,
+      lessonsCount: totalNodes,
       color: progressPercent === 100 ? "bg-power-green" : "bg-power-teal",
       iconName,
       startNodeId,

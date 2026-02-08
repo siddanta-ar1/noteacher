@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { ProgressBar, Avatar } from "@/components/ui";
+import { CourseCard } from "@/components/CourseCard";
 
 type DashboardProps = {
   profile: { xp: number; name: string; streak: number; avatar_url?: string | null };
@@ -197,94 +198,17 @@ export default function DashboardClient({
 
         {courses.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course, index) => {
-              const Icon = IconMap[course.iconName] || BookOpen;
-              const isCompleted = course.progress >= 100;
-
-              // Map legacy color strings to tailwind text/bg classes if needed, 
-              // or just rely on dynamic classes if they are standard format.
-              // Assuming course.color is like "bg-power-teal". 
-              // We want to transform "bg-power-teal" -> "bg-power-teal/10 text-power-teal"
-              // Only works if course.color is exactly "bg-power-teal" or similar.
-
-              const colorBase = course.color.replace("bg-", ""); // e.g., "power-teal"
-              const iconStyle = {
-                backgroundColor: `var(--${colorBase}-10, rgba(0,0,0,0.05))`, // Fallback/hack
-                color: `var(--${colorBase}, currentColor)`
-              };
-
-              // Actually, since we use tailwind classes, let's just do manual mapping for known colors if possible, 
-              // or use inline styles with opacity.
-              // A safer way without complex parsing: just use opacity utility if we can,
-              // but we need to change text color too.
-
-              // Let's assume standard colors for now and use a simpler approach:
-              // Just use bg-surface-raised and text-ink-500 if generic, or specific logic.
-              // For "professional" look, let's treat them uniformly or use a map.
-
-              const textColorClass = course.color.replace("bg-", "text-"); // e.g. text-power-teal
-
-              return (
-                <motion.div
-                  key={course.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Link href={`/course/${course.id}`}>
-                    <motion.div
-                      whileHover={{ y: -4, boxShadow: "0 20px 40px -15px rgba(0,0,0,0.1)" }}
-                      className="bg-surface border-2 border-border p-6 rounded-[1.5rem] hover:border-primary transition-all cursor-pointer h-full flex flex-col group"
-                    >
-                      {/* Icon & Badge */}
-                      <div className="flex justify-between items-start mb-4">
-                        <div
-                          className={`w-12 h-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 ${course.color.replace('bg-', 'bg-')}/10 ${course.color.replace('bg-', 'text-')}`}
-                          // Note: Tailwind arbitrary values with dynamic strings might not work JIT. 
-                          // Better to use safe list or style prop. 
-                          // Let's use style for reliability with dynamic colors.
-                          style={{
-                            backgroundColor: `var(--${course.color.replace('bg-', '')})22`, // roughly 13% opacity hex
-                            color: `var(--${course.color.replace('bg-', '')})`
-                          }}
-                        >
-                          <Icon className="w-6 h-6" />
-                        </div>
-                        {isCompleted && (
-                          <span className="bg-success-light text-success text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
-                            <CheckCircle size={12} />
-                            Complete
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Content */}
-                      <h4 className="text-lg font-black text-ink-900 mb-2 group-hover:text-primary transition-colors line-clamp-1">
-                        {course.title}
-                      </h4>
-
-                      <div className="flex-1" />
-
-                      {/* Progress */}
-                      <div className="mt-4 pt-4 border-t border-border">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-bold text-ink-400">
-                            {isCompleted ? "Mastered" : `${course.progress}% complete`}
-                          </span>
-                          <ChevronRight className="w-4 h-4 text-ink-300 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                        </div>
-                        <ProgressBar
-                          value={course.progress}
-                          color={isCompleted ? "success" : "primary"}
-                          size="sm"
-                          animated={false}
-                        />
-                      </div>
-                    </motion.div>
-                  </Link>
-                </motion.div>
-              );
-            })}
+            {courses.map((course, index) => (
+              <motion.div
+                key={course.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="h-full"
+              >
+                <CourseCard course={course} />
+              </motion.div>
+            ))}
           </div>
         ) : (
           <div className="text-center py-20 bg-surface rounded-3xl border-2 border-dashed border-border">

@@ -7,6 +7,7 @@ import Link from "next/link";
 import type { CourseWithNodeCount } from "@/types";
 import { ROUTES } from "@/config";
 import { Badge, ProgressBar } from "@/components/ui";
+import { CourseCard } from "@/components/CourseCard";
 
 interface CourseLibraryClientProps {
   initialCourses: CourseWithNodeCount[];
@@ -100,46 +101,15 @@ export default function CourseLibraryClient({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
+                className="h-full"
               >
-                <Link href={ROUTES.course(course.id)} className="block group h-full">
-                  <div className="bg-surface p-6 rounded-[1.5rem] shadow-sm border border-border hover:border-primary hover:shadow-xl transition-all h-full flex flex-col">
-                    {/* Header */}
-                    <div className="flex justify-between items-start mb-5">
-                      <div className="w-14 h-14 bg-primary-light rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <BookOpen className="text-primary w-7 h-7" />
-                      </div>
-                      <Badge variant="default" size="sm">
-                        {course.nodes[0]?.count || 0} lessons
-                      </Badge>
-                    </div>
-
-                    {/* Content */}
-                    <h3 className="text-xl font-black text-ink-900 mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                      {course.title}
-                    </h3>
-                    <p className="text-ink-500 font-medium leading-relaxed mb-6 line-clamp-2 flex-1">
-                      {course.description || "Master this topic through interactive lessons."}
-                    </p>
-
-                    {/* Footer */}
-                    <div className="pt-5 border-t border-border flex items-center justify-between">
-                      <div className="flex items-center gap-4 text-xs text-ink-400">
-                        <span className="flex items-center gap-1">
-                          <Clock size={14} />
-                          ~2h
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Users size={14} />
-                          1.2k
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1 text-power-teal font-bold text-sm group-hover:gap-2 transition-all">
-                        Start
-                        <ArrowRight size={16} />
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+                <CourseCard
+                  course={{
+                    ...course,
+                    lessonsCount: course.nodes[0]?.count || 0
+                  }}
+                  showProgress={false}
+                />
               </motion.div>
             ))
           ) : (
