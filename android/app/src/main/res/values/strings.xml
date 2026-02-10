@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">NOTEacher</string>
+    <string name="title_activity_main">NOTEacher</string>
+    <string name="package_name">com.bosc.noteacher</string>
+    <string name="custom_url_scheme">com.bosc.noteacher</string>
+</resources>
